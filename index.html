@@ -46,7 +46,6 @@
       box-shadow: var(--apple-shadow), var(--apple-glass-inset);
     }
 
-    /* BANNER FLUTUANTE APPLE LIQUID GLASS */
     .glass-appbar {
       background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(25px) saturate(180%);
@@ -72,7 +71,6 @@
       flex-shrink: 0;
     }
 
-    /* LOGO DA URE NO CANTO DIREITO */
     .ure-logo {
       height: 42px;
       max-width: 140px;
@@ -250,7 +248,7 @@
 </head>
 <body>
 
-  <!-- BANNER SUPERIOR APPLE GLASS COM LOGO DA URE À DIREITA -->
+  <!-- BANNER SUPERIOR COM LOGO -->
   <div class="container px-3">
     <div class="glass-appbar d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center gap-3">
@@ -261,9 +259,7 @@
         </div>
       </div>
       <div class="d-flex align-items-center gap-3">
-        <!-- Imagem do Logo da URE -->
         <img src="logo-ure.png" alt="Logo URE São Vicente" class="ure-logo" onerror="this.style.display='none'">
-        
         <div id="btnSairNav" style="display:none;">
           <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-bold" onclick="reiniciarApp()"><span class="material-symbols-rounded align-middle fs-6">logout</span> Sair</button>
         </div>
@@ -325,7 +321,6 @@
         </div>
       </div>
 
-      <!-- AVISO LGPD -->
       <div class="lgpd-card mb-4">
         <div class="lgpd-icon"><span class="material-symbols-rounded fs-5">shield</span></div>
         <div>
@@ -349,7 +344,6 @@
 
       <div id="corpoTabela"></div>
 
-      <!-- ÁREA DE SALVAMENTO + AVISO LGPD -->
       <div class="glass-panel p-4 mt-4" id="areaSalvar">
         <div class="lgpd-card mb-4" style="border-color: rgba(0, 113, 227, 0.2); background: rgba(240, 246, 255, 0.65);">
           <div class="lgpd-icon"><span class="material-symbols-rounded fs-5">lock</span></div>
@@ -506,17 +500,28 @@
             </div>`;
         } 
         else if (prof.turnoAtual && prof.turnoAtual !== "") {
+          // Pega o local da formação vinculado
+          let localTexto = prof.localAtual || (dados.mapaLocais && dados.mapaLocais[prof.turnoAtual.toUpperCase()]) || "Local a definir (Consulte a Diretoria)";
+          
           tbody.innerHTML += `
             <div class="prof-card d-md-flex align-items-center justify-content-between" style="border-left: 4px solid var(--apple-primary);">
               <div class="d-flex align-items-center mb-2 mb-md-0">
                 <div class="prof-avatar" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><span class="material-symbols-rounded">check_circle</span></div>
                 <div class="ms-3">
                   <div class="fw-bold">${prof.nome}</div>
-                  <small class="text-success fw-bold">Indicação Concluída - ${prof.comp}</small>
-                  ${prof.rg ? `<div class="text-muted" style="font-size:0.75rem;">RG: ${prof.rg} | CPF: ${prof.cpf} | Ag: ${prof.agencia} | CC: ${prof.conta}</div>` : ''}
+                  <small class="text-success fw-bold">Indicação Concluída – ${prof.comp}</small>
+                  ${prof.rg ? `<div class="text-muted mt-1" style="font-size:0.75rem;">RG: ${prof.rg} | CPF: ${prof.cpf} | Ag: ${prof.agencia} | CC: ${prof.conta}</div>` : ''}
                 </div>
               </div>
-              <span class="apple-badge apple-badge-blue">${prof.turnoAtual}</span>
+              
+              <!-- Pílula do Turno + Local da Formação logo abaixo -->
+              <div class="d-flex flex-column align-items-md-end text-md-end mt-2 mt-md-0">
+                <span class="apple-badge apple-badge-blue">${prof.turnoAtual}</span>
+                <div class="d-flex align-items-center justify-content-md-end gap-1 text-muted mt-1" style="font-size:0.76rem; font-weight: 500;">
+                  <span class="material-symbols-rounded text-primary" style="font-size:15px;">location_on</span>
+                  <span>${localTexto}</span>
+                </div>
+              </div>
             </div>`;
         } 
         else {
