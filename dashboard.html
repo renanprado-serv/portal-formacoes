@@ -22,6 +22,8 @@
       --apple-glass-inset: inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 -1px 1px rgba(0, 0, 0, 0.02);
     }
 
+    * { box-sizing: border-box; }
+
     body {
       background-color: var(--apple-bg);
       background-image: 
@@ -51,10 +53,86 @@
       -webkit-backdrop-filter: blur(25px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.9);
       border-radius: 980px;
-      padding: 12px 24px;
+      padding: 12px 28px;
       margin: 24px auto 32px auto;
       max-width: 1020px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), var(--apple-glass-inset);
+    }
+
+    .apple-badge-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0071e3, #60a5fa);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+      flex-shrink: 0;
+    }
+
+    .ure-logo {
+      height: 38px;
+      max-width: 130px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.04));
+    }
+
+    /* SELETOR DE COMPONENTE ESTILO APPLE (SEM SOBREPOSIÇÃO) */
+    .apple-select-pill {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: rgba(0, 113, 227, 0.08);
+      color: var(--apple-primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 9px 36px 9px 16px;
+      border-radius: 980px;
+      border: 1px solid rgba(0, 113, 227, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230071e3%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      outline: none;
+      box-shadow: 0 2px 6px rgba(0, 113, 227, 0.05);
+      max-width: 100%;
+    }
+    .apple-select-pill:hover {
+      background-color: rgba(0, 113, 227, 0.14);
+      border-color: var(--apple-primary);
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.12);
+    }
+    .apple-select-pill:focus {
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.25);
+    }
+    .apple-select-pill option {
+      background-color: #ffffff;
+      color: #1d1d1f;
+      font-weight: 500;
+    }
+
+    .btn-apple-refresh {
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--apple-text);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 980px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+    }
+    .btn-apple-refresh:hover {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     }
 
     /* BADGES APPLE LÍQUIDAS */
@@ -164,22 +242,36 @@
 </head>
 <body>
 
+  <!-- BANNER SUPERIOR COM SELETOR EM PÍLULA E LOGO -->
   <div class="container px-3">
     <div class="glass-appbar d-flex align-items-center justify-content-between flex-wrap gap-3">
+      
+      <!-- Lado Esquerdo: Ícone e Título -->
       <div class="d-flex align-items-center gap-3">
-        <div class="p-2 rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center">
-          <span class="material-symbols-rounded fs-3">monitoring</span>
+        <div class="apple-badge-icon">
+          <span class="material-symbols-rounded fs-4">monitoring</span>
         </div>
         <div>
           <h1 class="m-0 fs-6 fw-bold">Painel de Especialistas</h1>
-          <select id="selectComponenteDash" class="form-select form-select-sm border-0 bg-transparent fw-bold text-primary p-0 shadow-none mt-1" onchange="carregarDados()">
+          <p class="m-0 text-muted" style="font-size:0.8rem">Gestão Regional & Analytics</p>
+        </div>
+      </div>
+
+      <!-- Lado Direito: Filtro de Componente + Botão Atualizar + Logo -->
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <div>
+          <select id="selectComponenteDash" class="apple-select-pill" onchange="carregarDados()">
             <option value="Todos">Visão Geral (Todos os Componentes)</option>
           </select>
         </div>
+
+        <button class="btn-apple-refresh" onclick="carregarDados()">
+          <span class="material-symbols-rounded align-middle fs-6">refresh</span> Atualizar
+        </button>
+
+        <img src="logo-ure.png" alt="Logo URE" class="ure-logo ms-1" onerror="this.style.display='none'">
       </div>
-      <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-bold" onclick="carregarDados()">
-        <span class="material-symbols-rounded align-middle fs-6 me-1">refresh</span> Atualizar
-      </button>
+
     </div>
   </div>
 
@@ -191,6 +283,7 @@
 
     <div id="dashboardContent" style="display: none;">
       
+      <!-- Top KPIs -->
       <div class="kpi-grid">
         <div class="kpi-card"><div class="kpi-title text-danger">Inscrições Pendentes</div><div class="kpi-value text-danger" id="kpiPendentes">0</div></div>
         <div class="kpi-card"><div class="kpi-title text-primary">Total Indicados</div><div class="kpi-value text-primary" id="kpiIndicados">0</div></div>
@@ -198,6 +291,7 @@
         <div class="kpi-card"><div class="kpi-title text-danger">Faltas</div><div class="kpi-value text-danger" id="kpiFaltas">0</div></div>
       </div>
 
+      <!-- Segmented iOS Tab Navigation -->
       <div class="text-center mb-4">
         <div class="liquid-segmented">
           <button id="btnAbaEscola" class="nav-active" onclick="mudarAba('escolas')"><span class="material-symbols-rounded fs-6">domain</span> Por Escola</button>
@@ -381,7 +475,7 @@
 
   <script>
     // ⚠️ SUBSTITUA PELA SUA URL DO APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/AKfycbw6gY49y19b-L6-90Ad7-RpJVdF-mZEPilE49RdH8ufMq7kkKVIlUS3xSZ57_4d9HMQ/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbz_dE2_6hB7vU8V0879v5z_pfwYgnB4o/exec";
 
     let dadosCache = null;
     let chartFreqInstance = null, chartEscolasInstance = null, chartTurnosInstance = null;
@@ -391,6 +485,7 @@
         .then(res => res.json())
         .then(c => {
           let sel = document.getElementById('selectComponenteDash');
+          sel.innerHTML = '<option value="Todos">Visão Geral (Todos os Componentes)</option>';
           c.forEach(comp => sel.innerHTML += `<option value="${comp}">${comp}</option>`);
           carregarDados(); 
         })
