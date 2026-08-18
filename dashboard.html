@@ -16,7 +16,7 @@
       --apple-primary: #0071e3;
       --apple-text: #1d1d1f;
       --apple-text-secondary: #86868b;
-      --apple-card-bg: rgba(255, 255, 255, 0.72);
+      --apple-card-bg: rgba(255, 255, 255, 0.75);
       --apple-card-border: rgba(255, 255, 255, 0.85);
       --apple-shadow: 0 12px 36px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
       --apple-glass-inset: inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 -1px 1px rgba(0, 0, 0, 0.02);
@@ -36,7 +36,6 @@
       padding-bottom: 60px;
     }
 
-    /* Apple Glassmorphism Containers */
     .glass-panel {
       background: var(--apple-card-bg);
       backdrop-filter: blur(30px) saturate(190%);
@@ -44,11 +43,10 @@
       border: 1px solid var(--apple-card-border);
       border-radius: 24px;
       box-shadow: var(--apple-shadow), var(--apple-glass-inset);
-      transition: all 0.3s ease;
     }
 
     .glass-appbar {
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(25px) saturate(180%);
       -webkit-backdrop-filter: blur(25px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.9);
@@ -59,7 +57,40 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), var(--apple-glass-inset);
     }
 
-    /* Segmented Tab Controls (iOS Style) */
+    /* BADGES APPLE LÍQUIDAS */
+    .apple-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 14px;
+      border-radius: 980px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border: 1px solid transparent;
+      line-height: 1.2;
+    }
+    .apple-badge-blue {
+      background: rgba(0, 113, 227, 0.12) !important;
+      color: #0071e3 !important;
+      border-color: rgba(0, 113, 227, 0.25) !important;
+    }
+    .apple-badge-green {
+      background: rgba(16, 185, 129, 0.12) !important;
+      color: #059669 !important;
+      border-color: rgba(16, 185, 129, 0.25) !important;
+    }
+    .apple-badge-red {
+      background: rgba(239, 68, 68, 0.12) !important;
+      color: #dc2626 !important;
+      border-color: rgba(239, 68, 68, 0.25) !important;
+    }
+    .apple-badge-gray {
+      background: rgba(120, 120, 128, 0.12) !important;
+      color: #555558 !important;
+      border-color: rgba(120, 120, 128, 0.2) !important;
+    }
+
     .liquid-segmented {
       background: rgba(118, 118, 128, 0.12);
       backdrop-filter: blur(20px);
@@ -81,7 +112,7 @@
       border-radius: 980px;
       font-size: 0.88rem;
       font-weight: 500;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s ease;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -89,11 +120,10 @@
     .liquid-segmented button.nav-active {
       background: rgba(255, 255, 255, 0.95);
       color: var(--apple-text);
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
       font-weight: 600;
     }
 
-    /* KPI Cards */
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .kpi-card {
       background: rgba(255, 255, 255, 0.68);
@@ -108,13 +138,12 @@
     .kpi-title { font-size: 0.78rem; font-weight: 700; color: var(--apple-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
     .kpi-value { font-size: 2.2rem; font-weight: 700; color: var(--apple-text); line-height: 1.2; margin-top: 4px; }
 
-    /* Modais Apple */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 9999;
       display: none; align-items: center; justify-content: center; backdrop-filter: blur(12px); padding: 20px;
     }
     .modal-content-apple {
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(35px) saturate(190%);
       -webkit-backdrop-filter: blur(35px) saturate(190%);
       border: 1px solid rgba(255, 255, 255, 0.9);
@@ -124,7 +153,6 @@
       max-height: 90vh; overflow-y: hidden; display: flex; flex-direction: column;
     }
 
-    /* Botões de Chamada */
     .btn-presenca { border-radius: 980px; font-weight: 600; padding: 6px 16px; font-size: 0.82rem; transition: 0.2s; border: 1px solid transparent; }
     .btn-presente { background: rgba(16, 185, 129, 0.15); color: #059669; border-color: rgba(16, 185, 129, 0.3); }
     .btn-falta { background: rgba(239, 68, 68, 0.15); color: #dc2626; border-color: rgba(239, 68, 68, 0.3); }
@@ -136,7 +164,6 @@
 </head>
 <body>
 
-  <!-- Floating Nav Header -->
   <div class="container px-3">
     <div class="glass-appbar d-flex align-items-center justify-content-between flex-wrap gap-3">
       <div class="d-flex align-items-center gap-3">
@@ -164,7 +191,6 @@
 
     <div id="dashboardContent" style="display: none;">
       
-      <!-- Top KPIs -->
       <div class="kpi-grid">
         <div class="kpi-card"><div class="kpi-title text-danger">Inscrições Pendentes</div><div class="kpi-value text-danger" id="kpiPendentes">0</div></div>
         <div class="kpi-card"><div class="kpi-title text-primary">Total Indicados</div><div class="kpi-value text-primary" id="kpiIndicados">0</div></div>
@@ -172,7 +198,6 @@
         <div class="kpi-card"><div class="kpi-title text-danger">Faltas</div><div class="kpi-value text-danger" id="kpiFaltas">0</div></div>
       </div>
 
-      <!-- Segmented iOS Tab Navigation -->
       <div class="text-center mb-4">
         <div class="liquid-segmented">
           <button id="btnAbaEscola" class="nav-active" onclick="mudarAba('escolas')"><span class="material-symbols-rounded fs-6">domain</span> Por Escola</button>
@@ -356,7 +381,7 @@
 
   <script>
     // ⚠️ SUBSTITUA PELA SUA URL DO APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/AKfycbw6gY49y19b-L6-90Ad7-RpJVdF-mZEPilE49RdH8ufMq7kkKVIlUS3xSZ57_4d9HMQ/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbz_dE2_6hB7vU8V0879v5z_pfwYgnB4o/exec";
 
     let dadosCache = null;
     let chartFreqInstance = null, chartEscolasInstance = null, chartTurnosInstance = null;
@@ -424,7 +449,7 @@
         let corProgresso = esc.percentual === 100 ? '#10b981' : '#0071e3';
         let statusBadge = esc.faltam > 0
           ? `<span class="text-danger fw-bold" style="font-size:0.82rem">${esc.faltam} pendente(s)</span>`
-          : `<span class="badge rounded-pill bg-success bg-opacity-15 text-success px-3 py-1"><span class="material-symbols-rounded align-middle fs-6">check</span> Concluído</span>`;
+          : `<span class="apple-badge apple-badge-green"><span class="material-symbols-rounded align-middle fs-6 me-1">check</span> Concluído</span>`;
 
         div.innerHTML += `
           <div class="glass-panel p-3 px-4 mb-3">
@@ -466,8 +491,8 @@
               </div>
               <div class="col-md-4 text-center mb-2 mb-md-0">
                 <div class="d-flex justify-content-center gap-2">
-                  <span class="badge rounded-pill bg-success bg-opacity-15 text-success px-3 py-2">Presentes: ${t.presentes}</span>
-                  <span class="badge rounded-pill bg-danger bg-opacity-15 text-danger px-3 py-2">Faltas: ${t.faltas}</span>
+                  <span class="apple-badge apple-badge-green">Presentes: ${t.presentes}</span>
+                  <span class="apple-badge apple-badge-red">Faltas: ${t.faltas}</span>
                 </div>
               </div>
               <div class="col-md-3 text-end d-flex flex-column gap-2 mt-3 mt-md-0">
@@ -493,7 +518,7 @@
             <div class="col-md-4">
               <div class="glass-panel p-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="badge rounded-pill bg-primary bg-opacity-15 text-primary fw-bold px-3 py-1">${p.polo}</span>
+                  <span class="apple-badge apple-badge-blue">${p.polo}</span>
                   <span class="text-muted" style="font-size:0.8rem;"><b>${p.taxaPresenca}%</b> Presença</span>
                 </div>
                 <div class="d-flex justify-content-between text-muted" style="font-size:0.82rem;"><span>Ativos:</span><strong class="text-dark">${p.total}</strong></div>
@@ -590,7 +615,7 @@
         escola.listaIndicados.forEach(p => {
           html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center">
                      <div><b>${p.nome}</b><small class="text-muted d-block">${p.comp}</small></div>
-                     <span class="badge rounded-pill bg-primary bg-opacity-15 text-primary px-3 py-1">${p.turno}</span>
+                     <span class="apple-badge apple-badge-blue">${p.turno}</span>
                    </div>`;
         });
         html += '</div>';
@@ -737,7 +762,7 @@
                 <td class="text-center">${e.total}</td>
                 <td class="text-center text-primary fw-bold">${e.indicados}</td>
                 <td class="text-center text-danger fw-bold">${e.faltam}</td>
-                <td class="text-center"><span class="badge rounded-pill ${e.status==='Não Iniciado'?'bg-danger':'bg-warning text-dark'} bg-opacity-25 px-3 py-1">${e.status}</span></td>
+                <td class="text-center"><span class="apple-badge ${e.status==='Não Iniciado'?'apple-badge-red':'apple-badge-gray'}">${e.status}</span></td>
               </tr>`;
           });
         }
