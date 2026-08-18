@@ -3,114 +3,316 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal de Formações - Indicação da Equipe Gestora</title>
+  <title>Portal de Formações - Indicação da Equipe Gestora - URE São Vicente</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    :root { --md-primary: #0061a4; --md-on-primary: #ffffff; --md-primary-container: #d1e4ff; --md-on-primary-container: #001d36; --md-surface: #ffffff; --md-surface-variant: #e0e2ec; --md-background: #f4f7fb; --md-error: #ba1a1a; --md-success: #146c2e; --md-success-container: #c4eed0; }
-    body { background-color: var(--md-background); font-family: 'Roboto', sans-serif; color: #1a1c1e; padding-bottom: 40px; }
-    .m3-appbar { background-color: var(--md-primary-container); color: var(--md-on-primary-container); padding: 20px 24px; border-radius: 0 0 32px 32px; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
-    .m3-card { background: var(--md-surface); border-radius: 28px; padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: none; margin-bottom: 24px; }
-    .m3-label { font-weight: 500; font-size: 0.95rem; color: #44474e; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-    .m3-input { background-color: var(--md-surface-variant); border: 1px solid transparent; border-radius: 16px; padding: 14px 20px; width: 100%; font-size: 1rem; transition: 0.3s; margin-bottom: 20px; }
-    .m3-input:focus { outline: none; border-color: var(--md-primary); background-color: var(--md-surface); box-shadow: 0 0 0 4px rgba(0, 97, 164, 0.1); }
-    select.m3-input { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2344474e%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 20px top 50%; background-size: 12px auto; }
-    .m3-input-sm { padding: 10px 16px; border-radius: 12px; font-size: 0.9rem; margin-bottom: 0px; }
-    .m3-btn { border-radius: 100px; padding: 14px 32px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; border: none; width: 100%; }
-    .m3-btn-primary { background-color: var(--md-primary); color: var(--md-on-primary); }
-    .m3-list-item { background: var(--md-surface); border: 1px solid var(--md-surface-variant); border-radius: 20px; padding: 20px; margin-bottom: 16px; transition: 0.2s; }
-    .m3-avatar { width: 48px; height: 48px; background-color: var(--md-primary-container); color: var(--md-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .m3-alert { border-radius: 16px; padding: 16px 24px; display: flex; align-items: center; gap: 12px; font-weight: 500; margin-bottom: 24px; }
-    .form-switch .form-check-input { width: 2.5em; height: 1.25em; cursor: pointer; }
-    .afastado-badge { background-color: #e3e3e3; color: #5f6368; padding: 6px 12px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; }
-    .legenda-info { font-size: 0.85rem; background-color: #eef2f6; padding: 10px 16px; border-radius: 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-    .drawer-efetivo { background-color: #f8fafd; border: 1px dashed var(--md-primary); border-radius: 16px; padding: 16px; margin-top: 16px; display: none; }
+    :root {
+      --apple-bg: #f5f5f7;
+      --apple-primary: #0071e3;
+      --apple-primary-hover: #0077ed;
+      --apple-text: #1d1d1f;
+      --apple-text-secondary: #86868b;
+      --apple-card-bg: rgba(255, 255, 255, 0.72);
+      --apple-card-border: rgba(255, 255, 255, 0.85);
+      --apple-shadow: 0 12px 36px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
+      --apple-glass-inset: inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 -1px 1px rgba(0, 0, 0, 0.02);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--apple-bg);
+      background-image: 
+        radial-gradient(at 10% 15%, rgba(0, 113, 227, 0.12) 0px, transparent 45%),
+        radial-gradient(at 85% 10%, rgba(99, 102, 241, 0.14) 0px, transparent 40%),
+        radial-gradient(at 50% 85%, rgba(236, 72, 153, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(56, 189, 248, 0.12) 0px, transparent 40%);
+      background-attachment: fixed;
+      font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      color: var(--apple-text);
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 60px;
+    }
+
+    /* Apple Liquid Glass Container */
+    .glass-panel {
+      background: var(--apple-card-bg);
+      backdrop-filter: blur(30px) saturate(190%);
+      -webkit-backdrop-filter: blur(30px) saturate(190%);
+      border: 1px solid var(--apple-card-border);
+      border-radius: 28px;
+      box-shadow: var(--apple-shadow), var(--apple-glass-inset);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Header Nav */
+    .glass-appbar {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 980px;
+      padding: 12px 24px;
+      margin: 24px auto 32px auto;
+      max-width: 820px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), var(--apple-glass-inset);
+    }
+
+    .apple-badge-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0071e3, #60a5fa);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+    }
+
+    /* Inputs Apple Style */
+    .liquid-input {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.09);
+      border-radius: 14px;
+      padding: 13px 18px;
+      width: 100%;
+      font-size: 0.95rem;
+      color: var(--apple-text);
+      transition: all 0.2s ease;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+    .liquid-input:focus {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: var(--apple-primary);
+      box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.16);
+      outline: none;
+    }
+
+    select.liquid-input {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2386868b%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px top 50%;
+      background-size: 10px auto;
+    }
+
+    .liquid-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--apple-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Apple Pill Button */
+    .liquid-btn-primary {
+      background: linear-gradient(180deg, #0077ed 0%, #0062cc 100%);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 980px;
+      padding: 14px 28px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      box-shadow: 0 4px 14px rgba(0, 119, 237, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .liquid-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(0, 119, 237, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+      color: #fff;
+    }
+    .liquid-btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 8px rgba(0, 119, 237, 0.3);
+    }
+    .liquid-btn-primary:disabled {
+      opacity: 0.6;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    /* Cards Professores */
+    .prof-card {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      transition: all 0.2s ease;
+    }
+    .prof-card:hover {
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .prof-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(0, 113, 227, 0.1);
+      color: var(--apple-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Drawer Efetivo Exercício */
+    .drawer-efetivo {
+      background: rgba(240, 246, 255, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 113, 227, 0.25);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 14px;
+      display: none;
+    }
+
+    .liquid-alert {
+      border-radius: 16px;
+      padding: 14px 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      font-weight: 500;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .liquid-alert-danger { background: rgba(255, 219, 219, 0.8); color: #c92a2a; border-color: rgba(255, 150, 150, 0.4); }
+    .liquid-alert-info { background: rgba(224, 242, 254, 0.8); color: #0369a1; border-color: rgba(186, 230, 253, 0.4); }
   </style>
 </head>
 <body>
-  <div class="container max-width-800 px-0">
-    <div class="m3-appbar mx-3 mx-md-auto" style="max-width: 800px;">
-      <span class="material-symbols-rounded" style="font-size: 40px;">school</span>
-      <div>
-        <h2 class="m-0 fs-5" id="appbarTitle">Portal de Formações</h2>
-        <p class="m-0 opacity-75" style="font-size:0.9rem">Indicação da Equipe Gestora</p>
+
+  <!-- Floating Apple Nav -->
+  <div class="container px-3">
+    <div class="glass-appbar d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <div class="apple-badge-icon"><span class="material-symbols-rounded fs-4">school</span></div>
+        <div>
+          <h1 class="m-0 fs-6 fw-bold" id="appbarTitle">Portal de Formações - URE São Vicente</h1>
+          <p class="m-0 text-muted" style="font-size:0.8rem">Indicação da Equipe Gestora</p>
+        </div>
+      </div>
+      <div id="btnSairNav" style="display:none;">
+        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-bold" onclick="reiniciarApp()"><span class="material-symbols-rounded align-middle fs-6">logout</span> Sair</button>
       </div>
     </div>
   </div>
 
-  <div class="container" style="max-width: 800px;">
-    <div id="mensagemGlobal" class="m3-alert" style="display:none;"></div>
+  <div class="container" style="max-width: 820px;">
+    <div id="mensagemGlobal" class="liquid-alert" style="display:none;"></div>
 
-    <div class="m3-card" id="cardLogin">
-      <h4 class="mb-4 fw-bold"><span class="material-symbols-rounded align-middle text-primary me-2">login</span>Acesso da Unidade</h4>
+    <!-- TELA DE LOGIN / IDENTIFICAÇÃO -->
+    <div class="glass-panel p-4 p-md-5" id="cardLogin">
+      <h3 class="fw-bold mb-4 d-flex align-items-center gap-2" style="letter-spacing: -0.02em;">
+        <span class="material-symbols-rounded text-primary fs-3">lock_open</span> Acesso da Unidade Escolar
+      </h3>
       
-      <label class="m3-label">1. Componente / Área da Formação</label>
-      <select id="selectComponente" class="m3-input mb-4"><option value="">Carregando formações ativas...</option></select>
-
-      <label class="m3-label">2. Selecione o Polo / Município</label>
-      <select id="selectPolo" class="m3-input mb-2" onchange="carregarEscolas()"><option value="">Carregando...</option></select>
-      
-      <div class="legenda-info text-muted">
-        <span class="material-symbols-rounded" style="color: var(--md-primary); font-size: 20px;">info</span>
-        <span><b>Polo MIP:</b> Compreende as unidades escolares de Mongaguá, Itanhaém e Peruíbe.</span>
+      <div class="mb-3">
+        <label class="liquid-label">1. Componente / Área da Formação</label>
+        <select id="selectComponente" class="liquid-input"><option value="">Carregando formações ativas...</option></select>
       </div>
 
-      <label class="m3-label">3. Unidade Escolar</label>
-      <select id="selectEscola" class="m3-input"><option value="">-- Selecione primeiro o polo --</option></select>
-      
-      <label class="m3-label">4. Senha de Acesso (CIE)</label>
-      <input type="password" id="inputSenha" class="m3-input mb-4" placeholder="Digite o código da escola">
-      
-      <div class="p-3 mb-4 rounded-4" style="background-color: #f8fafd; border: 1px solid var(--md-primary-container);">
-        <h6 class="fw-bold text-primary mb-3"><span class="material-symbols-rounded align-middle fs-5 me-1">badge</span> Identificação do Responsável</h6>
-        <label class="m3-label" style="font-size: 0.9rem;">Nome Completo</label>
-        <input type="text" id="inputNomeGestor" class="m3-input mb-3" placeholder="Ex: Maria da Silva">
-        <label class="m3-label" style="font-size: 0.9rem;">Cargo na Unidade</label>
-        <select id="selectCargoGestor" class="m3-input m-0">
-          <option value="">-- Selecione o cargo --</option>
-          <option value="Diretor(a)">Diretor(a) de Escola</option>
-          <option value="Vice-diretor(a)">Vice-diretor(a)</option>
-          <option value="Coordenador(a)">Coordenador(a) / CGPG</option>
-        </select>
+      <div class="mb-3">
+        <label class="liquid-label">2. Polo / Município</label>
+        <select id="selectPolo" class="liquid-input mb-2" onchange="carregarEscolas()"><option value="">Carregando polos...</option></select>
+        <div class="p-2 px-3 rounded-3 d-flex align-items-center gap-2 text-muted" style="background: rgba(0,0,0,0.03); font-size: 0.8rem;">
+          <span class="material-symbols-rounded text-primary fs-6">info</span>
+          <span><b>Polo MIP:</b> Compreende Mongaguá, Itanhaém e Peruíbe.</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="liquid-label">3. Unidade Escolar</label>
+        <select id="selectEscola" class="liquid-input"><option value="">-- Selecione primeiro o polo --</option></select>
+      </div>
+
+      <div class="mb-4">
+        <label class="liquid-label">4. Senha de Acesso (CIE)</label>
+        <input type="password" id="inputSenha" class="liquid-input" placeholder="Digite o código da escola">
       </div>
       
-      <button class="m3-btn m3-btn-primary mt-2" id="btnAcesso" onclick="autenticarEscola()">Acessar Painel</button>
+      <div class="p-3 mb-4 rounded-4" style="background: rgba(0, 113, 227, 0.05); border: 1px solid rgba(0, 113, 227, 0.15);">
+        <h6 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2" style="font-size:0.9rem;">
+          <span class="material-symbols-rounded fs-5">badge</span> Identificação do Responsável
+        </h6>
+        <div class="row g-2">
+          <div class="col-md-7">
+            <label class="liquid-label" style="font-size:0.75rem;">Nome Completo</label>
+            <input type="text" id="inputNomeGestor" class="liquid-input" placeholder="Ex: Maria da Silva">
+          </div>
+          <div class="col-md-5">
+            <label class="liquid-label" style="font-size:0.75rem;">Cargo na Unidade</label>
+            <select id="selectCargoGestor" class="liquid-input">
+              <option value="">-- Cargo --</option>
+              <option value="Diretor(a)">Diretor(a) de Escola</option>
+              <option value="Vice-diretor(a)">Vice-diretor(a)</option>
+              <option value="Coordenador(a)">Coordenador(a) / CGPG</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <button class="liquid-btn-primary" id="btnAcesso" onclick="autenticarEscola()">Acessar Painel</button>
     </div>
 
-    <!-- PAINEL DOS PROFESSORES -->
+    <!-- PAINEL DE INDICAÇÃO DOS PROFESSORES -->
     <div id="areaProfessores" style="display:none;">
-      <div class="d-flex align-items-center justify-content-between mb-4">
+      <div class="glass-panel p-4 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div>
-          <h4 class="fw-bold mb-1" id="nomeEscolaLabel">Escola</h4>
-          <span class="badge bg-secondary me-2" id="nomePoloLabel">Polo</span>
-          <small class="text-muted fw-bold" id="nomeResponsavelLabel">Responsável</small>
+          <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 py-1 mb-1 fw-bold" id="nomePoloLabel">Polo</span>
+          <h4 class="fw-bold m-0" id="nomeEscolaLabel">Escola</h4>
+          <small class="text-muted fw-bold" id="nomeResponsavelLabel">Gestor Responsável</small>
         </div>
-        <button class="btn btn-outline-secondary rounded-circle p-2" onclick="reiniciarApp()"><span class="material-symbols-rounded">logout</span></button>
       </div>
 
       <div id="corpoTabela"></div>
 
-      <div class="m3-card mt-4" id="areaSalvar" style="background-color: #f8fafd; border: 1px solid var(--md-primary-container);">
-        <label class="m3-label text-primary">
+      <div class="glass-panel p-4 mt-4" id="areaSalvar">
+        <label class="liquid-label text-primary">
           <span class="material-symbols-rounded fs-5">mail</span>
           E-mail para comprovante oficial (obrigatório) *
         </label>
-        <input type="email" id="inputEmail" class="m3-input mb-4" placeholder="escola@educacao.sp.gov.br" required>
-        <button id="btnSalvar" class="m3-btn m3-btn-primary m3-btn-lg" onclick="salvar()">Salvar Indicações</button>
+        <input type="email" id="inputEmail" class="liquid-input mb-3" placeholder="escola@educacao.sp.gov.br" required>
+        <button id="btnSalvar" class="liquid-btn-primary py-3" onclick="salvar()">Salvar Indicações</button>
       </div>
     </div>
 
     <!-- TELA DE SUCESSO -->
-    <div class="m3-card text-center" id="areaSucesso" style="display:none;">
-      <span class="material-symbols-rounded text-success mb-3" style="font-size: 60px;">check_circle</span>
+    <div class="glass-panel p-5 text-center" id="areaSucesso" style="display:none;">
+      <div class="apple-badge-icon mx-auto mb-3" style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669);">
+        <span class="material-symbols-rounded fs-2">check_circle</span>
+      </div>
       <h3 class="fw-bold text-success">Salvo com Sucesso!</h3>
       <p class="text-muted mb-4" id="textoConfirmacaoEmail">Uma cópia do comprovante oficial foi encaminhada para o e-mail informado.</p>
       
       <div class="text-start mt-3 table-responsive">
-        <table class="table table-bordered mt-2 text-start">
+        <table class="table table-hover align-middle">
           <thead class="table-light">
             <tr>
               <th>Professor</th>
@@ -121,19 +323,18 @@
           <tbody id="tabelaResumo"></tbody>
         </table>
       </div>
-      <button class="m3-btn m3-btn-primary mt-4" onclick="reiniciarApp()">Voltar ao Início</button>
+      <button class="liquid-btn-primary mt-4" onclick="reiniciarApp()">Concluir e Voltar</button>
     </div>
   </div>
 
   <script>
-    // ⚠️ COLOQUE AQUI A URL GERADA NA IMPLANTAÇÃO DO APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/AKfycbw6gY49y19b-L6-90Ad7-RpJVdF-mZEPilE49RdH8ufMq7kkKVIlUS3xSZ57_4d9HMQ/exec";
+    // ⚠️ SUBSTITUA PELA SUA URL DO APPS SCRIPT
+    const API_URL = "https://script.google.com/macros/s/AKfycbz_dE2_6hB7vU8V0879v5z_pfwYgnB4o/exec";
 
     let estruturaCompleta = null, dadosAtuais = null, poloSelecionado = null;
     let nomeGestorAtual = "", cargoGestorAtual = "", componenteGlobal = ""; 
 
     window.onload = function() { 
-      // Busca Polos e Escolas
       fetch(`${API_URL}?action=getEstrutura`)
         .then(res => res.json())
         .then(p => {
@@ -142,7 +343,6 @@
         })
         .catch(() => exibirMensagem('error', 'Falha ao carregar polos escolares.'));
 
-      // Busca Componentes
       fetch(`${API_URL}?action=getComponentes`)
         .then(res => res.json())
         .then(c => {
@@ -160,6 +360,7 @@
       document.getElementById('areaProfessores').style.display = 'none'; 
       document.getElementById('areaSucesso').style.display = 'none';
       document.getElementById('mensagemGlobal').style.display = 'none'; 
+      document.getElementById('btnSairNav').style.display = 'none';
       document.getElementById('cardLogin').style.display = 'block';
       document.getElementById('inputSenha').value = ''; 
       document.getElementById('inputNomeGestor').value = ''; 
@@ -196,18 +397,19 @@
           
           document.getElementById('cardLogin').style.display = 'none'; 
           document.getElementById('mensagemGlobal').style.display = 'none';
+          document.getElementById('btnSairNav').style.display = 'block';
           
-          document.getElementById('appbarTitle').innerText = `Formação - ${componenteGlobal}`;
+          document.getElementById('appbarTitle').innerText = `${componenteGlobal}`;
           document.getElementById('nomeEscolaLabel').innerText = e; 
           document.getElementById('nomePoloLabel').innerText = res.polo;
-          document.getElementById('nomeResponsavelLabel').innerText = `Gestor(a): ${nomeGestorAtual}`;
+          document.getElementById('nomeResponsavelLabel').innerText = `Gestor(a): ${nomeGestorAtual} (${cargoGestorAtual})`;
           
           poloSelecionado = res.polo; 
           exibirProfessores(res);
         })
-        .catch(err => {
+        .catch(() => {
           document.getElementById('btnAcesso').innerHTML = 'Acessar Painel';
-          exibirMensagem('error', 'Falha ao autenticar. Verifique sua conexão.');
+          exibirMensagem('error', 'Falha ao conectar com o servidor.');
         });
     }
 
@@ -218,85 +420,84 @@
 
       if (!dados.professores || dados.professores.length === 0) {
         tbody.innerHTML = `
-          <div class="m3-alert m3-alert-danger mt-3">
+          <div class="liquid-alert liquid-alert-danger">
             <span class="material-symbols-rounded">person_off</span> 
-            Nenhum professor de ${componenteGlobal} localizado para esta unidade. Caso seja um erro, contate a Diretoria de Ensino.
+            Nenhum professor de ${componenteGlobal} localizado para esta unidade.
           </div>`;
         document.getElementById('areaSalvar').style.display = 'none';
         document.getElementById('areaProfessores').style.display = 'block';
-        window.scrollTo(0, 0);
         return; 
       }
 
       dados.professores.forEach(prof => {
         if (prof.situacao === "Afastado") {
           tbody.innerHTML += `
-            <div class="m3-list-item d-md-flex align-items-center justify-content-between" style="background-color: #f1f3f4;">
+            <div class="prof-card d-md-flex align-items-center justify-content-between opacity-75">
               <div class="d-flex align-items-center mb-2 mb-md-0">
-                <div class="m3-avatar" style="background-color: #e3e3e3; color: #5f6368;"><span class="material-symbols-rounded">person_off</span></div>
-                <div class="ms-3"><div class="fw-bold text-muted">${prof.nome}</div><small>${prof.comp}</small></div>
+                <div class="prof-avatar" style="background: rgba(0,0,0,0.06); color: #86868b;"><span class="material-symbols-rounded">person_off</span></div>
+                <div class="ms-3"><div class="fw-bold text-muted">${prof.nome}</div><small class="text-muted">${prof.comp}</small></div>
               </div>
-              <div><span class="afastado-badge"><span class="material-symbols-rounded align-middle fs-6">block</span> Não leciona / Afastado</span></div>
+              <span class="badge rounded-pill bg-secondary bg-opacity-25 text-secondary px-3 py-2">Não leciona / Afastado</span>
             </div>`;
         } 
         else if (prof.turnoAtual && prof.turnoAtual !== "") {
           tbody.innerHTML += `
-            <div class="m3-list-item d-md-flex align-items-center justify-content-between" style="background-color: #f8fafd; border-color: #d1e4ff;">
+            <div class="prof-card d-md-flex align-items-center justify-content-between" style="border-left: 4px solid var(--apple-primary);">
               <div class="d-flex align-items-center mb-2 mb-md-0">
-                <div class="m3-avatar" style="background-color: var(--md-success-container); color: var(--md-success);"><span class="material-symbols-rounded">lock</span></div>
+                <div class="prof-avatar" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><span class="material-symbols-rounded">check_circle</span></div>
                 <div class="ms-3">
                   <div class="fw-bold">${prof.nome}</div>
                   <small class="text-success fw-bold">Indicação Concluída - ${prof.comp}</small>
                   ${prof.rg ? `<div class="text-muted" style="font-size:0.75rem;">RG: ${prof.rg} | CPF: ${prof.cpf} | Ag: ${prof.agencia} | CC: ${prof.conta}</div>` : ''}
                 </div>
               </div>
-              <div class="mt-2 mt-md-0"><span class="badge bg-primary fs-6 py-2 px-3 rounded-pill">${prof.turnoAtual}</span></div>
+              <span class="badge rounded-pill bg-primary bg-opacity-15 text-primary fs-6 px-3 py-2">${prof.turnoAtual}</span>
             </div>`;
         } 
         else {
           todosJaIndicados = false;
-          let opts = '<option value="">-- Turno --</option>' + dados.turnos.map(t => `<option value="${t.nome}" ${t.esgotado?'disabled':''}>${t.nome}${t.esgotado?' (LOTADO)':` (${t.vagasRestantes} vagas)`}</option>`).join('');
+          let opts = '<option value="">-- Escolha o Turno --</option>' + dados.turnos.map(t => `<option value="${t.nome}" ${t.esgotado?'disabled':''}>${t.nome}${t.esgotado?' (LOTADO)':` (${t.vagasRestantes} vagas)`}</option>`).join('');
           
           tbody.innerHTML += `
-            <div class="m3-list-item">
+            <div class="prof-card">
               <div class="d-flex align-items-center mb-3">
-                <div class="m3-avatar"><span class="material-symbols-rounded">person</span></div>
-                <div class="ms-3"><div class="fw-bold fs-5">${prof.nome}</div><small class="text-muted">${prof.comp}</small></div>
+                <div class="prof-avatar"><span class="material-symbols-rounded">person</span></div>
+                <div class="ms-3"><div class="fw-bold fs-6">${prof.nome}</div><small class="text-muted">${prof.comp}</small></div>
               </div>
               <div class="row align-items-center">
                 <div class="col-md-7 mb-2 mb-md-0">
-                  <select class="m3-input select-turno m-0" data-linha="${prof.linha}" data-nome="${prof.nome}" onchange="onChangeTurno(this, ${prof.linha})">${opts}</select>
+                  <select class="liquid-input select-turno m-0" data-linha="${prof.linha}" data-nome="${prof.nome}" onchange="onChangeTurno(this, ${prof.linha})">${opts}</select>
                 </div>
                 <div class="col-md-5">
                   <div class="form-check form-switch p-0 m-0 d-flex align-items-center justify-content-md-end gap-2">
-                    <label class="form-check-label text-danger" style="font-size:0.9rem;" for="afas_${prof.linha}">Não leciona/Afastado</label>
+                    <label class="form-check-label text-danger" style="font-size:0.85rem;" for="afas_${prof.linha}">Não leciona / Afastado</label>
                     <input class="form-check-input m-0 check-afastado" type="checkbox" id="afas_${prof.linha}" onchange="toggleAfastado(this, ${prof.linha})">
                   </div>
                 </div>
               </div>
 
-              <!-- DADOS DO EFETIVO EXERCÍCIO -->
+              <!-- DRAWER EFETIVO EXERCÍCIO -->
               <div class="drawer-efetivo" id="drawer_${prof.linha}">
-                <h6 class="fw-bold text-primary mb-2 d-flex align-items-center gap-1" style="font-size:0.85rem;">
+                <h6 class="fw-bold text-primary mb-2 d-flex align-items-center gap-1" style="font-size:0.82rem;">
                   <span class="material-symbols-rounded fs-6">account_balance</span>
                   Dados para Lista de Efetivo Exercício (Obrigatório)
                 </h6>
                 <div class="row g-2">
                   <div class="col-md-3 col-6">
-                    <label class="text-muted" style="font-size:0.75rem;">RG *</label>
-                    <input type="text" class="m3-input m3-input-sm input-rg" id="rg_${prof.linha}" placeholder="Ex: 00.000.000-0">
+                    <label class="liquid-label" style="font-size:0.7rem;">RG *</label>
+                    <input type="text" class="liquid-input p-2 py-1 fs-6" id="rg_${prof.linha}" placeholder="00.000.000-0">
                   </div>
                   <div class="col-md-3 col-6">
-                    <label class="text-muted" style="font-size:0.75rem;">CPF *</label>
-                    <input type="text" class="m3-input m3-input-sm input-cpf" id="cpf_${prof.linha}" placeholder="000.000.000-00">
+                    <label class="liquid-label" style="font-size:0.7rem;">CPF *</label>
+                    <input type="text" class="liquid-input p-2 py-1 fs-6" id="cpf_${prof.linha}" placeholder="000.000.000-00">
                   </div>
                   <div class="col-md-3 col-6">
-                    <label class="text-muted" style="font-size:0.75rem;">Agência (com dígito) *</label>
-                    <input type="text" class="m3-input m3-input-sm input-agencia" id="ag_${prof.linha}" placeholder="Ex: 1234-5">
+                    <label class="liquid-label" style="font-size:0.7rem;">Agência *</label>
+                    <input type="text" class="liquid-input p-2 py-1 fs-6" id="ag_${prof.linha}" placeholder="1234-5">
                   </div>
                   <div class="col-md-3 col-6">
-                    <label class="text-muted" style="font-size:0.75rem;">Conta Corrente (com dígito) *</label>
-                    <input type="text" class="m3-input m3-input-sm input-conta" id="cc_${prof.linha}" placeholder="Ex: 123456-7">
+                    <label class="liquid-label" style="font-size:0.7rem;">Conta Corrente *</label>
+                    <input type="text" class="liquid-input p-2 py-1 fs-6" id="cc_${prof.linha}" placeholder="123456-7">
                   </div>
                 </div>
               </div>
@@ -313,11 +514,7 @@
     function onChangeTurno(sel, linha) {
       validarLimite(sel);
       let drawer = document.getElementById(`drawer_${linha}`);
-      if (sel.value !== "") {
-        drawer.style.display = 'block';
-      } else {
-        drawer.style.display = 'none';
-      }
+      drawer.style.display = (sel.value !== "") ? 'block' : 'none';
     }
 
     function toggleAfastado(checkbox, linha) {
@@ -337,16 +534,15 @@
       let count = Array.from(document.querySelectorAll('.select-turno')).filter(s => s.value === sel.value).length;
       let turnoInfo = dadosAtuais.turnos.find(t => t.nome === sel.value);
       if(turnoInfo && count > turnoInfo.vagasRestantes) { 
-        exibirMensagem('error', 'Vagas insuficientes para esta seleção.'); 
+        exibirMensagem('error', 'Vagas insuficientes para este turno.'); 
         sel.value = ""; 
       }
     }
 
     function salvar() {
       let email = document.getElementById('inputEmail').value.trim();
-      
       if (!email || !email.includes('@') || !email.includes('.')) {
-        return exibirMensagem('error', 'Por favor, informe um e-mail válido para envio do comprovante oficial.');
+        return exibirMensagem('error', 'Por favor, informe um e-mail válido para envio do comprovante.');
       }
 
       let indicacoes = [];
@@ -367,27 +563,18 @@
           }
 
           indicacoes.push({ 
-            linha: linha, 
-            turno: s.value, 
-            afastado: cb.checked, 
-            nome: s.getAttribute('data-nome'),
-            rg: rg, cpf: cpf, agencia: ag, conta: cc
+            linha: linha, turno: s.value, afastado: cb.checked, 
+            nome: s.getAttribute('data-nome'), rg: rg, cpf: cpf, agencia: ag, conta: cc
           }); 
         }
       });
 
-      if(indicacoes.length === 0) {
-        return exibirMensagem('error', 'Preencha o turno ou marque como afastado para salvar.');
-      }
-
-      if(erroValidacaoEfetivo) {
-        return exibirMensagem('error', 'Por favor, preencha todos os campos do Efetivo Exercício (RG, CPF, Agência e Conta) para os professores indicados.');
-      }
+      if(indicacoes.length === 0) return exibirMensagem('error', 'Selecione o turno ou marque como afastado para salvar.');
+      if(erroValidacaoEfetivo) return exibirMensagem('error', 'Preencha todos os campos do Efetivo Exercício (RG, CPF, Agência e Conta) dos professores indicados.');
 
       document.getElementById('btnSalvar').innerHTML = 'Salvando...'; 
       document.getElementById('btnSalvar').disabled = true;
 
-      // Requisição POST para o Apps Script
       fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -413,11 +600,9 @@
           
           document.getElementById('tabelaResumo').innerHTML = res.resumo.map(r => `
             <tr>
-              <td class="fw-bold align-middle">${r.nome}</td>
-              <td class="align-middle"><span class="badge bg-primary bg-opacity-10 text-primary p-2">${r.status}</span></td>
-              <td class="align-middle text-muted" style="font-size: 0.85rem;">
-                <span class="material-symbols-rounded align-middle fs-6 text-primary">location_on</span> ${r.local}
-              </td>
+              <td class="fw-bold">${r.nome}</td>
+              <td><span class="badge rounded-pill bg-primary bg-opacity-10 text-primary p-2">${r.status}</span></td>
+              <td class="text-muted"><span class="material-symbols-rounded align-middle fs-6 text-primary">location_on</span> ${r.local}</td>
             </tr>
           `).join('');
 
@@ -427,16 +612,16 @@
           exibirMensagem('error', res.mensagem); 
         }
       })
-      .catch(err => {
+      .catch(() => {
         document.getElementById('btnSalvar').innerHTML = 'Salvar Indicações'; 
         document.getElementById('btnSalvar').disabled = false;
-        exibirMensagem('error', 'Erro ao salvar. Verifique sua conexão e tente novamente.');
+        exibirMensagem('error', 'Erro ao salvar. Verifique sua conexão.');
       });
     }
 
     function exibirMensagem(tipo, txt) {
       let div = document.getElementById('mensagemGlobal');
-      div.className = `m3-alert m3-alert-${tipo==='error'?'danger':'info'}`;
+      div.className = `liquid-alert liquid-alert-${tipo==='error'?'danger':'info'}`;
       div.innerHTML = `<span class="material-symbols-rounded">${tipo==='error'?'error':'info'}</span> ${txt}`;
       div.style.display = 'flex'; 
       window.scrollTo(0,0);
