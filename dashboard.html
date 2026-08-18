@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel dos Especialistas - Analytics & Gestão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root { --md-background: #f4f7fb; --md-surface: #ffffff; --md-primary: #0061a4; --md-success: #146c2e; --md-danger: #ba1a1a; --md-secondary: #535f70; }
+    body { background-color: var(--md-background); font-family: 'Roboto', sans-serif; color: #1a1c1e; padding-bottom: 40px; }
+    .m3-appbar { background: linear-gradient(135deg, #001d36, #004a7a); color: white; padding: 20px 24px; border-radius: 0 0 32px 32px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--md-surface); border-radius: 20px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #e0e2ec; }
+    .kpi-title { font-size: 0.85rem; color: #44474e; font-weight: 600; text-transform: uppercase; }
+    .kpi-value { font-size: 2.2rem; font-weight: 700; color: #1a1c1e; line-height: 1.2; }
+    .school-card { background: var(--md-surface); border-radius: 20px; padding: 20px; margin-bottom: 16px; border: 1px solid #e0e2ec; }
+    .analytics-card { background: var(--md-surface); border-radius: 24px; padding: 24px; border: 1px solid #e0e2ec; box-shadow: 0 2px 12px rgba(0,0,0,0.04); height: 100%; }
+    .prog-bg { height: 8px; background-color: #e0e2ec; border-radius: 8px; width: 100%; overflow: hidden; margin-top: 12px; }
+    .prog-fill { height: 100%; border-radius: 8px; transition: 1s ease-out; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 20px; }
+    .modal-content { background: var(--md-surface); border-radius: 24px; width: 100%; max-width: 700px; padding: 24px; max-height: 90vh; overflow-y: hidden; display: flex; flex-direction: column; }
+    .btn-presenca { border-radius: 100px; font-weight: 600; padding: 6px 16px; font-size: 0.85rem; transition: 0.2s; border: 1px solid transparent; }
+    .btn-presente { background-color: #c4eed0; color: #146c2e; border-color: #146c2e; }
+    .btn-falta { background-color: #ffdad6; color: #ba1a1a; border-color: #ba1a1a; }
+    .btn-neutro { background-color: #f1f3f4; color: #5f6368; border-color: #dadce0; }
+    .nav-tabs-custom { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+    .nav-tabs-custom button { border: none; border-radius: 100px; padding: 10px 20px; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+    .nav-active { background-color: var(--md-primary); color: white; box-shadow: 0 4px 12px rgba(0,97,164,0.3); }
+    .nav-inactive { background-color: transparent; border: 1px solid #74777f !important; color: #44474e; }
+    .appbar-select { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 8px; padding: 6px 12px; outline: none; }
+    .appbar-select option { color: #333; }
+    .polo-tag { font-weight: 700; font-size: 0.8rem; padding: 4px 12px; border-radius: 50px; background-color: #e8f0fe; color: var(--md-primary); }
+  </style>
+</head>
+<body>
+  <div class="container max-width-1000 px-0">
+    <div class="m3-appbar mx-3 mx-md-auto" style="max-width: 1000px;">
+      <div class="d-flex align-items-center gap-3">
+        <span class="material-symbols-rounded fs-1">monitoring</span>
+        <div>
+          <h2 class="m-0 fs-5">Painel dos Especialistas</h2>
+          <select id="selectComponenteDash" class="appbar-select mt-1" onchange="carregarDados()">
+            <option value="Todos">Visão Geral (Todos os Componentes)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn text-white p-2" onclick="carregarDados()"><span class="material-symbols-rounded">refresh</span></button>
+    </div>
+  </div>
+
+  <div class="container" style="max-width: 1000px;">
+    <div id="loadingScreen" class="text-center py-5"><div class="spinner-border text-primary"></div><h5 class="mt-3">Buscando dados e métricas...</h5></div>
+    <div id="dashboardContent" style="display: none;">
+      
+      <!-- KPIs do Topo -->
+      <div class="kpi-grid">
+        <div class="kpi-card text-center"><div class="kpi-title">Inscrições Pendentes</div><div class="kpi-value text-danger" id="kpiPendentes">0</div></div>
+        <div class="kpi-card text-center"><div class="kpi-title">Total Indicados</div><div class="kpi-value text-primary" id="kpiIndicados">0</div></div>
+        <div class="kpi-card text-center" style="background-color: #f6fcf8;"><div class="kpi-title text-success">Presentes</div><div class="kpi-value text-success" id="kpiPresentes">0</div></div>
+        <div class="kpi-card text-center" style="background-color: #fffaf9;"><div class="kpi-title text-danger">Faltas</div><div class="kpi-value text-danger" id="kpiFaltas">0</div></div>
+      </div>
+
+      <!-- Navegação em 4 Abas -->
+      <div class="nav-tabs-custom mt-2">
+        <button id="btnAbaEscola" class="nav-active" onclick="mudarAba('escolas')"><span class="material-symbols-rounded align-middle fs-5 me-1">domain</span> Logística (Por Escola)</button>
+        <button id="btnAbaTurno" class="nav-inactive" onclick="mudarAba('turnos')"><span class="material-symbols-rounded align-middle fs-5 me-1">checklist</span> Frequência (Por Turno)</button>
+        <button id="btnAbaConsolidado" class="nav-inactive" onclick="mudarAba('consolidado')"><span class="material-symbols-rounded align-middle fs-5 me-1">table_chart</span> Consolidado (Polos & Componentes)</button>
+        <button id="btnAbaAnalytics" class="nav-inactive" onclick="mudarAba('analytics')"><span class="material-symbols-rounded align-middle fs-5 me-1">insights</span> Analytics & Diagnóstico</button>
+      </div>
+
+      <!-- ABA 1: VISÃO POR ESCOLA -->
+      <div id="viewEscolas">
+        <input type="text" id="inputPesquisaEscola" class="form-control rounded-pill px-4 py-2 mb-4" placeholder="Pesquisar escola..." onkeyup="filtrarEscolas()">
+        <div id="listaEscolas"></div>
+      </div>
+
+      <!-- ABA 2: VISÃO POR TURNO -->
+      <div id="viewTurnos" style="display: none;">
+        <div class="d-flex justify-content-end mb-3">
+          <button class="btn btn-outline-primary rounded-pill px-4 py-2 fw-bold" onclick="exportarEfetivoGeral()">
+            <span class="material-symbols-rounded align-middle fs-5 me-1">badge</span> Baixar Lista Geral de Efetivo Exercício (CSV)
+          </button>
+        </div>
+        <div id="listaTurnos"></div>
+      </div>
+
+      <!-- ABA 3: CONSOLIDADO -->
+      <div id="viewConsolidado" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold m-0 text-primary">Balanço Regional Consolidado</h5>
+            <small class="text-muted">Totalização estratificada por polo territorial e área de formação.</small>
+          </div>
+          <button class="btn btn-outline-success rounded-pill px-4 py-2 fw-bold" onclick="exportarRelatorioConsolidado()">
+            <span class="material-symbols-rounded align-middle fs-5 me-1">download</span> Baixar Consolidado (CSV)
+          </button>
+        </div>
+
+        <h6 class="fw-bold text-secondary mb-3 d-flex align-items-center gap-2">
+          <span class="material-symbols-rounded text-primary">location_city</span>
+          Totalização por Polo Regional
+        </h6>
+        
+        <div class="row g-3 mb-4" id="cardsPolosGrid"></div>
+
+        <div class="analytics-card mb-5">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Polo Territorial</th>
+                  <th class="text-center">Total Docentes Ativos</th>
+                  <th class="text-center">Indicados</th>
+                  <th class="text-center">Pendentes</th>
+                  <th class="text-center text-success">Presentes</th>
+                  <th class="text-center text-danger">Faltas</th>
+                  <th class="text-center">Taxa de Presença</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaConsolidadoPolos"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <h6 class="fw-bold text-secondary mb-3 d-flex align-items-center gap-2">
+          <span class="material-symbols-rounded text-primary">menu_book</span>
+          Totalização por Componente Curricular
+        </h6>
+
+        <div class="analytics-card">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Componente Curricular</th>
+                  <th class="text-center">Total Docentes Ativos</th>
+                  <th class="text-center">Indicados</th>
+                  <th class="text-center">Pendentes</th>
+                  <th class="text-center text-success">Presentes</th>
+                  <th class="text-center text-danger">Faltas</th>
+                  <th class="text-center">Presença (%)</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaConsolidadoComponentes"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA 4: ANALYTICS -->
+      <div id="viewAnalytics" style="display: none;">
+        <div class="row g-3 mb-4">
+          <div class="col-md-3 col-6">
+            <div class="analytics-card text-center py-3">
+              <span class="material-symbols-rounded text-success fs-2">verified</span>
+              <div class="kpi-title mt-1">Taxa de Presença</div>
+              <h3 class="fw-bold text-success m-0" id="anTaxaPresenca">0%</h3>
+              <small class="text-muted" style="font-size:0.75rem;">Sobre presenças computadas</small>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="analytics-card text-center py-3">
+              <span class="material-symbols-rounded text-danger fs-2">person_cancel</span>
+              <div class="kpi-title mt-1">Absenteísmo (No-Show)</div>
+              <h3 class="fw-bold text-danger m-0" id="anTaxaFalta">0%</h3>
+              <small class="text-muted" style="font-size:0.75rem;">Faltas sobre chamadas</small>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="analytics-card text-center py-3">
+              <span class="material-symbols-rounded text-primary fs-2">apartment</span>
+              <div class="kpi-title mt-1">Adesão das Escolas</div>
+              <h3 class="fw-bold text-primary m-0" id="anAdesaoEscolas">0%</h3>
+              <small class="text-muted" style="font-size:0.75rem;"><span id="anEscolasConcluidas">0</span> de <span id="anEscolasTotal">0</span> concluídas</small>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="analytics-card text-center py-3">
+              <span class="material-symbols-rounded text-secondary fs-2">block</span>
+              <div class="kpi-title mt-1">Docentes Afastados</div>
+              <h3 class="fw-bold text-secondary m-0" id="anAfastados">0</h3>
+              <small class="text-muted" style="font-size:0.75rem;">Declarados não lecionando</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+          <div class="col-md-6">
+            <div class="analytics-card">
+              <h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">pie_chart</span> Balanço Geral de Frequência</h6>
+              <div style="position: relative; height: 260px;"><canvas id="chartFrequencia"></canvas></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="analytics-card">
+              <h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">donut_large</span> Engajamento das Escolas na Indicação</h6>
+              <div style="position: relative; height: 260px;"><canvas id="chartEscolasStatus"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-card mb-4">
+          <h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">bar_chart</span> Ocupação e Frequência por Turno / Formação</h6>
+          <div style="position: relative; height: 320px;"><canvas id="chartTurnos"></canvas></div>
+        </div>
+
+        <div class="analytics-card">
+          <h6 class="fw-bold mb-3 d-flex align-items-center gap-2 text-danger"><span class="material-symbols-rounded">warning</span> Atenção Prioritária: Escolas com Maior Número de Pendências</h6>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr><th>Unidade Escolar</th><th class="text-center">Docentes Ativos</th><th class="text-center">Indicados</th><th class="text-center">Pendentes</th><th class="text-center">Status</th></tr>
+              </thead>
+              <tbody id="tabelaAtencaoEscolas"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE DETALHES DA ESCOLA -->
+  <div class="modal-overlay" id="modalEscola">
+    <div class="modal-content" style="max-width: 650px;">
+      <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
+        <h5 class="fw-bold m-0 text-primary" id="modalTituloEscolaDetalhe">Escola</h5>
+        <button class="btn-close" onclick="fecharModal()"></button>
+      </div>
+      <div id="modalConteudoEscola" style="overflow-y: auto; flex-grow: 1; padding-right: 5px;"></div>
+      <div class="pt-3 border-top mt-2">
+        <button class="btn btn-primary w-100 rounded-pill py-2" onclick="fecharModal()">Fechar Detalhes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CHAMADA -->
+  <div class="modal-overlay" id="modalFreq">
+    <div class="modal-content">
+      <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
+        <h5 class="fw-bold m-0 text-primary" id="modalTituloTurno">Turno</h5>
+        <button class="btn-close" onclick="fecharModal()"></button>
+      </div>
+      <div class="list-group list-group-flush" id="modalListaPresenca" style="overflow-y: auto; flex-grow: 1; padding-right: 5px;"></div>
+      <div class="pt-3 border-top mt-2">
+        <button class="btn btn-primary w-100 rounded-pill py-2" onclick="fecharModal()">Salvar e Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ COLOQUE AQUI A URL GERADA NA IMPLANTAÇÃO DO APPS SCRIPT
+    const API_URL = "COLE_AQUI_A_URL_DO_WEBAPP_DO_APPS_SCRIPT";
+
+    let dadosCache = null;
+    let chartFreqInstance = null, chartEscolasInstance = null, chartTurnosInstance = null;
+
+    window.onload = function() { 
+      fetch(`${API_URL}?action=getComponentes`)
+        .then(res => res.json())
+        .then(c => {
+          let sel = document.getElementById('selectComponenteDash');
+          c.forEach(comp => sel.innerHTML += `<option value="${comp}">${comp}</option>`);
+          carregarDados(); 
+        })
+        .catch(() => alert("Falha ao carregar componentes no painel."));
+    };
+
+    function carregarDados() {
+      document.getElementById('dashboardContent').style.display = 'none'; 
+      document.getElementById('loadingScreen').style.display = 'block';
+      let filtroAtual = document.getElementById('selectComponenteDash').value;
+      
+      fetch(`${API_URL}?action=getDashboard&componente=${encodeURIComponent(filtroAtual)}`)
+        .then(res => res.json())
+        .then(dados => {
+          renderizarPainel(dados);
+        })
+        .catch(err => {
+          alert("Erro ao buscar dados do painel.");
+        });
+    }
+
+    function renderizarPainel(dados) {
+      dadosCache = dados;
+      document.getElementById('kpiPendentes').innerText = dados.kpis.pendentes;
+      document.getElementById('kpiIndicados').innerText = dados.kpis.indicados;
+      document.getElementById('kpiPresentes').innerText = dados.kpis.presentes;
+      document.getElementById('kpiFaltas').innerText = dados.kpis.faltas;
+
+      renderizarEscolas(dadosCache.escolas);
+      renderizarTurnos(dadosCache.turnos);
+      renderizarConsolidado(dadosCache);
+      renderizarAnalytics(dadosCache);
+      
+      document.getElementById('loadingScreen').style.display = 'none'; 
+      document.getElementById('dashboardContent').style.display = 'block';
+    }
+
+    function mudarAba(aba) {
+      document.getElementById('btnAbaEscola').className = (aba === 'escolas') ? 'nav-active' : 'nav-inactive';
+      document.getElementById('btnAbaTurno').className = (aba === 'turnos') ? 'nav-active' : 'nav-inactive';
+      document.getElementById('btnAbaConsolidado').className = (aba === 'consolidado') ? 'nav-active' : 'nav-inactive';
+      document.getElementById('btnAbaAnalytics').className = (aba === 'analytics') ? 'nav-active' : 'nav-inactive';
+      
+      document.getElementById('viewEscolas').style.display = (aba === 'escolas') ? 'block' : 'none';
+      document.getElementById('viewTurnos').style.display = (aba === 'turnos') ? 'block' : 'none';
+      document.getElementById('viewConsolidado').style.display = (aba === 'consolidado') ? 'block' : 'none';
+      document.getElementById('viewAnalytics').style.display = (aba === 'analytics') ? 'block' : 'none';
+
+      if (aba === 'analytics') renderizarAnalytics(dadosCache);
+      if (aba === 'consolidado') renderizarConsolidado(dadosCache);
+    }
+
+    function renderizarEscolas(escolas) {
+      let div = document.getElementById('listaEscolas'); div.innerHTML = '';
+      if(escolas.length === 0) { div.innerHTML = '<div class="alert alert-secondary">Nenhum dado encontrado para o filtro atual.</div>'; return; }
+      
+      escolas.forEach((esc, idx) => {
+        let corProgresso = esc.percentual === 100 ? '#146c2e' : '#0061a4';
+        let statusBadge = esc.faltam > 0
+          ? `<span class="text-danger fw-bold" style="font-size:0.85rem">${esc.faltam} pendente(s)</span>`
+          : `<span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1"><span class="material-symbols-rounded align-middle" style="font-size:14px">check</span> Concluído</span>`;
+
+        let btnDetalhes = `
+          <div class="d-flex flex-column align-items-md-end gap-2 mt-2 mt-md-0">
+            ${statusBadge}
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="abrirModalEscola(${idx})"><span class="material-symbols-rounded align-middle" style="font-size: 16px;">visibility</span> Ver Detalhes</button>
+          </div>`;
+
+        div.innerHTML += `
+          <div class="school-card">
+            <div class="row align-items-center">
+              <div class="col-md-5 mb-2 mb-md-0">
+                <h6 class="fw-bold mb-1">${esc.escola}</h6>
+                ${esc.afastados > 0 ? `<small class="text-muted"><span class="material-symbols-rounded align-middle fs-6">person_off</span> ${esc.afastados} afastado(s)</small>` : ''}
+              </div>
+              <div class="col-md-4 text-center">
+                <div class="d-flex justify-content-between text-muted" style="font-size: 0.8rem;"><span>${esc.indicados} indicados</span><span>${esc.total} ativos</span></div>
+                <div class="prog-bg"><div class="prog-fill" style="width: ${esc.percentual}%; background-color: ${corProgresso};"></div></div>
+              </div>
+              <div class="col-md-3 text-md-end">${btnDetalhes}</div>
+            </div>
+          </div>`;
+      });
+    }
+
+    function filtrarEscolas() {
+      let termo = document.getElementById('inputPesquisaEscola').value.toLowerCase();
+      renderizarEscolas(dadosCache.escolas.filter(e => e.escola.toLowerCase().includes(termo)));
+    }
+
+    function renderizarTurnos(turnos) {
+      let div = document.getElementById('listaTurnos'); div.innerHTML = '';
+      if(turnos.length === 0) div.innerHTML = '<div class="alert alert-info">Nenhum turno com inscrições nesta área.</div>';
+      
+      turnos.forEach((t, idx) => {
+        div.innerHTML += `
+          <div class="school-card" style="border-left: 5px solid var(--md-primary);">
+            <div class="row align-items-center">
+              <div class="col-md-5 mb-2 mb-md-0">
+                <h5 class="fw-bold text-primary mb-1">${t.turno}</h5>
+                <small class="text-muted d-block"><span class="material-symbols-rounded align-middle fs-6">book</span> ${t.comp}</small>
+                <small class="text-muted d-block"><span class="material-symbols-rounded align-middle fs-6">groups</span> ${t.total} inscritos nesta turma</small>
+              </div>
+              <div class="col-md-4 text-center mb-2 mb-md-0">
+                <div class="d-flex justify-content-center gap-2 mt-2 mt-md-0">
+                  <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2">Presentes: ${t.presentes}</span>
+                  <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2">Faltas: ${t.faltas}</span>
+                </div>
+              </div>
+              <div class="col-md-3 text-end d-flex flex-column gap-2 mt-3 mt-md-0">
+                <button class="btn btn-primary rounded-pill px-4 py-2 w-100" onclick="abrirModalTurno(${idx})">Fazer Chamada</button>
+                <button class="btn btn-outline-success rounded-pill px-4 py-2 w-100" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo do Turno</button>
+              </div>
+            </div>
+          </div>`;
+      });
+    }
+
+    function renderizarConsolidado(dados) {
+      if(!dados) return;
+
+      let cardsPolos = document.getElementById('cardsPolosGrid');
+      let tbodyPolos = document.getElementById('tabelaConsolidadoPolos');
+      cardsPolos.innerHTML = '';
+      tbodyPolos.innerHTML = '';
+
+      if (dados.consolidadoPolos && dados.consolidadoPolos.length > 0) {
+        dados.consolidadoPolos.forEach(p => {
+          cardsPolos.innerHTML += `
+            <div class="col-md-4">
+              <div class="analytics-card p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="polo-tag">${p.polo}</span>
+                  <span class="badge bg-primary bg-opacity-10 text-primary">${p.taxaPresenca}% Presença</span>
+                </div>
+                <div class="d-flex justify-content-between text-muted mt-2" style="font-size:0.85rem;">
+                  <span>Docentes Ativos:</span><strong class="text-dark">${p.total}</strong>
+                </div>
+                <div class="d-flex justify-content-between text-muted" style="font-size:0.85rem;">
+                  <span>Presentes / Faltas:</span><strong class="text-success">${p.presentes} <span class="text-muted">/</span> <span class="text-danger">${p.faltas}</span></strong>
+                </div>
+                <div class="d-flex justify-content-between text-muted" style="font-size:0.85rem;">
+                  <span>Pendentes de Indicação:</span><strong class="text-danger">${p.pendentes}</strong>
+                </div>
+              </div>
+            </div>`;
+
+          tbodyPolos.innerHTML += `
+            <tr>
+              <td class="fw-bold">${p.polo}</td>
+              <td class="text-center">${p.total}</td>
+              <td class="text-center text-primary fw-bold">${p.indicados}</td>
+              <td class="text-center text-danger fw-bold">${p.pendentes}</td>
+              <td class="text-center text-success fw-bold">${p.presentes}</td>
+              <td class="text-center text-danger fw-bold">${p.faltas}</td>
+              <td class="text-center fw-bold">${p.taxaPresenca}%</td>
+            </tr>`;
+        });
+      } else {
+        tbodyPolos.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Nenhum dado por polo disponível.</td></tr>';
+      }
+
+      let tbodyComp = document.getElementById('tabelaConsolidadoComponentes');
+      tbodyComp.innerHTML = '';
+
+      if (dados.consolidadoComponentes && dados.consolidadoComponentes.length > 0) {
+        dados.consolidadoComponentes.forEach(c => {
+          tbodyComp.innerHTML += `
+            <tr>
+              <td class="fw-bold">${c.componente}</td>
+              <td class="text-center">${c.total}</td>
+              <td class="text-center text-primary fw-bold">${c.indicados}</td>
+              <td class="text-center text-danger fw-bold">${c.pendentes}</td>
+              <td class="text-center text-success fw-bold">${c.presentes}</td>
+              <td class="text-center text-danger fw-bold">${c.faltas}</td>
+              <td class="text-center fw-bold">${c.taxaPresenca}%</td>
+            </tr>`;
+        });
+      } else {
+        tbodyComp.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">Nenhum componente encontrado.</td></tr>';
+      }
+    }
+
+    function exportarEfetivoTurno(idx) {
+      if (!dadosCache || !dadosCache.turnos) return;
+      let t = dadosCache.turnos[idx];
+      let csvContent = "\uFEFFEscola;Nome do Professor;RG;CPF;Agência;Conta Corrente;Componente;Turno;Presença\n";
+      t.professores.forEach(p => {
+        csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`;
+      });
+      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      let url = URL.createObjectURL(blob);
+      let link = document.createElement("a");
+      link.href = url;
+      let nomeTurnoArquivo = t.turno.replace(/[\/\\]/g, '-');
+      link.download = `Efetivo_Exercicio_${nomeTurnoArquivo}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportarEfetivoGeral() {
+      if (!dadosCache || !dadosCache.turnos) return;
+      let csvContent = "\uFEFFEscola;Nome do Professor;RG;CPF;Agência;Conta Corrente;Componente;Turno;Presença\n";
+      dadosCache.turnos.forEach(t => {
+        t.professores.forEach(p => {
+          csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`;
+        });
+      });
+      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      let url = URL.createObjectURL(blob);
+      let link = document.createElement("a");
+      link.href = url;
+      let compNome = document.getElementById('selectComponenteDash').value;
+      if (compNome === "Todos") compNome = "Geral";
+      let dataHoje = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+      link.download = `Efetivo_Exercicio_Completo_${compNome}_${dataHoje}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportarRelatorioConsolidado() {
+      if (!dadosCache) return alert("Os dados ainda não foram carregados.");
+      let csvContent = "\uFEFF--- CONSOLIDADO POR POLO REGIONAL ---\nPolo;Total Ativos;Indicados;Pendentes;Presentes;Faltas;Taxa Presenca (%)\n";
+      dadosCache.consolidadoPolos.forEach(p => {
+        csvContent += `"${p.polo}";${p.total};${p.indicados};${p.pendentes};${p.presentes};${p.faltas};"${p.taxaPresenca}%"\n`;
+      });
+      csvContent += "\n--- CONSOLIDADO POR COMPONENTE CURRICULAR ---\nComponente;Total Ativos;Indicados;Pendentes;Presentes;Faltas;Taxa Presenca (%)\n";
+      dadosCache.consolidadoComponentes.forEach(c => {
+        csvContent += `"${c.componente}";${c.total};${c.indicados};${c.pendentes};${c.presentes};${c.faltas};"${c.taxaPresenca}%"\n`;
+      });
+
+      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      let url = URL.createObjectURL(blob);
+      let link = document.createElement("a");
+      link.href = url;
+      let dataHoje = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+      link.download = `Relatorio_Consolidado_${dataHoje}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function abrirModalEscola(idx) {
+      let escola = dadosCache.escolas[idx];
+      document.getElementById('modalTituloEscolaDetalhe').innerText = escola.escola;
+      let html = '';
+
+      if(escola.responsavel && escola.responsavel !== "") {
+        html += `
+          <div class="mb-4 p-3 rounded-3 d-flex align-items-center gap-2" style="background-color: #f8fafd; border: 1px solid var(--md-primary-container);">
+            <span class="material-symbols-rounded text-primary fs-3">badge</span>
+            <div>
+              <small class="text-muted d-block" style="font-size: 0.8rem;">Responsável pela indicação:</small>
+              <span class="fw-bold text-dark">${escola.responsavel}</span>
+            </div>
+          </div>`;
+      }
+
+      if(escola.listaIndicados.length > 0) {
+        html += `<h6 class="fw-bold text-success mb-2"><span class="material-symbols-rounded align-middle fs-5">check_circle</span> Professores Indicados (${escola.listaIndicados.length})</h6>`;
+        html += '<div class="list-group list-group-flush mb-4">';
+        escola.listaIndicados.forEach(p => {
+          html += `<div class="list-group-item px-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                     <div>
+                       <span class="fw-bold text-dark mb-1 d-block">${p.nome}</span>
+                       <small class="text-muted d-block">${p.comp}</small>
+                       ${p.rg ? `<small class="text-muted">RG: ${p.rg} | CPF: ${p.cpf} | Ag: ${p.agencia} | CC: ${p.conta}</small>` : ''}
+                     </div>
+                     <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill py-2 px-3 text-center mt-2 mt-md-0">${p.turno}</span>
+                   </div>`;
+        });
+        html += '</div>';
+      }
+
+      if(escola.listaPendentes.length > 0) {
+        html += `<h6 class="fw-bold text-danger mb-2"><span class="material-symbols-rounded align-middle fs-5">warning</span> Professores Pendentes (${escola.listaPendentes.length})</h6>`;
+        html += '<div class="list-group list-group-flush mb-4">';
+        escola.listaPendentes.forEach(p => {
+          html += `<div class="list-group-item px-0 text-muted d-flex flex-column">
+                     <div><span class="material-symbols-rounded align-middle me-2 text-danger opacity-50" style="font-size:18px;">account_circle</span><span class="fw-bold text-dark">${p.nome}</span></div>
+                     <small class="ms-4 text-muted">${p.comp}</small>
+                   </div>`;
+        });
+        html += '</div>';
+      }
+
+      if(escola.listaAfastados && escola.listaAfastados.length > 0) {
+        html += `<h6 class="fw-bold text-secondary mb-2"><span class="material-symbols-rounded align-middle fs-5">block</span> Professores Afastados / Não Lecionam (${escola.listaAfastados.length})</h6>`;
+        html += '<div class="list-group list-group-flush mb-4">';
+        escola.listaAfastados.forEach(p => {
+          html += `<div class="list-group-item px-0 text-muted d-flex flex-column" style="background: transparent;">
+                     <div><span class="material-symbols-rounded align-middle me-2 text-secondary opacity-75" style="font-size:18px;">person_off</span><span class="fw-bold text-secondary">${p.nome}</span></div>
+                     <small class="ms-4 text-muted">${p.comp}</small>
+                   </div>`;
+        });
+        html += '</div>';
+      }
+      
+      if(escola.listaIndicados.length === 0 && escola.listaPendentes.length === 0 && (!escola.listaAfastados || escola.listaAfastados.length === 0)) {
+        html = '<div class="alert alert-secondary text-center">Nenhum professor cadastrado para esta unidade.</div>';
+      }
+
+      document.getElementById('modalConteudoEscola').innerHTML = html;
+      document.getElementById('modalEscola').style.display = 'flex';
+    }
+
+    function abrirModalTurno(idx) {
+      let turno = dadosCache.turnos[idx];
+      document.getElementById('modalTituloTurno').innerText = turno.turno;
+      let html = '';
+      
+      turno.professores.forEach(prof => {
+        let btnP = prof.presenca === 'Presente' ? 'btn-presente' : 'btn-neutro';
+        let btnF = prof.presenca === 'Falta' ? 'btn-falta' : 'btn-neutro';
+        
+        html += `
+          <div class="list-group-item px-0 py-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center border-bottom">
+            <div class="mb-2 mb-md-0">
+              <div class="fw-bold" style="font-size: 1.1rem;">${prof.nome}</div>
+              <small class="text-muted d-block"><span class="material-symbols-rounded align-middle text-primary" style="font-size:16px">account_balance</span> ${prof.escola}</small>
+              ${prof.rg ? `<small class="text-muted">RG: ${prof.rg} | CPF: ${prof.cpf} | Ag: ${prof.agencia} | CC: ${prof.conta}</small>` : ''}
+            </div>
+            <div class="btn-group mt-2 mt-md-0">
+              <button class="btn-presenca ${btnP}" onclick="registrarFrequencia(${prof.linha}, 'Presente', this)">Presente</button>
+              <button class="btn-presenca ${btnF}" onclick="registrarFrequencia(${prof.linha}, 'Falta', this)">Faltou</button>
+            </div>
+          </div>`;
+      });
+      
+      document.getElementById('modalListaPresenca').innerHTML = html;
+      document.getElementById('modalFreq').style.display = 'flex';
+    }
+
+    function registrarFrequencia(linha, status, btnElement) {
+      let parent = btnElement.parentElement;
+      parent.querySelectorAll('.btn-presenca').forEach(b => b.className = 'btn-presenca btn-neutro');
+      btnElement.className = `btn-presenca ${status === 'Presente' ? 'btn-presente' : 'btn-falta'}`;
+      
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'salvarFrequencia', linha: linha, statusPresenca: status })
+      });
+    }
+
+    function fecharModal() { 
+      document.getElementById('modalEscola').style.display = 'none'; 
+      document.getElementById('modalFreq').style.display = 'none'; 
+      carregarDados();
+    }
+
+    function renderizarAnalytics(dados) {
+      if(!dados || !dados.kpis) return;
+      let k = dados.kpis;
+      document.getElementById('anTaxaPresenca').innerText = `${k.percPresenca}%`;
+      document.getElementById('anTaxaFalta').innerText = `${k.taxaAbsenteismo}%`;
+      
+      let totalEscolas = k.statusEscolas.totalEscolas;
+      let concluidas = k.statusEscolas.concluidas;
+      let percAdesao = totalEscolas > 0 ? Math.round((concluidas / totalEscolas) * 100) : 0;
+      
+      document.getElementById('anAdesaoEscolas').innerText = `${percAdesao}%`;
+      document.getElementById('anEscolasConcluidas').innerText = concluidas;
+      document.getElementById('anEscolasTotal').innerText = totalEscolas;
+      document.getElementById('anAfastados').innerText = k.afastados;
+
+      if(chartFreqInstance) chartFreqInstance.destroy();
+      if(chartEscolasInstance) chartEscolasInstance.destroy();
+      if(chartTurnosInstance) chartTurnosInstance.destroy();
+
+      let ctxFreq = document.getElementById('chartFrequencia');
+      if(ctxFreq) {
+        let naoRegistrados = Math.max(0, k.indicados - (k.presentes + k.faltas));
+        chartFreqInstance = new Chart(ctxFreq, {
+          type: 'doughnut',
+          data: {
+            labels: ['Presentes', 'Faltas', 'Sem Registro'],
+            datasets: [{
+              data: [k.presentes, k.faltas, naoRegistrados],
+              backgroundColor: ['#146c2e', '#ba1a1a', '#e0e2ec'],
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      let ctxEsc = document.getElementById('chartEscolasStatus');
+      if(ctxEsc) {
+        chartEscolasInstance = new Chart(ctxEsc, {
+          type: 'pie',
+          data: {
+            labels: ['100% Concluídas', 'Indicação Parcial', 'Não Iniciadas'],
+            datasets: [{
+              data: [k.statusEscolas.concluidas, k.statusEscolas.parciais, k.statusEscolas.naoIniciadas],
+              backgroundColor: ['#146c2e', '#0061a4', '#ba1a1a'],
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      let ctxTurnos = document.getElementById('chartTurnos');
+      if(ctxTurnos && dados.turnos.length > 0) {
+        let labels = dados.turnos.map(t => t.turno.length > 25 ? t.turno.substring(0,25) + '...' : t.turno);
+        let inscritosData = dados.turnos.map(t => t.total);
+        let presentesData = dados.turnos.map(t => t.presentes);
+        let faltasData = dados.turnos.map(t => t.faltas);
+
+        chartTurnosInstance = new Chart(ctxTurnos, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              { label: 'Inscritos', data: inscritosData, backgroundColor: '#0061a4' },
+              { label: 'Presentes', data: presentesData, backgroundColor: '#146c2e' },
+              { label: 'Faltas', data: faltasData, backgroundColor: '#ba1a1a' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      let tbodyAtencao = document.getElementById('tabelaAtencaoEscolas');
+      if(tbodyAtencao) {
+        tbodyAtencao.innerHTML = '';
+        let escolasPendentes = dados.escolas.filter(e => e.faltam > 0).sort((a,b) => b.faltam - a.faltam).slice(0, 8);
+        
+        if(escolasPendentes.length === 0) {
+          tbodyAtencao.innerHTML = '<tr><td colspan="5" class="text-center text-success py-3 fw-bold">Parabéns! Todas as escolas da rede concluíram 100% das indicações.</td></tr>';
+        } else {
+          escolasPendentes.forEach(e => {
+            tbodyAtencao.innerHTML += `
+              <tr>
+                <td class="fw-bold">${e.escola}</td>
+                <td class="text-center">${e.total}</td>
+                <td class="text-center text-primary fw-bold">${e.indicados}</td>
+                <td class="text-center text-danger fw-bold">${e.faltam}</td>
+                <td class="text-center"><span class="badge ${e.status === 'Não Iniciado' ? 'bg-danger' : 'bg-warning text-dark'} rounded-pill px-2 py-1">${e.status}</span></td>
+              </tr>`;
+          });
+        }
+      }
+    }
+  </script>
+</body>
+</html>
