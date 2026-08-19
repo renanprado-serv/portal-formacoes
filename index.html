@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal de Formações - URE São Vicente 1</title>
+  <title>Portal de Formações - URE São Vicente</title>
   
   <!-- Fontes e Ícones -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -96,6 +96,7 @@
 
     .drawer-efetivo { background: rgba(240, 246, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px dashed rgba(0, 113, 227, 0.25); border-radius: 16px; padding: 16px; margin-top: 14px; display: none; }
 
+    /* CARD DE AVISO LGPD */
     .lgpd-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(0, 113, 227, 0.15); border-radius: 18px; padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; font-size: 0.8rem; color: #555558; line-height: 1.45; }
     .lgpd-icon { color: var(--apple-primary); background: rgba(0, 113, 227, 0.1); padding: 6px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
@@ -192,6 +193,15 @@
           </div>
         </div>
       </div>
+
+      <!-- AVISO LGPD (TELA INICIAL) RESTAURADO -->
+      <div class="lgpd-card mb-4">
+        <div class="lgpd-icon"><span class="material-symbols-rounded fs-5">shield</span></div>
+        <div>
+          <strong class="d-block text-dark mb-1">Privacidade e Proteção de Dados (LGPD)</strong>
+          Este sistema processa dados estritamente institucionais e funcionais em conformidade com a <b>Lei Federal nº 13.709/2018</b>. O acesso é exclusivo à equipe gestora para fins de planejamento pedagógico regional.
+        </div>
+      </div>
       
       <button class="liquid-btn-primary" id="btnAcesso" onclick="autenticarEscola()">Acessar Painel</button>
     </div>
@@ -211,17 +221,29 @@
       <!-- Tabela Professores -->
       <div id="corpoTabela"></div>
 
-      <!-- CALENDÁRIO GERAL (NOVIDADE) -->
+      <!-- CALENDÁRIO GERAL -->
       <div class="glass-panel p-4 mt-4" id="areaCalendario" style="display:none;">
         <h5 class="fw-bold text-primary mb-1 d-flex align-items-center gap-2">
           <span class="material-symbols-rounded">calendar_month</span> Visão Geral da Formação
         </h5>
         <p class="text-muted mb-4" style="font-size:0.85rem;">Organize a liberação da sua equipe visualizando as datas programadas para este polo.</p>
+        
+        <!-- Contêiner do calendário -->
         <div id="calendar"></div>
       </div>
 
       <!-- ÁREA DE SALVAMENTO -->
       <div class="glass-panel p-4 mt-4" id="areaSalvar">
+        
+        <!-- AVISO LGPD DADOS BANCÁRIOS RESTAURADO -->
+        <div class="lgpd-card mb-4" style="border-color: rgba(0, 113, 227, 0.2); background: rgba(240, 246, 255, 0.65);">
+          <div class="lgpd-icon"><span class="material-symbols-rounded fs-5">lock</span></div>
+          <div>
+            <strong class="d-block text-dark mb-1">Finalidade dos Dados Coletados (Efetivo Exercício)</strong>
+            Os dados cadastrais e bancários (RG, CPF, Agência e Conta Corrente) fornecidos para os professores indicados são tratados com sigilo profissional, com a finalidade exclusiva de homologação da frequência, registro de Efetivo Exercício e processamento administrativo, em conformidade com as diretrizes da LGPD (Lei nº 13.709/2018).
+          </div>
+        </div>
+
         <label class="liquid-label text-primary">
           <span class="material-symbols-rounded fs-5">mail</span>
           E-mail para comprovante oficial (obrigatório) *
@@ -264,7 +286,6 @@
     let nomeGestorAtual = "", cargoGestorAtual = "", componenteGlobal = ""; 
     let calendarioInstancia = null;
 
-    // Cores aleatórias para o calendário
     const coresCalendario = ['#0071e3', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#f43f5e'];
 
     window.onload = function() { 
@@ -346,13 +367,11 @@
     }
 
     function renderizarCalendario(eventosBase) {
-      if(!eventosBase || eventosBase.length === 0) return;
-
+      // Exibe a div do calendário
       document.getElementById('areaCalendario').style.display = 'block';
       let calendarEl = document.getElementById('calendar');
       
-      // Mapeia os eventos e atribui uma cor da paleta
-      let eventosProntos = eventosBase.map((ev, index) => {
+      let eventosProntos = (eventosBase || []).map((ev, index) => {
         return {
           title: ev.extendedProps.turno,
           start: ev.start,
@@ -362,8 +381,11 @@
         };
       });
 
-      // Se houver eventos, o calendário inicia no mês do primeiro evento
       let dataInicial = eventosProntos.length > 0 ? eventosProntos[0].start : new Date();
+
+      if(calendarioInstancia) {
+        calendarioInstancia.destroy();
+      }
 
       calendarioInstancia = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -379,7 +401,12 @@
           alert(`Turno: ${info.event.title}\nLocal: ${info.event.extendedProps.local}`);
         }
       });
-      calendarioInstancia.render();
+      
+      // Delay essencial: o FullCalendar precisa de tempo para calcular a largura/altura 
+      // logo após a div 'areaCalendario' receber display: block
+      setTimeout(() => {
+        calendarioInstancia.render();
+      }, 250);
     }
 
     function exibirProfessores(dados) {
