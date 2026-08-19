@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal de Formações - URE São Vicente</title>
   
-  <!-- Fontes e Ícones -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   
-  <!-- FullCalendar (Para o Calendário Visão Geral) -->
+  <!-- FullCalendar -->
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
   
   <style>
@@ -74,29 +73,47 @@
     .ure-logo { height: 42px; max-width: 140px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.04)); transition: transform 0.2s ease; }
     .ure-logo:hover { transform: scale(1.03); }
 
+    /* NAVEGAÇÃO EM ABAS ESTILO APPLE (USADA NA TELA INICIAL) */
+    .liquid-segmented {
+      background: rgba(118, 118, 128, 0.12);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 5px;
+      border-radius: 980px;
+      display: inline-flex;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .liquid-segmented button {
+      border: none; background: transparent; color: var(--apple-text-secondary);
+      padding: 8px 20px; border-radius: 980px; font-size: 0.88rem; font-weight: 500;
+      transition: all 0.25s ease; display: flex; align-items: center; gap: 6px;
+    }
+    .liquid-segmented button.nav-active {
+      background: rgba(255, 255, 255, 0.95); color: var(--apple-text);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); font-weight: 600;
+    }
+
     .apple-badge { display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; border-radius: 980px; font-size: 0.82rem; font-weight: 600; letter-spacing: -0.01em; border: 1px solid transparent; line-height: 1.2; }
     .apple-badge-blue { background: rgba(0, 113, 227, 0.12) !important; color: #0071e3 !important; border-color: rgba(0, 113, 227, 0.25) !important; }
     .apple-badge-gray { background: rgba(120, 120, 128, 0.12) !important; color: #555558 !important; border-color: rgba(120, 120, 128, 0.2) !important; }
 
-    .liquid-input {
-      background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 14px; padding: 13px 18px; width: 100%; font-size: 0.95rem; color: var(--apple-text); transition: all 0.2s ease;
-    }
+    .liquid-input { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 14px; padding: 13px 18px; width: 100%; font-size: 0.95rem; color: var(--apple-text); transition: all 0.2s ease; }
     .liquid-input:focus { background: rgba(255, 255, 255, 0.95); border-color: var(--apple-primary); box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.16); outline: none; }
     
     select.liquid-input { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2386868b%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 18px top 50%; background-size: 10px auto; }
-
     .liquid-label { font-size: 0.82rem; font-weight: 600; color: var(--apple-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-
     .liquid-btn-primary { background: linear-gradient(180deg, #0077ed 0%, #0062cc 100%); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 980px; padding: 14px 28px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(0, 119, 237, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4); transition: all 0.2s ease; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .liquid-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0, 119, 237, 0.4); color: #fff; }
 
-    .prof-card { background: rgba(255, 255, 255, 0.68); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03); }
+    .prof-card { background: rgba(255, 255, 255, 0.68); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03); }
     .prof-avatar { width: 44px; height: 44px; border-radius: 12px; background: rgba(0, 113, 227, 0.1); color: var(--apple-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .drawer-efetivo { background: rgba(240, 246, 255, 0.7); backdrop-filter: blur(16px); border: 1px dashed rgba(0, 113, 227, 0.25); border-radius: 16px; padding: 16px; margin-top: 14px; display: none; }
 
-    .drawer-efetivo { background: rgba(240, 246, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px dashed rgba(0, 113, 227, 0.25); border-radius: 16px; padding: 16px; margin-top: 14px; display: none; }
-
-    /* CARD DE AVISO LGPD */
+    /* CARD LGPD INSTITUCIONAL */
     .lgpd-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(0, 113, 227, 0.15); border-radius: 18px; padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; font-size: 0.8rem; color: #555558; line-height: 1.45; }
     .lgpd-icon { color: var(--apple-primary); background: rgba(0, 113, 227, 0.1); padding: 6px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
@@ -104,19 +121,12 @@
     .liquid-alert-danger { background: rgba(255, 219, 219, 0.85); color: #c92a2a; border: 1px solid rgba(255, 150, 150, 0.4); }
     .liquid-alert-info { background: rgba(224, 242, 254, 0.85); color: #0369a1; border: 1px solid rgba(186, 230, 253, 0.4); }
 
-    /* ESTILO PARA O CALENDÁRIO */
-    #calendar {
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 16px;
-      padding: 16px;
-      font-family: inherit;
-    }
+    /* ESTILO DO CALENDÁRIO */
+    #calendar { background: transparent; font-family: inherit; min-height: 550px; }
     .fc-theme-standard td, .fc-theme-standard th { border-color: rgba(0,0,0,0.06); }
     .fc-col-header-cell { padding: 8px 0; background: rgba(0,0,0,0.02); }
-    .fc-event { border-radius: 6px; border: none; padding: 3px 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
-    .fc-event-main { color: #fff; }
+    .fc-event { border-radius: 6px; border: none; padding: 4px 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+    .fc-event-main { color: #fff; text-align: center; white-space: pre-wrap; line-height: 1.2; }
     .fc-day-today { background-color: rgba(0, 113, 227, 0.04) !important; }
     .fc-toolbar-title { font-size: 1.2rem !important; font-weight: 700; color: var(--apple-text); }
     .fc-button { background: #fff !important; border: 1px solid rgba(0,0,0,0.1) !important; color: #1d1d1f !important; border-radius: 8px !important; font-weight: 600 !important; text-transform: capitalize; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
@@ -125,7 +135,7 @@
 </head>
 <body>
 
-  <!-- BANNER SUPERIOR COM LOGO -->
+  <!-- BANNER SUPERIOR -->
   <div class="container px-3">
     <div class="glass-appbar d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center gap-3">
@@ -138,19 +148,32 @@
       <div class="d-flex align-items-center gap-3">
         <img src="logo-ure.png" alt="Logo URE São Vicente" class="ure-logo" onerror="this.style.display='none'">
         <div id="btnSairNav" style="display:none;">
-          <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-bold" onclick="reiniciarApp()"><span class="material-symbols-rounded align-middle fs-6">logout</span> Sair</button>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1 fw-bold" onclick="reiniciarApp()"><span class="material-symbols-rounded align-middle fs-6">logout</span> Voltar Início</button>
         </div>
       </div>
     </div>
   </div>
 
   <div class="container" style="max-width: 820px;">
+    
+    <!-- MENU DE ABAS NA TELA INICIAL (NOVIDADE) -->
+    <div class="text-center mb-4" id="navAbasInicial">
+      <div class="liquid-segmented">
+        <button id="btnAbaAcesso" class="nav-active" onclick="mudarAbaInicial('acesso')">
+          <span class="material-symbols-rounded fs-6">lock_open</span> Acesso Gestão
+        </button>
+        <button id="btnAbaCalendario" onclick="mudarAbaInicial('calendario')">
+          <span class="material-symbols-rounded fs-6">calendar_month</span> Calendário de Formações
+        </button>
+      </div>
+    </div>
+
     <div id="mensagemGlobal" class="liquid-alert" style="display:none;"></div>
 
-    <!-- TELA DE ACESSO -->
+    <!-- TELA 1: ACESSO (FORMULÁRIO E LGPD) -->
     <div class="glass-panel p-4 p-md-5" id="cardLogin">
       <h3 class="fw-bold mb-4 d-flex align-items-center gap-2" style="letter-spacing: -0.02em;">
-        <span class="material-symbols-rounded text-primary fs-3">lock_open</span> Acesso da Unidade Escolar
+        <span class="material-symbols-rounded text-primary fs-3">login</span> Acesso da Unidade Escolar
       </h3>
       
       <div class="mb-3">
@@ -194,7 +217,7 @@
         </div>
       </div>
 
-      <!-- AVISO LGPD (TELA INICIAL) RESTAURADO -->
+      <!-- AVISO LGPD -->
       <div class="lgpd-card mb-4">
         <div class="lgpd-icon"><span class="material-symbols-rounded fs-5">shield</span></div>
         <div>
@@ -206,10 +229,19 @@
       <button class="liquid-btn-primary" id="btnAcesso" onclick="autenticarEscola()">Acessar Painel</button>
     </div>
 
-    <!-- PAINEL DE INDICAÇÃO DOS PROFESSORES -->
-    <div id="areaProfessores" style="display:none;">
+    <!-- TELA 2: CALENDÁRIO GERAL (NOVIDADE) -->
+    <div class="glass-panel p-4 p-md-5" id="cardCalendario" style="display:none;">
+      <h3 class="fw-bold mb-1 d-flex align-items-center gap-2" style="letter-spacing: -0.02em;">
+        <span class="material-symbols-rounded text-primary fs-3">event_note</span> Mapa de Formações
+      </h3>
+      <p class="text-muted mb-4" style="font-size: 0.9rem;">Visualize todas as datas programadas para a sua região.</p>
       
-      <!-- Cabeçalho Escola -->
+      <div id="calendar"></div>
+    </div>
+
+
+    <!-- PAINEL DE INDICAÇÃO DOS PROFESSORES (PÓS-LOGIN) -->
+    <div id="areaProfessores" style="display:none;">
       <div class="glass-panel p-4 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div>
           <span class="apple-badge apple-badge-blue mb-1" id="nomePoloLabel">Polo</span>
@@ -218,24 +250,10 @@
         </div>
       </div>
 
-      <!-- Tabela Professores -->
       <div id="corpoTabela"></div>
 
-      <!-- CALENDÁRIO GERAL -->
-      <div class="glass-panel p-4 mt-4" id="areaCalendario" style="display:none;">
-        <h5 class="fw-bold text-primary mb-1 d-flex align-items-center gap-2">
-          <span class="material-symbols-rounded">calendar_month</span> Visão Geral da Formação
-        </h5>
-        <p class="text-muted mb-4" style="font-size:0.85rem;">Organize a liberação da sua equipe visualizando as datas programadas para este polo.</p>
-        
-        <!-- Contêiner do calendário -->
-        <div id="calendar"></div>
-      </div>
-
-      <!-- ÁREA DE SALVAMENTO -->
+      <!-- ÁREA DE SALVAMENTO + LGPD -->
       <div class="glass-panel p-4 mt-4" id="areaSalvar">
-        
-        <!-- AVISO LGPD DADOS BANCÁRIOS RESTAURADO -->
         <div class="lgpd-card mb-4" style="border-color: rgba(0, 113, 227, 0.2); background: rgba(240, 246, 255, 0.65);">
           <div class="lgpd-icon"><span class="material-symbols-rounded fs-5">lock</span></div>
           <div>
@@ -251,7 +269,6 @@
         <input type="email" id="inputEmail" class="liquid-input mb-3" placeholder="escola@educacao.sp.gov.br" required>
         <button id="btnSalvar" class="liquid-btn-primary py-3" onclick="salvar()">Salvar Indicações</button>
       </div>
-
     </div>
 
     <!-- TELA DE SUCESSO -->
@@ -284,8 +301,10 @@
 
     let estruturaCompleta = null, dadosAtuais = null, poloSelecionado = null;
     let nomeGestorAtual = "", cargoGestorAtual = "", componenteGlobal = ""; 
+    
+    // Controle do Calendário
     let calendarioInstancia = null;
-
+    let calendarioEventosCache = null;
     const coresCalendario = ['#0071e3', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#f43f5e'];
 
     window.onload = function() { 
@@ -305,6 +324,73 @@
         .catch(() => exibirMensagem('error', 'Falha ao carregar formações ativas.'));
     };
 
+    // TROCA DE ABAS NA TELA INICIAL
+    function mudarAbaInicial(aba) {
+      if (aba === 'acesso') {
+        document.getElementById('btnAbaAcesso').classList.add('nav-active');
+        document.getElementById('btnAbaCalendario').classList.remove('nav-active');
+        document.getElementById('cardLogin').style.display = 'block';
+        document.getElementById('cardCalendario').style.display = 'none';
+      } else if (aba === 'calendario') {
+        document.getElementById('btnAbaAcesso').classList.remove('nav-active');
+        document.getElementById('btnAbaCalendario').classList.add('nav-active');
+        document.getElementById('cardLogin').style.display = 'none';
+        document.getElementById('cardCalendario').style.display = 'block';
+        
+        if (!calendarioEventosCache) {
+          carregarCalendarioGeral();
+        } else {
+          // Atraso para o render garantir que a div já está visível
+          setTimeout(() => { if (calendarioInstancia) calendarioInstancia.render(); }, 150);
+        }
+      }
+    }
+
+    // BUSCA OS EVENTOS NA PLANILHA
+    function carregarCalendarioGeral() {
+      let divCal = document.getElementById('calendar');
+      divCal.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div><p class="mt-2 text-muted">Carregando datas...</p></div>';
+      
+      fetch(`${API_URL}?action=getCalendario`)
+        .then(res => res.json())
+        .then(eventosBase => {
+          calendarioEventosCache = eventosBase;
+          divCal.innerHTML = ''; // limpa spinner
+          
+          let eventosProntos = eventosBase.map((ev, index) => {
+            return {
+              title: ev.title, // Já formatado no Apps Script "Matemática (MIP)"
+              start: ev.start,
+              allDay: true,
+              backgroundColor: coresCalendario[index % coresCalendario.length],
+              extendedProps: ev.extendedProps
+            };
+          });
+
+          let dataInicial = eventosProntos.length > 0 ? eventosProntos[0].start : new Date();
+
+          calendarioInstancia = new FullCalendar.Calendar(divCal, {
+            initialView: 'dayGridMonth',
+            initialDate: dataInicial,
+            locale: 'pt-br',
+            events: eventosProntos,
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: ''
+            },
+            eventClick: function(info) {
+              alert(`Formação: ${info.event.extendedProps.componente}\nTurno: ${info.event.extendedProps.turno}\nLocal: ${info.event.extendedProps.local}`);
+            }
+          });
+          
+          setTimeout(() => { calendarioInstancia.render(); }, 150);
+        })
+        .catch(() => {
+          divCal.innerHTML = '<div class="alert alert-danger text-center">Erro ao conectar com o banco de formações.</div>';
+        });
+    }
+
     function carregarEscolas() {
       let p = document.getElementById('selectPolo').value, s = document.getElementById('selectEscola');
       s.innerHTML = p ? '<option value="">-- Unidade Escolar --</option>' + estruturaCompleta[p].map(e => `<option value="${e}">${e}</option>`).join('') : '<option value="">-- Selecione o polo --</option>';
@@ -315,16 +401,17 @@
       document.getElementById('areaSucesso').style.display = 'none';
       document.getElementById('mensagemGlobal').style.display = 'none'; 
       document.getElementById('btnSairNav').style.display = 'none';
-      document.getElementById('cardLogin').style.display = 'block';
-      document.getElementById('areaCalendario').style.display = 'none';
       
+      // Restaura o menu de abas e a aba de acesso
+      document.getElementById('navAbasInicial').style.display = 'block';
+      mudarAbaInicial('acesso');
+
       document.getElementById('inputSenha').value = ''; 
       document.getElementById('inputNomeGestor').value = ''; 
       document.getElementById('selectCargoGestor').value = '';
       document.getElementById('inputEmail').value = '';
       document.getElementById('appbarTitle').innerText = 'Portal de Formações – URE São Vicente';
       dadosAtuais = null; nomeGestorAtual = ""; cargoGestorAtual = ""; componenteGlobal = "";
-      if(calendarioInstancia) calendarioInstancia.destroy();
       window.scrollTo(0,0);
     }
 
@@ -336,7 +423,7 @@
       let n = document.getElementById('inputNomeGestor').value.trim();
       let cg = document.getElementById('selectCargoGestor').value;
       
-      if(!c || !p || !e || !s || !n || !cg) return exibirMensagem('error', 'Preencha todos os campos obrigatórios.');
+      if(!c || !p || !e || !s || !n || !cg) return exibirMensagem('error', 'Preencha todos os campos obrigatórios para acessar.');
       
       nomeGestorAtual = n; cargoGestorAtual = cg; componenteGlobal = c;
       document.getElementById('btnAcesso').innerHTML = 'Autenticando...';
@@ -348,6 +435,7 @@
           if(res.erro) return exibirMensagem('error', res.erro);
           
           document.getElementById('cardLogin').style.display = 'none'; 
+          document.getElementById('navAbasInicial').style.display = 'none'; // Esconde as abas
           document.getElementById('mensagemGlobal').style.display = 'none';
           document.getElementById('btnSairNav').style.display = 'block';
           
@@ -358,55 +446,11 @@
           
           poloSelecionado = res.polo; 
           exibirProfessores(res);
-          renderizarCalendario(res.eventosCalendario);
         })
         .catch(() => {
           document.getElementById('btnAcesso').innerHTML = 'Acessar Painel';
           exibirMensagem('error', 'Falha ao conectar com o servidor.');
         });
-    }
-
-    function renderizarCalendario(eventosBase) {
-      // Exibe a div do calendário
-      document.getElementById('areaCalendario').style.display = 'block';
-      let calendarEl = document.getElementById('calendar');
-      
-      let eventosProntos = (eventosBase || []).map((ev, index) => {
-        return {
-          title: ev.extendedProps.turno,
-          start: ev.start,
-          allDay: true,
-          backgroundColor: coresCalendario[index % coresCalendario.length],
-          extendedProps: ev.extendedProps
-        };
-      });
-
-      let dataInicial = eventosProntos.length > 0 ? eventosProntos[0].start : new Date();
-
-      if(calendarioInstancia) {
-        calendarioInstancia.destroy();
-      }
-
-      calendarioInstancia = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        initialDate: dataInicial,
-        locale: 'pt-br',
-        events: eventosProntos,
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: ''
-        },
-        eventClick: function(info) {
-          alert(`Turno: ${info.event.title}\nLocal: ${info.event.extendedProps.local}`);
-        }
-      });
-      
-      // Delay essencial: o FullCalendar precisa de tempo para calcular a largura/altura 
-      // logo após a div 'areaCalendario' receber display: block
-      setTimeout(() => {
-        calendarioInstancia.render();
-      }, 250);
     }
 
     function exibirProfessores(dados) {
@@ -549,7 +593,6 @@
         document.getElementById('btnSalvar').innerHTML = 'Salvar Indicações'; document.getElementById('btnSalvar').disabled = false;
         if(res.sucesso) {
           document.getElementById('areaProfessores').style.display = 'none';
-          document.getElementById('areaCalendario').style.display = 'none';
           document.getElementById('textoConfirmacaoEmail').innerText = `Uma cópia foi encaminhada para ${email}.`;
           document.getElementById('tabelaResumo').innerHTML = res.resumo.map(r => `<tr><td class="fw-bold">${r.nome}</td><td><span class="apple-badge apple-badge-blue">${r.status}</span></td><td class="text-muted"><span class="material-symbols-rounded align-middle fs-6 text-primary">location_on</span> ${r.local}</td></tr>`).join('');
           document.getElementById('areaSucesso').style.display = 'block'; 
