@@ -197,23 +197,23 @@
         </div>
       </div>
 
-      <!-- CARD LGPD -->
-      <div class="info-card mb-3">
-        <div class="info-icon"><span class="material-symbols-rounded fs-5">shield</span></div>
-        <div>
-          <strong class="d-block text-dark mb-1">Privacidade e Proteção de Dados (LGPD)</strong>
-          Este sistema processa dados institucionais em conformidade com a <b>Lei Federal nº 13.709/2018</b> para o planejamento pedagógico regional.
-        </div>
-      </div>
-
-      <!-- CARD DE PRAZO DINÂMICO -->
-      <div id="cardPrazo" class="info-card mb-4" style="display:none; border-color: rgba(245, 158, 11, 0.4); background: rgba(254, 243, 199, 0.6);">
+      <!-- CARD DE PRAZO DINÂMICO (Agora acima da LGPD) -->
+      <div id="cardPrazo" class="info-card mb-3" style="display:none; border-color: rgba(245, 158, 11, 0.4); background: rgba(254, 243, 199, 0.6);">
         <div class="info-icon" id="iconePrazoBg" style="background: rgba(245, 158, 11, 0.15); color: #d97706;">
           <span class="material-symbols-rounded fs-5" id="iconePrazo">event</span>
         </div>
         <div>
           <strong class="d-block text-dark mb-1" id="tituloPrazo">Atenção ao Prazo</strong>
           <span id="textoPrazo"></span>
+        </div>
+      </div>
+
+      <!-- CARD LGPD INSTITUCIONAL -->
+      <div class="info-card mb-4">
+        <div class="info-icon"><span class="material-symbols-rounded fs-5">shield</span></div>
+        <div>
+          <strong class="d-block text-dark mb-1">Privacidade e Proteção de Dados (LGPD)</strong>
+          Este sistema processa dados institucionais em conformidade com a <b>Lei Federal nº 13.709/2018</b> para o planejamento pedagógico regional.
         </div>
       </div>
       
@@ -603,6 +603,7 @@
         document.getElementById('btnSalvar').innerHTML = 'Salvar Indicações'; document.getElementById('btnSalvar').disabled = false;
         if(res.sucesso) {
           document.getElementById('areaProfessores').style.display = 'none';
+          document.getElementById('areaCalendario').style.display = 'none';
           document.getElementById('textoConfirmacaoEmail').innerText = `Uma cópia foi encaminhada para ${email}.`;
           document.getElementById('tabelaResumo').innerHTML = res.resumo.map(r => `<tr><td class="fw-bold">${r.nome}</td><td><span class="apple-badge apple-badge-blue">${r.status}</span></td><td class="text-muted"><span class="material-symbols-rounded align-middle fs-6 text-primary">location_on</span> ${r.local}</td></tr>`).join('');
           document.getElementById('areaSucesso').style.display = 'block'; 
