@@ -38,7 +38,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       color: var(--apple-text);
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 60px;
+      padding-bottom: 40px;
     }
 
     .glass-panel {
@@ -83,7 +83,7 @@
     .apple-badge-gray { background: rgba(120, 120, 128, 0.12) !important; color: #555558 !important; border-color: rgba(120, 120, 128, 0.2) !important; }
 
     .liquid-input { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 14px; padding: 13px 18px; width: 100%; font-size: 0.95rem; color: var(--apple-text); transition: all 0.2s ease; }
-    .liquid-input:focus { background: rgba(255, 255, 255, 0.95); border-color: var(--apple-primary); box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.16); outline: none; }
+    .liquid-input:focus { background: rgba(255, 255, 255, 0.95); border-color: var(--apple-primary); box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.16); outline: none; z-index: 3;}
     select.liquid-input { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2386868b%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 18px top 50%; background-size: 10px auto; }
     
     .liquid-label { font-size: 0.82rem; font-weight: 600; color: var(--apple-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
@@ -164,7 +164,6 @@
       <div class="mb-3">
         <label class="liquid-label">2. POLO / MUNICÍPIO</label>
         <select id="selectPolo" class="liquid-input" onchange="carregarEscolas()"><option value="">-- Escolha o Polo --</option></select>
-        <!-- AVISO DO POLO MIP RESTAURADO -->
         <div class="p-2 px-3 rounded-3 d-flex align-items-center gap-2 text-muted mt-2" style="background: rgba(0,0,0,0.03); font-size: 0.8rem;">
           <span class="material-symbols-rounded text-primary fs-6">info</span>
           <span><b>Polo MIP:</b> Compreende Mongaguá, Itanhaém e Peruíbe.</span>
@@ -178,7 +177,12 @@
 
       <div class="mb-4">
         <label class="liquid-label">4. SENHA DE ACESSO (CIE)</label>
-        <input type="password" id="inputSenha" class="liquid-input" placeholder="Digite o código da escola">
+        <div class="input-group">
+          <input type="password" id="inputSenha" class="liquid-input form-control" style="border-radius: 14px 0 0 14px; border-right: none; margin-bottom: 0;" placeholder="Digite o código da escola">
+          <button class="btn btn-outline-secondary d-flex align-items-center" type="button" style="border-radius: 0 14px 14px 0; border-color: rgba(0, 0, 0, 0.1); background: rgba(255, 255, 255, 0.65);" onclick="toggleSenha()">
+            <span class="material-symbols-rounded text-muted" id="iconeSenha">visibility</span>
+          </button>
+        </div>
       </div>
       
       <div class="p-3 mb-4 rounded-4" style="background: rgba(0, 113, 227, 0.05); border: 1px solid rgba(0, 113, 227, 0.15);">
@@ -188,7 +192,7 @@
         <div class="row g-2">
           <div class="col-md-7">
             <label class="liquid-label" style="font-size:0.75rem;">Nome Completo</label>
-            <input type="text" id="inputNomeGestor" class="liquid-input" placeholder="Ex: Maria da Silva">
+            <input type="text" id="inputNomeGestor" class="liquid-input" placeholder="EX: MARIA DA SILVA" oninput="this.value = this.value.toUpperCase()">
           </div>
           <div class="col-md-5">
             <label class="liquid-label" style="font-size:0.75rem;">Cargo na Unidade</label>
@@ -289,6 +293,13 @@
       </div>
       <button class="liquid-btn-primary mt-4" onclick="reiniciarApp()">Concluir e Voltar</button>
     </div>
+
+    <!-- RODAPÉ DE SUPORTE -->
+    <div class="text-center mt-5 mb-4 text-muted" style="font-size: 0.8rem;">
+      <p class="m-0">Dúvidas ou problemas de acesso?</p>
+      <a href="mailto:svieec@gmail.com" class="text-primary text-decoration-none fw-bold">Contate a Equipe Regional de Formação</a>
+    </div>
+
   </div>
 
   <script>
@@ -322,6 +333,18 @@
         })
         .catch(() => exibirMensagem('error', 'Falha ao carregar formações ativas.'));
     };
+
+    function toggleSenha() {
+      let input = document.getElementById('inputSenha');
+      let icone = document.getElementById('iconeSenha');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icone.innerText = 'visibility_off';
+      } else {
+        input.type = 'password';
+        icone.innerText = 'visibility';
+      }
+    }
 
     function verificarPrazoFormacao() {
       let val = document.getElementById('selectComponente').value;
@@ -627,6 +650,14 @@
       div.innerHTML = `<span class="material-symbols-rounded">${tipo==='error'?'error':'info'}</span> ${txt}`;
       div.style.display = 'flex'; window.scrollTo(0,0);
     }
+
+    // Prevenção de perda de dados ao fechar a aba
+    window.addEventListener('beforeunload', function (e) {
+      if (document.getElementById('areaProfessores').style.display === 'block') {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
   </script>
 </body>
 </html>
