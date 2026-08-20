@@ -480,13 +480,14 @@
     let dadosCache = null;
     let chartFreqInstance = null, chartEscolasInstance = null, chartTurnosInstance = null;
 
-    window.onload = function() { 
+   window.onload = function() { 
       fetch(`${API_URL}?action=getComponentes`)
         .then(res => res.json())
         .then(c => {
           let sel = document.getElementById('selectComponenteDash');
           sel.innerHTML = '<option value="Todos">Visão Geral (Todos os Componentes)</option>';
-          c.forEach(comp => sel.innerHTML += `<option value="${comp}">${comp}</option>`);
+          // Agora o 'c' devolve um objeto com a chave "nome"
+          c.forEach(comp => sel.innerHTML += `<option value="${comp.nome}">${comp.nome}</option>`);
           carregarDados(); 
         })
         .catch(() => alert("Falha ao carregar formações no painel."));
