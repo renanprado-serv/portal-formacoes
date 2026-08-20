@@ -163,7 +163,12 @@
 
       <div class="mb-3">
         <label class="liquid-label">2. POLO / MUNICÍPIO</label>
-        <select id="selectPolo" class="liquid-input mb-2" onchange="carregarEscolas()"><option value="">-- Escolha o Polo --</option></select>
+        <select id="selectPolo" class="liquid-input" onchange="carregarEscolas()"><option value="">-- Escolha o Polo --</option></select>
+        <!-- AVISO DO POLO MIP RESTAURADO -->
+        <div class="p-2 px-3 rounded-3 d-flex align-items-center gap-2 text-muted mt-2" style="background: rgba(0,0,0,0.03); font-size: 0.8rem;">
+          <span class="material-symbols-rounded text-primary fs-6">info</span>
+          <span><b>Polo MIP:</b> Compreende Mongaguá, Itanhaém e Peruíbe.</span>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -197,7 +202,7 @@
         </div>
       </div>
 
-      <!-- CARD DE PRAZO DINÂMICO (Agora acima da LGPD) -->
+      <!-- CARD DE PRAZO DINÂMICO -->
       <div id="cardPrazo" class="info-card mb-3" style="display:none; border-color: rgba(245, 158, 11, 0.4); background: rgba(254, 243, 199, 0.6);">
         <div class="info-icon" id="iconePrazoBg" style="background: rgba(245, 158, 11, 0.15); color: #d97706;">
           <span class="material-symbols-rounded fs-5" id="iconePrazo">event</span>
@@ -522,7 +527,7 @@
                 </div>
                 <div class="col-md-5">
                   <div class="form-check form-switch p-0 m-0 d-flex align-items-center justify-content-md-end gap-2">
-                    <label class="form-check-label text-danger" style="font-size:0.85rem;" for="afas_${prof.linha}">Afastado</label>
+                    <label class="form-check-label text-danger" style="font-size:0.85rem;" for="afas_${prof.linha}">Não leciona / Afastado</label>
                     <input class="form-check-input m-0 check-afastado" type="checkbox" id="afas_${prof.linha}" onchange="toggleAfastado(this, ${prof.linha})">
                   </div>
                 </div>
