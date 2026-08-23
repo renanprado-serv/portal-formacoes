@@ -38,7 +38,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       color: var(--apple-text);
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 40px;
+      padding-bottom: 60px;
     }
 
     .glass-panel {
@@ -92,7 +92,7 @@
     .liquid-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0, 119, 237, 0.4); color: #fff; }
     .liquid-btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; box-shadow: none; }
 
-    .prof-card { background: rgba(255, 255, 255, 0.68); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03); }
+    .prof-card { background: rgba(255, 255, 255, 0.68); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03); position: relative; }
     .prof-avatar { width: 44px; height: 44px; border-radius: 12px; background: rgba(0, 113, 227, 0.1); color: var(--apple-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .drawer-efetivo { background: rgba(240, 246, 255, 0.7); backdrop-filter: blur(16px); border: 1px dashed rgba(0, 113, 227, 0.25); border-radius: 16px; padding: 16px; margin-top: 14px; display: none; }
 
@@ -104,13 +104,14 @@
     .liquid-alert-danger { background: rgba(255, 219, 219, 0.85); color: #c92a2a; border: 1px solid rgba(255, 150, 150, 0.4); }
     .liquid-alert-info { background: rgba(224, 242, 254, 0.85); color: #0369a1; border: 1px solid rgba(186, 230, 253, 0.4); }
 
+    /* ESTILO DO CALENDÁRIO */
     #calendar { background: transparent; font-family: inherit; min-height: 550px; }
     .fc-theme-standard td, .fc-theme-standard th { border-color: rgba(0,0,0,0.06); }
     .fc-col-header-cell { padding: 8px 0; background: rgba(0,0,0,0.02); }
     .fc-event { border-radius: 6px; border: none; padding: 4px 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
     .fc-event-main { color: #fff; text-align: center; white-space: pre-wrap; line-height: 1.2; }
     .fc-day-today { background-color: rgba(0, 113, 227, 0.04) !important; }
-    .fc-toolbar-title { font-size: 1.2rem !important; font-weight: 700; color: var(--apple-text); }
+    .fc-toolbar-title { font-size: 1.2rem !important; font-weight: 700; color: var(--apple-text); text-transform: capitalize; }
     .fc-button { background: #fff !important; border: 1px solid rgba(0,0,0,0.1) !important; color: #1d1d1f !important; border-radius: 8px !important; font-weight: 600 !important; text-transform: capitalize; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .fc-button:hover { background: #f5f5f7 !important; }
   </style>
@@ -163,7 +164,8 @@
 
       <div class="mb-3">
         <label class="liquid-label">2. POLO / MUNICÍPIO</label>
-        <select id="selectPolo" class="liquid-input" onchange="carregarEscolas()"><option value="">-- Escolha o Polo --</option></select>
+        <select id="selectPolo" class="liquid-input mb-2" onchange="carregarEscolas()"><option value="">-- Escolha o Polo --</option></select>
+        <!-- AVISO DO POLO MIP -->
         <div class="p-2 px-3 rounded-3 d-flex align-items-center gap-2 text-muted mt-2" style="background: rgba(0,0,0,0.03); font-size: 0.8rem;">
           <span class="material-symbols-rounded text-primary fs-6">info</span>
           <span><b>Polo MIP:</b> Compreende Mongaguá, Itanhaém e Peruíbe.</span>
@@ -239,7 +241,6 @@
       <div id="calendar"></div>
     </div>
 
-
     <!-- PAINEL DE INDICAÇÃO DOS PROFESSORES (PÓS-LOGIN) -->
     <div id="areaProfessores" style="display:none;">
       <div class="glass-panel p-4 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -251,6 +252,14 @@
       </div>
 
       <div id="corpoTabela"></div>
+      <div id="corpoTabelaNovos"></div>
+
+      <!-- BOTÃO INCLUIR NOVO PROFESSOR -->
+      <div class="text-center mt-3 mb-4">
+        <button class="btn btn-outline-primary rounded-pill fw-bold" onclick="adicionarProfessorCard()" style="border: 2px dashed var(--apple-primary); background: rgba(0, 113, 227, 0.05); transition: 0.2s;">
+          <span class="material-symbols-rounded align-middle me-1">person_add</span> Adicionar professor(a) não listado
+        </button>
+      </div>
 
       <!-- ÁREA DE SALVAMENTO + LGPD BANCÁRIO -->
       <div class="glass-panel p-4 mt-4" id="areaSalvar">
@@ -297,7 +306,7 @@
     <!-- RODAPÉ DE SUPORTE -->
     <div class="text-center mt-5 mb-4 text-muted" style="font-size: 0.8rem;">
       <p class="m-0">Dúvidas ou problemas de acesso?</p>
-      <a href="mailto:svi.eec@educacao.sp.gov.br.com" class="text-primary text-decoration-none fw-bold">Clique aqui e contate a URE São Vicente</a>
+      <a href="mailto:svieec@gmail.com" class="text-primary text-decoration-none fw-bold">Contate a Equipe Regional de Formação</a>
     </div>
 
   </div>
@@ -309,6 +318,7 @@
     let estruturaCompleta = null, dadosAtuais = null, poloSelecionado = null;
     let nomeGestorAtual = "", cargoGestorAtual = "", componenteGlobal = ""; 
     let componentesGlobais = [];
+    let turnosGlobais = [];
     
     let calendarioInstancia = null;
     let calendarioEventosCache = null;
@@ -448,6 +458,8 @@
       document.getElementById('appbarTitle').innerText = 'Portal de Formações – URE São Vicente';
       document.getElementById('cardPrazo').style.display = 'none';
       document.getElementById('selectComponente').value = '';
+      
+      document.getElementById('corpoTabelaNovos').innerHTML = ''; // Limpa professores adicionados
 
       dadosAtuais = null; nomeGestorAtual = ""; cargoGestorAtual = ""; componenteGlobal = "";
       window.scrollTo(0,0);
@@ -493,11 +505,13 @@
 
     function exibirProfessores(dados) {
       dadosAtuais = dados;
+      turnosGlobais = dados.turnos; // Salva para uso nos cards manuais
       let tbody = document.getElementById('corpoTabela'); tbody.innerHTML = '';
+      document.getElementById('corpoTabelaNovos').innerHTML = ''; // Limpa adições da sessão anterior
       let todosJaIndicados = true;
 
       if (!dados.professores || dados.professores.length === 0) {
-        tbody.innerHTML = `<div class="liquid-alert liquid-alert-danger"><span class="material-symbols-rounded">person_off</span> Nenhum professor localizado para esta unidade.</div>`;
+        tbody.innerHTML = `<div class="liquid-alert liquid-alert-danger"><span class="material-symbols-rounded">person_off</span> Nenhum professor da lista base localizado para esta unidade.</div>`;
         document.getElementById('areaSalvar').style.display = 'none';
         document.getElementById('areaProfessores').style.display = 'block';
         return; 
@@ -546,12 +560,12 @@
               </div>
               <div class="row align-items-center">
                 <div class="col-md-7 mb-2 mb-md-0">
-                  <select class="liquid-input select-turno m-0" data-linha="${prof.linha}" data-nome="${prof.nome}" onchange="onChangeTurno(this, ${prof.linha})">${opts}</select>
+                  <select class="liquid-input select-turno m-0" data-linha="${prof.linha}" data-nome="${prof.nome}" onchange="onChangeTurno(this, '${prof.linha}')">${opts}</select>
                 </div>
                 <div class="col-md-5">
                   <div class="form-check form-switch p-0 m-0 d-flex align-items-center justify-content-md-end gap-2">
                     <label class="form-check-label text-danger" style="font-size:0.85rem;" for="afas_${prof.linha}">Não leciona / Afastado</label>
-                    <input class="form-check-input m-0 check-afastado" type="checkbox" id="afas_${prof.linha}" onchange="toggleAfastado(this, ${prof.linha})">
+                    <input class="form-check-input m-0 check-afastado" type="checkbox" id="afas_${prof.linha}" onchange="toggleAfastado(this, '${prof.linha}')">
                   </div>
                 </div>
               </div>
@@ -577,6 +591,59 @@
       window.scrollTo(0, 0);
     }
 
+    // ADICIONAR NOVO PROFESSOR MANUALMENTE
+    function adicionarProfessorCard() {
+      let idNovo = 'novo_' + Date.now();
+      let opts = '<option value="">-- Escolha o Turno --</option>' + turnosGlobais.map(t => `<option value="${t.nome}" ${t.esgotado?'disabled':''}>${t.nome}${t.esgotado?' (LOTADO)':` (${t.vagasRestantes} vagas)`}</option>`).join('');
+      
+      let html = `
+        <div class="prof-card" id="card_${idNovo}" style="border: 2px dashed var(--apple-primary); background: rgba(0, 113, 227, 0.02);">
+          <div class="d-flex align-items-center mb-3">
+            <div class="prof-avatar" style="background: var(--apple-primary); color: #fff;"><span class="material-symbols-rounded">person_add</span></div>
+            <div class="ms-3 flex-grow-1 pe-3">
+              <input type="text" id="nome_${idNovo}" class="liquid-input p-2 py-1 fw-bold text-primary w-100" style="font-size: 1rem;" placeholder="Nome completo do professor(a)..." oninput="this.value = this.value.toUpperCase()">
+              <small class="text-muted d-block mt-1">${componenteGlobal}</small>
+            </div>
+            <button class="btn btn-sm btn-light text-danger rounded-circle p-2 shadow-sm" onclick="removerCardNovo('${idNovo}')" title="Remover professor">
+              <span class="material-symbols-rounded fs-5 align-middle">delete</span>
+            </button>
+          </div>
+          
+          <div class="row align-items-center">
+            <div class="col-md-7 mb-2 mb-md-0">
+              <select class="liquid-input select-turno m-0" data-linha="${idNovo}" data-nome="" onchange="onChangeTurno(this, '${idNovo}')">${opts}</select>
+            </div>
+            <div class="col-md-5">
+              <div class="form-check form-switch p-0 m-0 d-flex align-items-center justify-content-md-end gap-2">
+                <label class="form-check-label text-danger" style="font-size:0.85rem;" for="afas_${idNovo}">Não leciona / Afastado</label>
+                <input class="form-check-input m-0 check-afastado" type="checkbox" id="afas_${idNovo}" onchange="toggleAfastado(this, '${idNovo}')">
+              </div>
+            </div>
+          </div>
+
+          <div class="drawer-efetivo" id="drawer_${idNovo}">
+            <h6 class="fw-bold text-primary mb-2 d-flex align-items-center gap-1" style="font-size:0.82rem;">
+              <span class="material-symbols-rounded fs-6">account_balance</span> Efetivo Exercício
+            </h6>
+            <div class="row g-2">
+              <div class="col-md-3 col-6"><input type="text" class="liquid-input p-2 py-1 fs-6" id="rg_${idNovo}" placeholder="RG"></div>
+              <div class="col-md-3 col-6"><input type="text" class="liquid-input p-2 py-1 fs-6" id="cpf_${idNovo}" placeholder="CPF"></div>
+              <div class="col-md-3 col-6"><input type="text" class="liquid-input p-2 py-1 fs-6" id="ag_${idNovo}" placeholder="Agência"></div>
+              <div class="col-md-3 col-6"><input type="text" class="liquid-input p-2 py-1 fs-6" id="cc_${idNovo}" placeholder="Conta"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('corpoTabelaNovos').insertAdjacentHTML('beforeend', html);
+      document.getElementById('areaSalvar').style.display = 'block';
+    }
+
+    function removerCardNovo(id) {
+      let card = document.getElementById('card_' + id);
+      if(card) card.remove();
+    }
+
     function onChangeTurno(sel, linha) {
       validarLimite(sel);
       let drawer = document.getElementById(`drawer_${linha}`);
@@ -593,7 +660,7 @@
     function validarLimite(sel) {
       if(!sel.value) return;
       let count = Array.from(document.querySelectorAll('.select-turno')).filter(s => s.value === sel.value).length;
-      let turnoInfo = dadosAtuais.turnos.find(t => t.nome === sel.value);
+      let turnoInfo = turnosGlobais.find(t => t.nome === sel.value);
       if(turnoInfo && count > turnoInfo.vagasRestantes) { exibirMensagem('error', 'Vagas insuficientes.'); sel.value = ""; }
     }
 
@@ -601,21 +668,28 @@
       let email = document.getElementById('inputEmail').value.trim();
       if (!email || !email.includes('@')) return exibirMensagem('error', 'Informe um e-mail válido.');
 
-      let indicacoes = [], erroValidacaoEfetivo = false;
+      let indicacoes = [], erroValidacaoEfetivo = false, erroNomeVazio = false;
 
       document.querySelectorAll('.select-turno').forEach(s => {
-        let linha = s.getAttribute('data-linha'), cb = document.getElementById(`afas_${linha}`);
+        let linha = s.getAttribute('data-linha');
+        let isNovo = linha.toString().startsWith('novo_');
+        let cb = document.getElementById(`afas_${linha}`);
+        let nomeProf = isNovo ? document.getElementById(`nome_${linha}`).value.trim() : s.getAttribute('data-nome');
+
         if(s.value !== "" || cb.checked) { 
+          if (isNovo && nomeProf === "") erroNomeVazio = true;
+
           let rg = document.getElementById(`rg_${linha}`)?.value.trim() || "";
           let cpf = document.getElementById(`cpf_${linha}`)?.value.trim() || "";
           let ag = document.getElementById(`ag_${linha}`)?.value.trim() || "";
           let cc = document.getElementById(`cc_${linha}`)?.value.trim() || "";
           if (s.value !== "" && (!rg || !cpf || !ag || !cc)) erroValidacaoEfetivo = true;
 
-          indicacoes.push({ linha: linha, turno: s.value, afastado: cb.checked, nome: s.getAttribute('data-nome'), rg: rg, cpf: cpf, agencia: ag, conta: cc }); 
+          indicacoes.push({ linha: linha, turno: s.value, afastado: cb.checked, nome: nomeProf, rg: rg, cpf: cpf, agencia: ag, conta: cc, isNovo: isNovo }); 
         }
       });
 
+      if(erroNomeVazio) return exibirMensagem('error', 'Por favor, digite o nome do novo professor adicionado.');
       if(indicacoes.length === 0) return exibirMensagem('error', 'Selecione o turno ou marque como afastado para salvar.');
       if(erroValidacaoEfetivo) return exibirMensagem('error', 'Preencha todos os campos do Efetivo Exercício.');
 
