@@ -43,6 +43,7 @@
     .apple-badge-icon { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #0071e3, #60a5fa); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3); flex-shrink: 0; }
     .ure-logo { height: 38px; max-width: 130px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.04)); }
 
+    /* SELETOR DE COMPONENTE ESTILO APPLE */
     .apple-select-pill {
       appearance: none; -webkit-appearance: none; background-color: rgba(0, 113, 227, 0.08); color: var(--apple-primary);
       font-weight: 600; font-size: 0.85rem; padding: 9px 36px 9px 16px; border-radius: 980px; border: 1px solid rgba(0, 113, 227, 0.2);
@@ -147,7 +148,7 @@
 
     <div class="container" style="max-width: 1020px;">
       
-      <!-- MENU DE ABAS (COM A NOVA ABA KANBAN) -->
+      <!-- MENU DE ABAS -->
       <div class="text-center mb-4">
         <div class="liquid-segmented">
           <button id="btnAbaEscola" class="nav-active" onclick="mudarAba('escolas')"><span class="material-symbols-rounded fs-6">list</span> Lista</button>
@@ -176,7 +177,7 @@
           <div id="listaEscolas"></div>
         </div>
 
-        <!-- ABA 6: KANBAN DE ESCOLAS (NOVIDADE) -->
+        <!-- ABA 6: KANBAN DE ESCOLAS -->
         <div id="viewKanban" style="display: none;">
           <div class="row g-4">
             <!-- Coluna Não Iniciadas -->
@@ -189,7 +190,8 @@
             <!-- Coluna Parciais -->
             <div class="col-md-4">
               <div class="glass-panel p-3" style="background: rgba(0, 113, 227, 0.05); border-color: rgba(0, 113, 227, 0.2);">
-                <h6 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded">hourglass_half</span> Parciais (<span id="kbCountParcial">0</span>)</h6>
+                <!-- AQUI ESTÁ A CORREÇÃO DO ÍCONE HOURGLASS_HALF PARA TIMELAPSE -->
+                <h6 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded">timelapse</span> Parciais (<span id="kbCountParcial">0</span>)</h6>
                 <div id="kbColParcial" class="d-flex flex-column gap-2" style="min-height: 200px;"></div>
               </div>
             </div>
@@ -239,6 +241,7 @@
             <div class="col-md-6"><div class="glass-panel p-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">donut_large</span> Engajamento das Unidades</h6><div style="position: relative; height: 260px;"><canvas id="chartEscolasStatus"></canvas></div></div></div>
           </div>
           <div class="glass-panel p-4 mb-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">bar_chart</span> Ocupação por Turno</h6><div style="position: relative; height: 300px;"><canvas id="chartTurnos"></canvas></div></div>
+          <div class="glass-panel p-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2 text-danger"><span class="material-symbols-rounded">warning</span> Atenção Prioritária (Pendências)</h6><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light bg-transparent"><tr><th>Escola</th><th class="text-center">Ativos</th><th class="text-center">Indicados</th><th class="text-center">Pendentes</th><th class="text-center">Status</th></tr></thead><tbody id="tabelaAtencaoEscolas"></tbody></table></div></div>
         </div>
 
         <!-- ABA 5: LOGS -->
@@ -380,7 +383,7 @@
       document.getElementById('kpiFaltas').innerText = dados.kpis.faltas;
 
       renderizarEscolas(dadosCache.escolas);
-      renderizarKanban(dadosCache.escolas); // NOVO
+      renderizarKanban(dadosCache.escolas);
       renderizarTurnos(dadosCache.turnos);
       renderizarConsolidado(dadosCache);
       
@@ -421,7 +424,6 @@
       if (aba === 'logs') carregarLogs();
     }
 
-    // RENDERIZA A VISÃO KANBAN
     function renderizarKanban(escolas) {
       let colNao = document.getElementById('kbColNao');
       let colParcial = document.getElementById('kbColParcial');
@@ -531,7 +533,7 @@
               </div>
               <div class="col-md-3 text-end d-flex flex-column gap-2 mt-3 mt-md-0">
                 <button class="btn btn-primary rounded-pill px-3 py-2 fw-bold" onclick="abrirModalTurno(${idx})">Fazer Chamada</button>
-                <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo</button>
+                <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo do Turno</button>
               </div>
             </div>
           </div>`;
