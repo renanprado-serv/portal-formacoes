@@ -340,8 +340,23 @@
       
       fetch(`${API_URL}?action=getDashboard&componente=${encodeURIComponent(filtroAtual)}`)
         .then(res => res.json())
-        .then(dados => { renderizarPainel(dados); })
-        .catch(() => alert("Erro ao buscar dados do painel."));
+        .then(dados => { 
+          if(dados.erro) {
+            alert("Erro no servidor: " + dados.mensagem);
+            document.getElementById('loadingScreen').style.display = 'none';
+            return;
+          }
+          try {
+            renderizarPainel(dados); 
+          } catch(e) {
+            console.error("Erro interno ao exibir:", e);
+            alert("Erro interno ao processar os dados recebidos.");
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+          alert("Erro de conexão ao buscar dados do painel.");
+        });
     }
 
     function renderizarPainel(dados) {
@@ -358,11 +373,12 @@
       document.getElementById('loadingScreen').style.display = 'none'; 
       document.getElementById('dashboardContent').style.display = 'block';
 
-      // Re-aplica a aba atual para forçar a renderização dos gráficos
-      let abas = ['escolas', 'turnos', 'consolidado', 'analytics', 'logs'];
-      let abaAtiva = 'escolas';
-      abas.forEach(aba => { if(document.getElementById('btnAba' + aba.charAt(0).toUpperCase() + aba.slice(1)).classList.contains('nav-active')) abaAtiva = aba; });
-      mudarAba(abaAtiva);
+      // Re-aplica a aba atual de forma 100% segura
+      if(document.getElementById('btnAbaTurno').classList.contains('nav-active')) mudarAba('turnos');
+      else if(document.getElementById('btnAbaConsolidado').classList.contains('nav-active')) mudarAba('consolidado');
+      else if(document.getElementById('btnAbaAnalytics').classList.contains('nav-active')) mudarAba('analytics');
+      else if(document.getElementById('btnAbaLogs').classList.contains('nav-active')) mudarAba('logs');
+      else mudarAba('escolas');
     }
 
     function mudarAba(aba) {
@@ -634,7 +650,6 @@
       document.getElementById('modalFreq').style.display = 'flex';
     }
 
-    // AGORA PASSA O NOME DO PEC PARA O BACKEND
     function registrarFrequencia(linha, status, nomeProf, btnElement) {
       let parent = btnElement.parentElement;
       parent.querySelectorAll('.btn-presenca').forEach(b => b.className = 'btn-presenca btn-neutro');
