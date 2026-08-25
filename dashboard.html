@@ -169,7 +169,7 @@
 
     <div class="container" style="max-width: 1020px;">
       
-      <!-- MENU DE ABAS (COM A NOVA ABA LOGS) -->
+      <!-- MENU DE ABAS -->
       <div class="text-center mb-4">
         <div class="liquid-segmented">
           <button id="btnAbaEscola" class="nav-active" onclick="mudarAba('escolas')"><span class="material-symbols-rounded fs-6">domain</span> Por Escola</button>
@@ -330,7 +330,7 @@
           c.forEach(comp => sel.innerHTML += `<option value="${comp.nome}">${comp.nome}</option>`);
           carregarDados(); 
         })
-        .catch(() => alert("Falha ao carregar formações no painel."));
+        .catch(() => alert("Falha ao carregar as opções de formações no painel."));
     }
 
     function carregarDados() {
@@ -339,23 +339,29 @@
       let filtroAtual = document.getElementById('selectComponenteDash').value;
       
       fetch(`${API_URL}?action=getDashboard&componente=${encodeURIComponent(filtroAtual)}`)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error("Erro de resposta do servidor: " + res.status);
+          return res.json();
+        })
         .then(dados => { 
           if(dados.erro) {
-            alert("Erro no servidor: " + dados.mensagem);
+            alert("Erro reportado pelo sistema: " + dados.mensagem);
             document.getElementById('loadingScreen').style.display = 'none';
             return;
           }
+          
           try {
             renderizarPainel(dados); 
           } catch(e) {
-            console.error("Erro interno ao exibir:", e);
-            alert("Erro interno ao processar os dados recebidos.");
+            console.error("Erro na hora de desenhar a tela:", e);
+            alert("Ocorreu um erro interno na exibição dos gráficos. Verifique o console.");
+            document.getElementById('loadingScreen').style.display = 'none';
           }
         })
         .catch((e) => {
-          console.error(e);
-          alert("Erro de conexão ao buscar dados do painel.");
+          console.error("Falha ao buscar os dados:", e);
+          alert("Falha de conexão com o banco de dados. Por favor, atualize a página.");
+          document.getElementById('loadingScreen').style.display = 'none';
         });
     }
 
@@ -373,12 +379,19 @@
       document.getElementById('loadingScreen').style.display = 'none'; 
       document.getElementById('dashboardContent').style.display = 'block';
 
-      // Re-aplica a aba atual de forma 100% segura
-      if(document.getElementById('btnAbaTurno').classList.contains('nav-active')) mudarAba('turnos');
-      else if(document.getElementById('btnAbaConsolidado').classList.contains('nav-active')) mudarAba('consolidado');
-      else if(document.getElementById('btnAbaAnalytics').classList.contains('nav-active')) mudarAba('analytics');
-      else if(document.getElementById('btnAbaLogs').classList.contains('nav-active')) mudarAba('logs');
-      else mudarAba('escolas');
+      // Identifica a aba ativa para manter o estado após o recarregamento
+      let abaAtiva = 'escolas';
+      let btnTurno = document.getElementById('btnAbaTurno');
+      let btnConsolidado = document.getElementById('btnAbaConsolidado');
+      let btnAnalytics = document.getElementById('btnAbaAnalytics');
+      let btnLogs = document.getElementById('btnAbaLogs');
+
+      if(btnTurno && btnTurno.classList.contains('nav-active')) abaAtiva = 'turnos';
+      else if(btnConsolidado && btnConsolidado.classList.contains('nav-active')) abaAtiva = 'consolidado';
+      else if(btnAnalytics && btnAnalytics.classList.contains('nav-active')) abaAtiva = 'analytics';
+      else if(btnLogs && btnLogs.classList.contains('nav-active')) abaAtiva = 'logs';
+
+      mudarAba(abaAtiva);
     }
 
     function mudarAba(aba) {
