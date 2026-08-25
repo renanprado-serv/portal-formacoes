@@ -38,34 +38,9 @@
       padding-bottom: 60px;
     }
 
-    .glass-panel {
-      background: var(--apple-card-bg);
-      backdrop-filter: blur(30px) saturate(190%);
-      -webkit-backdrop-filter: blur(30px) saturate(190%);
-      border: 1px solid var(--apple-card-border);
-      border-radius: 24px;
-      box-shadow: var(--apple-shadow), var(--apple-glass-inset);
-    }
-
-    .glass-appbar {
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(25px) saturate(180%);
-      -webkit-backdrop-filter: blur(25px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      border-radius: 980px;
-      padding: 12px 28px;
-      margin: 24px auto 32px auto;
-      max-width: 1020px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), var(--apple-glass-inset);
-    }
-
-    .apple-badge-icon {
-      width: 44px; height: 44px; border-radius: 14px;
-      background: linear-gradient(135deg, #0071e3, #60a5fa); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3); flex-shrink: 0;
-    }
-
+    .glass-panel { background: var(--apple-card-bg); backdrop-filter: blur(30px) saturate(190%); -webkit-backdrop-filter: blur(30px) saturate(190%); border: 1px solid var(--apple-card-border); border-radius: 24px; box-shadow: var(--apple-shadow), var(--apple-glass-inset); }
+    .glass-appbar { background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 980px; padding: 12px 28px; margin: 24px auto 32px auto; max-width: 1020px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), var(--apple-glass-inset); }
+    .apple-badge-icon { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #0071e3, #60a5fa); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3); flex-shrink: 0; }
     .ure-logo { height: 38px; max-width: 130px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.04)); }
 
     /* SELETOR DE COMPONENTE ESTILO APPLE */
@@ -79,10 +54,7 @@
     .apple-select-pill:hover { background-color: rgba(0, 113, 227, 0.14); border-color: var(--apple-primary); box-shadow: 0 4px 12px rgba(0, 113, 227, 0.12); }
     .apple-select-pill:focus { box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.25); }
 
-    .btn-apple-refresh {
-      background: rgba(255, 255, 255, 0.8); color: var(--apple-text); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 980px;
-      padding: 8px 16px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03); cursor: pointer;
-    }
+    .btn-apple-refresh { background: rgba(255, 255, 255, 0.8); color: var(--apple-text); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 980px; padding: 8px 16px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03); cursor: pointer; }
     .btn-apple-refresh:hover { background: #ffffff; border-color: rgba(0, 0, 0, 0.2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); }
 
     .liquid-btn-primary { background: linear-gradient(180deg, #0077ed 0%, #0062cc 100%); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 980px; padding: 14px 28px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 14px rgba(0, 119, 237, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4); transition: all 0.2s ease; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
@@ -119,6 +91,10 @@
     .prog-fill { height: 100%; border-radius: 980px; transition: 0.8s ease-out; }
     .liquid-alert { border-radius: 16px; padding: 14px 20px; backdrop-filter: blur(20px); font-weight: 500; font-size: 0.92rem; display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
     .liquid-alert-danger { background: rgba(255, 219, 219, 0.85); color: #c92a2a; border: 1px solid rgba(255, 150, 150, 0.4); }
+
+    /* BOTÃO EXCLUIR HOVER EFEITO */
+    .btn-outline-danger { transition: all 0.2s ease; }
+    .btn-outline-danger:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; transform: scale(1.05); }
   </style>
 </head>
 <body>
@@ -365,6 +341,27 @@
         });
     }
 
+    // EXCLUIR INDICAÇÃO VIA PAINEL DOS ESPECIALISTAS
+    function excluirIndicacao(linha, nomeProf) {
+      if(!confirm(`Atenção: Tem certeza que deseja EXCLUIR a indicação de ${nomeProf}?\nOs dados serão apagados e a escola precisará indicar novamente.`)) return;
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'excluirIndicacao', linha: linha, nomeProf: nomeProf, pecLogado: nomeEspecialistaAtivo })
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res.sucesso) {
+          alert('Indicação excluída com sucesso! A escola já pode indicar o professor novamente.');
+          fecharModal(); 
+        } else {
+          alert('Erro ao tentar excluir: ' + res.mensagem);
+        }
+      })
+      .catch(() => alert('Erro de conexão com o banco de dados ao tentar excluir.'));
+    }
+
     function renderizarPainel(dados) {
       dadosCache = dados;
       document.getElementById('kpiPendentes').innerText = dados.kpis.pendentes;
@@ -411,7 +408,6 @@
       if (aba === 'logs') carregarLogs();
     }
 
-    // CARREGAR TELA DE LOGS
     function carregarLogs() {
       let tb = document.getElementById('tabelaLogs');
       tb.innerHTML = '<tr><td colspan="4" class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm"></div> Buscando histórico...</td></tr>';
@@ -423,7 +419,7 @@
           if(logs.length === 0) { tb.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Nenhum registro encontrado.</td></tr>'; return; }
           
           logs.forEach(l => {
-            let badgeColor = l.acao === "Chamada" ? "apple-badge-green" : (l.acao === "Login" ? "apple-badge-gray" : "apple-badge-blue");
+            let badgeColor = l.acao === "Chamada" ? "apple-badge-green" : (l.acao === "Login" ? "apple-badge-gray" : (l.acao === "Exclusão" ? "apple-badge-red" : "apple-badge-blue"));
             tb.innerHTML += `<tr>
               <td class="text-muted" style="white-space:nowrap;">${l.data}</td>
               <td class="fw-bold">${l.usuario}</td>
@@ -609,7 +605,10 @@
           let badgeTag = p.nome.includes("(Adicionado") ? `<span class="badge bg-warning text-dark ms-2" style="font-size:0.6rem;">Incluído Manualmente</span>` : "";
           html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center">
                      <div><b>${p.nome}</b> ${badgeTag} <small class="text-muted d-block">${p.comp}</small></div>
-                     <span class="apple-badge apple-badge-blue">${p.turno}</span>
+                     <div class="d-flex align-items-center gap-2">
+                       <span class="apple-badge apple-badge-blue">${p.turno}</span>
+                       <button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${p.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button>
+                     </div>
                    </div>`;
         });
         html += '</div>';
@@ -626,7 +625,10 @@
       if(escola.listaAfastados && escola.listaAfastados.length > 0) {
         html += `<h6 class="fw-bold text-secondary mb-2">Afastados (${escola.listaAfastados.length})</h6><div class="list-group list-group-flush mb-3">`;
         escola.listaAfastados.forEach(p => {
-          html += `<div class="list-group-item bg-transparent px-0 py-2 text-muted"><span>${p.nome}</span><small class="d-block">${p.comp}</small></div>`;
+          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center">
+                     <div class="text-muted"><span>${p.nome}</span><small class="d-block">${p.comp}</small></div>
+                     <button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${p.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button>
+                   </div>`;
         });
         html += '</div>';
       }
@@ -652,9 +654,12 @@
               <small class="text-muted">${prof.escola}</small>
               ${prof.rg ? `<div class="text-muted" style="font-size:0.75rem;">RG: ${prof.rg} | CPF: ${prof.cpf}</div>` : ''}
             </div>
-            <div class="btn-group">
-              <button class="btn-presenca ${btnP}" onclick="registrarFrequencia(${prof.linha}, 'Presente', '${prof.nome}', this)">Presente</button>
-              <button class="btn-presenca ${btnF}" onclick="registrarFrequencia(${prof.linha}, 'Falta', '${prof.nome}', this)">Faltou</button>
+            <div class="d-flex align-items-center gap-2">
+              <div class="btn-group">
+                <button class="btn-presenca ${btnP}" onclick="registrarFrequencia(${prof.linha}, 'Presente', '${prof.nome}', this)">Presente</button>
+                <button class="btn-presenca ${btnF}" onclick="registrarFrequencia(${prof.linha}, 'Falta', '${prof.nome}', this)">Faltou</button>
+              </div>
+              <button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${prof.linha}, '${prof.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.2rem;">delete</span></button>
             </div>
           </div>`;
       });
