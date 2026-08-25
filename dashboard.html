@@ -43,7 +43,6 @@
     .apple-badge-icon { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #0071e3, #60a5fa); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3); flex-shrink: 0; }
     .ure-logo { height: 38px; max-width: 130px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.04)); }
 
-    /* SELETOR DE COMPONENTE ESTILO APPLE */
     .apple-select-pill {
       appearance: none; -webkit-appearance: none; background-color: rgba(0, 113, 227, 0.08); color: var(--apple-primary);
       font-weight: 600; font-size: 0.85rem; padding: 9px 36px 9px 16px; border-radius: 980px; border: 1px solid rgba(0, 113, 227, 0.2);
@@ -92,9 +91,12 @@
     .liquid-alert { border-radius: 16px; padding: 14px 20px; backdrop-filter: blur(20px); font-weight: 500; font-size: 0.92rem; display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
     .liquid-alert-danger { background: rgba(255, 219, 219, 0.85); color: #c92a2a; border: 1px solid rgba(255, 150, 150, 0.4); }
 
-    /* BOTÃO EXCLUIR HOVER EFEITO */
     .btn-outline-danger { transition: all 0.2s ease; }
     .btn-outline-danger:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; transform: scale(1.05); }
+
+    /* HOVER PARA CARDS KANBAN */
+    .kanban-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
+    .kanban-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important; }
   </style>
 </head>
 <body>
@@ -123,7 +125,7 @@
     </div>
   </div>
 
-  <!-- APLICAÇÃO PRINCIPAL (ESCONDIDA ATÉ O LOGIN) -->
+  <!-- APLICAÇÃO PRINCIPAL -->
   <div id="appScreen" style="display: none;">
     <!-- BANNER SUPERIOR -->
     <div class="container px-3">
@@ -145,14 +147,15 @@
 
     <div class="container" style="max-width: 1020px;">
       
-      <!-- MENU DE ABAS -->
+      <!-- MENU DE ABAS (COM A NOVA ABA KANBAN) -->
       <div class="text-center mb-4">
         <div class="liquid-segmented">
-          <button id="btnAbaEscola" class="nav-active" onclick="mudarAba('escolas')"><span class="material-symbols-rounded fs-6">domain</span> Por Escola</button>
+          <button id="btnAbaEscola" class="nav-active" onclick="mudarAba('escolas')"><span class="material-symbols-rounded fs-6">list</span> Lista</button>
+          <button id="btnAbaKanban" onclick="mudarAba('kanban')"><span class="material-symbols-rounded fs-6">view_kanban</span> Kanban</button>
           <button id="btnAbaTurno" onclick="mudarAba('turnos')"><span class="material-symbols-rounded fs-6">checklist</span> Por Turno</button>
           <button id="btnAbaConsolidado" onclick="mudarAba('consolidado')"><span class="material-symbols-rounded fs-6">table_chart</span> Consolidado</button>
           <button id="btnAbaAnalytics" onclick="mudarAba('analytics')"><span class="material-symbols-rounded fs-6">insights</span> Analytics</button>
-          <button id="btnAbaLogs" onclick="mudarAba('logs')"><span class="material-symbols-rounded fs-6">history</span> Histórico (Logs)</button>
+          <button id="btnAbaLogs" onclick="mudarAba('logs')"><span class="material-symbols-rounded fs-6">history</span> Logs</button>
         </div>
       </div>
 
@@ -167,10 +170,37 @@
           <div class="kpi-card"><div class="kpi-title text-danger">Faltas</div><div class="kpi-value text-danger" id="kpiFaltas">0</div></div>
         </div>
 
-        <!-- ABA 1: VISÃO POR ESCOLA -->
+        <!-- ABA 1: VISÃO POR ESCOLA (LISTA) -->
         <div id="viewEscolas">
           <input type="text" id="inputPesquisaEscola" class="form-control rounded-pill px-4 py-2 mb-4 glass-panel border-0" placeholder="Pesquisar unidade escolar..." onkeyup="filtrarEscolas()">
           <div id="listaEscolas"></div>
+        </div>
+
+        <!-- ABA 6: KANBAN DE ESCOLAS (NOVIDADE) -->
+        <div id="viewKanban" style="display: none;">
+          <div class="row g-4">
+            <!-- Coluna Não Iniciadas -->
+            <div class="col-md-4">
+              <div class="glass-panel p-3" style="background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2);">
+                <h6 class="fw-bold text-danger mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded">pending_actions</span> Não Iniciadas (<span id="kbCountNao">0</span>)</h6>
+                <div id="kbColNao" class="d-flex flex-column gap-2" style="min-height: 200px;"></div>
+              </div>
+            </div>
+            <!-- Coluna Parciais -->
+            <div class="col-md-4">
+              <div class="glass-panel p-3" style="background: rgba(0, 113, 227, 0.05); border-color: rgba(0, 113, 227, 0.2);">
+                <h6 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded">hourglass_half</span> Parciais (<span id="kbCountParcial">0</span>)</h6>
+                <div id="kbColParcial" class="d-flex flex-column gap-2" style="min-height: 200px;"></div>
+              </div>
+            </div>
+            <!-- Coluna Concluídas -->
+            <div class="col-md-4">
+              <div class="glass-panel p-3" style="background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2);">
+                <h6 class="fw-bold text-success mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded">task_alt</span> Concluídas (<span id="kbCountConcluida">0</span>)</h6>
+                <div id="kbColConcluida" class="d-flex flex-column gap-2" style="min-height: 200px;"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- ABA 2: VISÃO POR TURNO -->
@@ -209,7 +239,6 @@
             <div class="col-md-6"><div class="glass-panel p-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">donut_large</span> Engajamento das Unidades</h6><div style="position: relative; height: 260px;"><canvas id="chartEscolasStatus"></canvas></div></div></div>
           </div>
           <div class="glass-panel p-4 mb-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">bar_chart</span> Ocupação por Turno</h6><div style="position: relative; height: 300px;"><canvas id="chartTurnos"></canvas></div></div>
-          <div class="glass-panel p-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2 text-danger"><span class="material-symbols-rounded">warning</span> Atenção Prioritária (Pendências)</h6><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light bg-transparent"><tr><th>Escola</th><th class="text-center">Ativos</th><th class="text-center">Indicados</th><th class="text-center">Pendentes</th><th class="text-center">Status</th></tr></thead><tbody id="tabelaAtencaoEscolas"></tbody></table></div></div>
         </div>
 
         <!-- ABA 5: LOGS -->
@@ -232,7 +261,7 @@
     </div>
   </div>
 
-  <!-- MODAIS -->
+  <!-- MODAL DE DETALHES DA ESCOLA -->
   <div class="modal-overlay" id="modalEscola">
     <div class="modal-content-apple">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
@@ -244,6 +273,7 @@
     </div>
   </div>
 
+  <!-- MODAL DE CHAMADA -->
   <div class="modal-overlay" id="modalFreq">
     <div class="modal-content-apple">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
@@ -263,7 +293,6 @@
     let chartFreqInstance = null, chartEscolasInstance = null, chartTurnosInstance = null;
     let nomeEspecialistaAtivo = "";
 
-    // LÓGICA DE LOGIN
     function fazerLogin() {
       let u = document.getElementById('inputUser').value.trim();
       let p = document.getElementById('inputPass').value.trim();
@@ -325,41 +354,22 @@
             document.getElementById('loadingScreen').style.display = 'none';
             return;
           }
-          
-          try {
-            renderizarPainel(dados); 
-          } catch(e) {
-            console.error("Erro na hora de desenhar a tela:", e);
-            alert("Ocorreu um erro interno na exibição dos gráficos. Verifique o console.");
-            document.getElementById('loadingScreen').style.display = 'none';
-          }
+          try { renderizarPainel(dados); } catch(e) { alert("Erro interno ao processar os dados recebidos."); }
         })
-        .catch((e) => {
-          console.error("Falha ao buscar os dados:", e);
-          alert("Falha de conexão com o banco de dados. Por favor, atualize a página.");
-          document.getElementById('loadingScreen').style.display = 'none';
-        });
+        .catch((e) => { alert("Falha de conexão com o banco de dados. Atualize a página."); document.getElementById('loadingScreen').style.display = 'none'; });
     }
 
-    // EXCLUIR INDICAÇÃO VIA PAINEL DOS ESPECIALISTAS
     function excluirIndicacao(linha, nomeProf) {
       if(!confirm(`Atenção: Tem certeza que deseja EXCLUIR a indicação de ${nomeProf}?\nOs dados serão apagados e a escola precisará indicar novamente.`)) return;
-
       fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: 'excluirIndicacao', linha: linha, nomeProf: nomeProf, pecLogado: nomeEspecialistaAtivo })
       })
       .then(res => res.json())
       .then(res => {
-        if(res.sucesso) {
-          alert('Indicação excluída com sucesso! A escola já pode indicar o professor novamente.');
-          fecharModal(); 
-        } else {
-          alert('Erro ao tentar excluir: ' + res.mensagem);
-        }
-      })
-      .catch(() => alert('Erro de conexão com o banco de dados ao tentar excluir.'));
+        if(res.sucesso) { alert('Indicação excluída com sucesso!'); fecharModal(); } 
+        else { alert('Erro ao tentar excluir: ' + res.mensagem); }
+      }).catch(() => alert('Erro de conexão ao tentar excluir.'));
     }
 
     function renderizarPainel(dados) {
@@ -370,34 +380,37 @@
       document.getElementById('kpiFaltas').innerText = dados.kpis.faltas;
 
       renderizarEscolas(dadosCache.escolas);
+      renderizarKanban(dadosCache.escolas); // NOVO
       renderizarTurnos(dadosCache.turnos);
       renderizarConsolidado(dadosCache);
       
       document.getElementById('loadingScreen').style.display = 'none'; 
       document.getElementById('dashboardContent').style.display = 'block';
 
-      // Identifica a aba ativa para manter o estado após o recarregamento
       let abaAtiva = 'escolas';
       let btnTurno = document.getElementById('btnAbaTurno');
       let btnConsolidado = document.getElementById('btnAbaConsolidado');
       let btnAnalytics = document.getElementById('btnAbaAnalytics');
       let btnLogs = document.getElementById('btnAbaLogs');
+      let btnKanban = document.getElementById('btnAbaKanban');
 
       if(btnTurno && btnTurno.classList.contains('nav-active')) abaAtiva = 'turnos';
       else if(btnConsolidado && btnConsolidado.classList.contains('nav-active')) abaAtiva = 'consolidado';
       else if(btnAnalytics && btnAnalytics.classList.contains('nav-active')) abaAtiva = 'analytics';
       else if(btnLogs && btnLogs.classList.contains('nav-active')) abaAtiva = 'logs';
+      else if(btnKanban && btnKanban.classList.contains('nav-active')) abaAtiva = 'kanban';
 
       mudarAba(abaAtiva);
     }
 
     function mudarAba(aba) {
-      ['Escola', 'Turno', 'Consolidado', 'Analytics', 'Logs'].forEach(tab => {
+      ['Escola', 'Turno', 'Consolidado', 'Analytics', 'Logs', 'Kanban'].forEach(tab => {
         let btn = document.getElementById(`btnAba${tab}`);
         if(btn) btn.className = (aba.toLowerCase() === tab.toLowerCase() || (aba==='escolas'&&tab==='Escola') || (aba==='turnos'&&tab==='Turno')) ? 'nav-active' : '';
       });
 
       document.getElementById('viewEscolas').style.display = (aba === 'escolas') ? 'block' : 'none';
+      document.getElementById('viewKanban').style.display = (aba === 'kanban') ? 'block' : 'none';
       document.getElementById('viewTurnos').style.display = (aba === 'turnos') ? 'block' : 'none';
       document.getElementById('viewConsolidado').style.display = (aba === 'consolidado') ? 'block' : 'none';
       document.getElementById('viewAnalytics').style.display = (aba === 'analytics') ? 'block' : 'none';
@@ -406,6 +419,38 @@
       if (aba === 'analytics') renderizarAnalytics(dadosCache);
       if (aba === 'consolidado') renderizarConsolidado(dadosCache);
       if (aba === 'logs') carregarLogs();
+    }
+
+    // RENDERIZA A VISÃO KANBAN
+    function renderizarKanban(escolas) {
+      let colNao = document.getElementById('kbColNao');
+      let colParcial = document.getElementById('kbColParcial');
+      let colConcluida = document.getElementById('kbColConcluida');
+      
+      colNao.innerHTML = ''; colParcial.innerHTML = ''; colConcluida.innerHTML = '';
+      let countNao = 0, countParcial = 0, countConcluida = 0;
+
+      if(!escolas || escolas.length === 0) return;
+
+      escolas.forEach((esc, idx) => {
+        let cardHtml = `
+          <div class="glass-panel p-3 shadow-sm kanban-card" onclick="abrirModalEscola(${idx})">
+            <div class="fw-bold mb-2" style="font-size: 0.85rem; line-height: 1.2;">${esc.escola}</div>
+            <div class="d-flex justify-content-between align-items-center text-muted" style="font-size: 0.75rem;">
+              <span><span class="material-symbols-rounded align-middle" style="font-size: 1rem;">person</span> ${esc.indicados}/${esc.total} ind.</span>
+              ${esc.faltam > 0 ? `<span class="text-danger fw-bold">${esc.faltam} faltam</span>` : `<span class="text-success fw-bold">100%</span>`}
+            </div>
+          </div>
+        `;
+
+        if(esc.status === 'Não Iniciado') { colNao.innerHTML += cardHtml; countNao++; } 
+        else if(esc.status === 'Parcial') { colParcial.innerHTML += cardHtml; countParcial++; } 
+        else if(esc.status === 'Concluído') { colConcluida.innerHTML += cardHtml; countConcluida++; }
+      });
+
+      document.getElementById('kbCountNao').innerText = countNao;
+      document.getElementById('kbCountParcial').innerText = countParcial;
+      document.getElementById('kbCountConcluida').innerText = countConcluida;
     }
 
     function carregarLogs() {
@@ -432,7 +477,7 @@
 
     function renderizarEscolas(escolas) {
       let div = document.getElementById('listaEscolas'); div.innerHTML = '';
-      if(escolas.length === 0) { div.innerHTML = '<div class="alert alert-secondary rounded-4">Nenhum dado encontrado para este filtro.</div>'; return; }
+      if(escolas.length === 0) { div.innerHTML = '<div class="alert alert-secondary rounded-4">Nenhum dado encontrado.</div>'; return; }
       
       escolas.forEach((esc, idx) => {
         let corProgresso = esc.percentual === 100 ? '#10b981' : '#0071e3';
@@ -486,7 +531,7 @@
               </div>
               <div class="col-md-3 text-end d-flex flex-column gap-2 mt-3 mt-md-0">
                 <button class="btn btn-primary rounded-pill px-3 py-2 fw-bold" onclick="abrirModalTurno(${idx})">Fazer Chamada</button>
-                <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo do Turno</button>
+                <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo</button>
               </div>
             </div>
           </div>`;
@@ -746,26 +791,6 @@
           },
           options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { position: 'bottom' } } }
         });
-      }
-
-      let tbodyAtencao = document.getElementById('tabelaAtencaoEscolas');
-      if(tbodyAtencao) {
-        tbodyAtencao.innerHTML = '';
-        let pendentes = dados.escolas.filter(e => e.faltam > 0).sort((a,b) => b.faltam - a.faltam).slice(0, 8);
-        if(pendentes.length === 0) {
-          tbodyAtencao.innerHTML = '<tr><td colspan="5" class="text-center text-success py-3 fw-bold">Todas as escolas concluíram as indicações!</td></tr>';
-        } else {
-          pendentes.forEach(e => {
-            tbodyAtencao.innerHTML += `
-              <tr>
-                <td class="fw-bold">${e.escola}</td>
-                <td class="text-center">${e.total}</td>
-                <td class="text-center text-primary fw-bold">${e.indicados}</td>
-                <td class="text-center text-danger fw-bold">${e.faltam}</td>
-                <td class="text-center"><span class="apple-badge ${e.status==='Não Iniciado'?'apple-badge-red':'apple-badge-gray'}">${e.status}</span></td>
-              </tr>`;
-          });
-        }
       }
     }
   </script>
