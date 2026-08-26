@@ -95,9 +95,21 @@
     .btn-outline-danger { transition: all 0.2s ease; }
     .btn-outline-danger:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; transform: scale(1.05); }
 
-    /* HOVER PARA CARDS KANBAN */
     .kanban-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
     .kanban-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important; }
+
+    /* ESTILOS DE IMPRESSÃO (NÃO AFETA A TELA NORMAL) */
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 40px; display: block !important; }
+      .print-header { text-align: center; margin-bottom: 40px; }
+      .print-logo { max-height: 90px; margin-bottom: 20px; }
+      .print-title { font-size: 1.6rem; font-weight: bold; text-decoration: underline; margin-bottom: 50px; font-family: 'Times New Roman', serif; }
+      .print-body { font-size: 1.2rem; line-height: 2; text-align: justify; margin-bottom: 60px; font-family: 'Times New Roman', serif; }
+      .print-footer { text-align: center; margin-top: 100px; font-family: 'Times New Roman', serif; }
+      .print-signature { border-top: 1px solid #000; width: 60%; margin: 0 auto; padding-top: 10px; font-size: 1.1rem; }
+    }
   </style>
 </head>
 <body>
@@ -156,6 +168,7 @@
           <button id="btnAbaTurno" onclick="mudarAba('turnos')"><span class="material-symbols-rounded fs-6">checklist</span> Por Turno</button>
           <button id="btnAbaConsolidado" onclick="mudarAba('consolidado')"><span class="material-symbols-rounded fs-6">table_chart</span> Consolidado</button>
           <button id="btnAbaAnalytics" onclick="mudarAba('analytics')"><span class="material-symbols-rounded fs-6">insights</span> Analytics</button>
+          <button id="btnAbaDeclaracoes" onclick="mudarAba('declaracoes')"><span class="material-symbols-rounded fs-6">description</span> Declarações</button>
           <button id="btnAbaLogs" onclick="mudarAba('logs')"><span class="material-symbols-rounded fs-6">history</span> Logs</button>
         </div>
       </div>
@@ -177,25 +190,21 @@
           <div id="listaEscolas"></div>
         </div>
 
-        <!-- ABA 6: KANBAN DE ESCOLAS -->
+        <!-- ABA 2: KANBAN DE ESCOLAS -->
         <div id="viewKanban" style="display: none;">
           <div class="row g-4">
-            <!-- Coluna Não Iniciadas -->
             <div class="col-md-4">
               <div class="glass-panel p-3" style="background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2);">
                 <h6 class="fw-bold text-danger mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded">pending_actions</span> Não Iniciadas (<span id="kbCountNao">0</span>)</h6>
                 <div id="kbColNao" class="d-flex flex-column gap-2" style="min-height: 200px;"></div>
               </div>
             </div>
-            <!-- Coluna Parciais -->
             <div class="col-md-4">
               <div class="glass-panel p-3" style="background: rgba(0, 113, 227, 0.05); border-color: rgba(0, 113, 227, 0.2);">
-                <!-- AQUI ESTÁ A CORREÇÃO DO ÍCONE HOURGLASS_HALF PARA TIMELAPSE -->
                 <h6 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded">timelapse</span> Parciais (<span id="kbCountParcial">0</span>)</h6>
                 <div id="kbColParcial" class="d-flex flex-column gap-2" style="min-height: 200px;"></div>
               </div>
             </div>
-            <!-- Coluna Concluídas -->
             <div class="col-md-4">
               <div class="glass-panel p-3" style="background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2);">
                 <h6 class="fw-bold text-success mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded">task_alt</span> Concluídas (<span id="kbCountConcluida">0</span>)</h6>
@@ -205,17 +214,15 @@
           </div>
         </div>
 
-        <!-- ABA 2: VISÃO POR TURNO -->
+        <!-- ABA 3: VISÃO POR TURNO -->
         <div id="viewTurnos" style="display: none;">
           <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 fw-bold" onclick="exportarEfetivoGeral()">
-              <span class="material-symbols-rounded align-middle fs-6 me-1">badge</span> Baixar Lista Geral de Efetivo (CSV)
-            </button>
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 fw-bold" onclick="exportarEfetivoGeral()"><span class="material-symbols-rounded align-middle fs-6 me-1">badge</span> Baixar Lista Geral de Efetivo</button>
           </div>
           <div id="listaTurnos"></div>
         </div>
 
-        <!-- ABA 3: CONSOLIDADO -->
+        <!-- ABA 4: CONSOLIDADO -->
         <div id="viewConsolidado" style="display: none;">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div><h5 class="fw-bold m-0">Balanço Regional Consolidado</h5><small class="text-muted">Totalização estratificada por polos territoriais e áreas.</small></div>
@@ -228,7 +235,7 @@
           <div class="glass-panel p-3"><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light bg-transparent"><tr><th>Componente</th><th class="text-center">Ativos</th><th class="text-center">Indicados</th><th class="text-center">Pendentes</th><th class="text-center text-success">Presentes</th><th class="text-center text-danger">Faltas</th><th class="text-center">Presença</th></tr></thead><tbody id="tabelaConsolidadoComponentes"></tbody></table></div></div>
         </div>
 
-        <!-- ABA 4: ANALYTICS -->
+        <!-- ABA 5: ANALYTICS -->
         <div id="viewAnalytics" style="display: none;">
           <div class="row g-3 mb-4">
             <div class="col-md-3 col-6"><div class="glass-panel text-center p-3"><span class="material-symbols-rounded text-success fs-3">verified</span><div class="kpi-title mt-1">Taxa de Presença</div><h3 class="fw-bold text-success m-0" id="anTaxaPresenca">0%</h3></div></div>
@@ -240,20 +247,38 @@
             <div class="col-md-6"><div class="glass-panel p-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">pie_chart</span> Balanço de Frequência</h6><div style="position: relative; height: 260px;"><canvas id="chartFrequencia"></canvas></div></div></div>
             <div class="col-md-6"><div class="glass-panel p-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">donut_large</span> Engajamento das Unidades</h6><div style="position: relative; height: 260px;"><canvas id="chartEscolasStatus"></canvas></div></div></div>
           </div>
-          <div class="glass-panel p-4 mb-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2"><span class="material-symbols-rounded text-primary">bar_chart</span> Ocupação por Turno</h6><div style="position: relative; height: 300px;"><canvas id="chartTurnos"></canvas></div></div>
-          <div class="glass-panel p-4"><h6 class="fw-bold mb-3 d-flex align-items-center gap-2 text-danger"><span class="material-symbols-rounded">warning</span> Atenção Prioritária (Pendências)</h6><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light bg-transparent"><tr><th>Escola</th><th class="text-center">Ativos</th><th class="text-center">Indicados</th><th class="text-center">Pendentes</th><th class="text-center">Status</th></tr></thead><tbody id="tabelaAtencaoEscolas"></tbody></table></div></div>
         </div>
 
-        <!-- ABA 5: LOGS -->
+        <!-- ABA 6: EMISSÃO DE DECLARAÇÕES (NOVIDADE) -->
+        <div id="viewDeclaracoes" style="display: none;">
+          <div class="glass-panel p-4 mb-4">
+            <h5 class="fw-bold text-primary mb-1 d-flex align-items-center gap-2"><span class="material-symbols-rounded">description</span> Emissão de Declarações</h5>
+            <p class="text-muted mb-4" style="font-size:0.85rem;">Gere automaticamente declarações em PDF para os professores presentes.</p>
+            
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label class="liquid-label">Local da Formação (Para o documento)</label>
+                <input type="text" id="inputLocalDec" class="liquid-input" placeholder="Ex: EE Abrahão Jacob Lafer">
+              </div>
+              <div class="col-md-6">
+                <label class="liquid-label">Data da Emissão</label>
+                <input type="date" id="inputDataDec" class="liquid-input">
+              </div>
+            </div>
+            
+            <input type="text" id="inputPesquisaDec" class="form-control rounded-pill px-4 py-2 mb-4 border-0" style="background: rgba(255,255,255,0.8); box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);" placeholder="Pesquisar professor pelo nome ou RG..." onkeyup="filtrarDeclaracoes()">
+            
+            <div id="listaDeclaracoes" class="d-flex flex-column gap-2"></div>
+          </div>
+        </div>
+
+        <!-- ABA 7: LOGS -->
         <div id="viewLogs" style="display: none;">
           <div class="glass-panel p-4">
             <h5 class="fw-bold mb-1 d-flex align-items-center gap-2 text-primary"><span class="material-symbols-rounded">history</span> Registro de Atividades (Auditoria)</h5>
-            <p class="text-muted mb-4" style="font-size:0.85rem;">Histórico completo de indicações salvas pelas escolas e chamadas registradas pelos especialistas.</p>
-            <div id="tabelaLogsContainer" class="table-responsive">
+            <div id="tabelaLogsContainer" class="table-responsive mt-4">
               <table class="table table-hover align-middle mb-0" style="font-size:0.85rem;">
-                <thead class="table-light bg-transparent">
-                  <tr><th>Data/Hora</th><th>Usuário / Escola</th><th>Ação</th><th>Detalhes</th></tr>
-                </thead>
+                <thead class="table-light bg-transparent"><tr><th>Data/Hora</th><th>Usuário / Escola</th><th>Ação</th><th>Detalhes</th></tr></thead>
                 <tbody id="tabelaLogs"></tbody>
               </table>
             </div>
@@ -288,6 +313,29 @@
     </div>
   </div>
 
+  <!-- ÁREA DE IMPRESSÃO (ESCONDIDA NA NAVEGAÇÃO NORMAL) -->
+  <div id="printArea" style="display: none;">
+    <div class="print-header">
+      <img src="logo-ure.png" class="print-logo" alt="URE São Vicente">
+      <h2 class="print-title">DECLARAÇÃO DE COMPARECIMENTO</h2>
+    </div>
+    <div class="print-body">
+      Declaro, para os devidos fins, que o(a) professor(a) <strong id="printNome"></strong>,
+      portador(a) do RG <strong id="printRg"></strong> e do CPF <strong id="printCpf"></strong>,
+      compareceu à formação continuada de <strong id="printComp"></strong>,
+      realizada no local <strong id="printLocal"></strong>, no turno <strong id="printTurno"></strong>.
+    </div>
+    <div class="text-end mb-5" style="font-size: 1.1rem; font-family: 'Times New Roman', serif;">
+      São Vicente, <span id="printData"></span>.
+    </div>
+    <div class="print-footer">
+      <div class="print-signature">
+        Assinatura do(a) Especialista / Responsável<br>
+        <strong>URE São Vicente</strong>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ⚠️ SUBSTITUA PELA SUA URL DO APPS SCRIPT
     const API_URL = "https://script.google.com/macros/s/AKfycbw6gY49y19b-L6-90Ad7-RpJVdF-mZEPilE49RdH8ufMq7kkKVIlUS3xSZ57_4d9HMQ/exec";
@@ -295,6 +343,7 @@
     let dadosCache = null;
     let chartFreqInstance = null, chartEscolasInstance = null, chartTurnosInstance = null;
     let nomeEspecialistaAtivo = "";
+    let todosProfessoresCache = [];
 
     function fazerLogin() {
       let u = document.getElementById('inputUser').value.trim();
@@ -362,19 +411,6 @@
         .catch((e) => { alert("Falha de conexão com o banco de dados. Atualize a página."); document.getElementById('loadingScreen').style.display = 'none'; });
     }
 
-    function excluirIndicacao(linha, nomeProf) {
-      if(!confirm(`Atenção: Tem certeza que deseja EXCLUIR a indicação de ${nomeProf}?\nOs dados serão apagados e a escola precisará indicar novamente.`)) return;
-      fetch(API_URL, {
-        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'excluirIndicacao', linha: linha, nomeProf: nomeProf, pecLogado: nomeEspecialistaAtivo })
-      })
-      .then(res => res.json())
-      .then(res => {
-        if(res.sucesso) { alert('Indicação excluída com sucesso!'); fecharModal(); } 
-        else { alert('Erro ao tentar excluir: ' + res.mensagem); }
-      }).catch(() => alert('Erro de conexão ao tentar excluir.'));
-    }
-
     function renderizarPainel(dados) {
       dadosCache = dados;
       document.getElementById('kpiPendentes').innerText = dados.kpis.pendentes;
@@ -396,20 +432,22 @@
       let btnAnalytics = document.getElementById('btnAbaAnalytics');
       let btnLogs = document.getElementById('btnAbaLogs');
       let btnKanban = document.getElementById('btnAbaKanban');
+      let btnDec = document.getElementById('btnAbaDeclaracoes');
 
       if(btnTurno && btnTurno.classList.contains('nav-active')) abaAtiva = 'turnos';
       else if(btnConsolidado && btnConsolidado.classList.contains('nav-active')) abaAtiva = 'consolidado';
       else if(btnAnalytics && btnAnalytics.classList.contains('nav-active')) abaAtiva = 'analytics';
       else if(btnLogs && btnLogs.classList.contains('nav-active')) abaAtiva = 'logs';
       else if(btnKanban && btnKanban.classList.contains('nav-active')) abaAtiva = 'kanban';
+      else if(btnDec && btnDec.classList.contains('nav-active')) abaAtiva = 'declaracoes';
 
       mudarAba(abaAtiva);
     }
 
     function mudarAba(aba) {
-      ['Escola', 'Turno', 'Consolidado', 'Analytics', 'Logs', 'Kanban'].forEach(tab => {
+      ['Escola', 'Turno', 'Consolidado', 'Analytics', 'Logs', 'Kanban', 'Declaracoes'].forEach(tab => {
         let btn = document.getElementById(`btnAba${tab}`);
-        if(btn) btn.className = (aba.toLowerCase() === tab.toLowerCase() || (aba==='escolas'&&tab==='Escola') || (aba==='turnos'&&tab==='Turno')) ? 'nav-active' : '';
+        if(btn) btn.className = (aba.toLowerCase() === tab.toLowerCase() || (aba==='escolas'&&tab==='Escola') || (aba==='turnos'&&tab==='Turno') || (aba==='declaracoes'&&tab==='Declaracoes')) ? 'nav-active' : '';
       });
 
       document.getElementById('viewEscolas').style.display = (aba === 'escolas') ? 'block' : 'none';
@@ -418,17 +456,106 @@
       document.getElementById('viewConsolidado').style.display = (aba === 'consolidado') ? 'block' : 'none';
       document.getElementById('viewAnalytics').style.display = (aba === 'analytics') ? 'block' : 'none';
       document.getElementById('viewLogs').style.display = (aba === 'logs') ? 'block' : 'none';
+      document.getElementById('viewDeclaracoes').style.display = (aba === 'declaracoes') ? 'block' : 'none';
 
       if (aba === 'analytics') renderizarAnalytics(dadosCache);
       if (aba === 'consolidado') renderizarConsolidado(dadosCache);
       if (aba === 'logs') carregarLogs();
+      if (aba === 'declaracoes') renderizarDeclaracoes();
+    }
+
+    // ========== NOVA SESSÃO DE DECLARAÇÕES ==========
+    function renderizarDeclaracoes() {
+      todosProfessoresCache = [];
+      if(dadosCache && dadosCache.turnos) {
+        dadosCache.turnos.forEach(t => {
+          t.professores.forEach(p => {
+            todosProfessoresCache.push({
+              nome: p.nome.replace(" (Adicionado pela escola)", ""), // Limpa tag visual
+              rg: p.rg || "Não informado",
+              cpf: p.cpf || "Não informado",
+              comp: t.comp,
+              turno: t.turno
+            });
+          });
+        });
+      }
+      
+      todosProfessoresCache.sort((a,b) => a.nome.localeCompare(b.nome));
+      document.getElementById('inputDataDec').valueAsDate = new Date();
+      
+      exibirListaDeclaracoes(todosProfessoresCache);
+    }
+
+    function exibirListaDeclaracoes(lista) {
+      let div = document.getElementById('listaDeclaracoes');
+      div.innerHTML = '';
+      if(lista.length === 0) {
+         div.innerHTML = '<div class="alert alert-secondary">Nenhum professor indicado encontrado.</div>';
+         return;
+      }
+      
+      lista.forEach(p => {
+        div.innerHTML += `
+          <div class="glass-panel p-3 d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-bold" style="font-size:0.95rem;">${p.nome}</div>
+              <div class="text-muted mt-1" style="font-size:0.75rem;">RG: ${p.rg} | CPF: ${p.cpf} | ${p.turno}</div>
+            </div>
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" onclick="imprimirDeclaracao('${p.nome}', '${p.rg}', '${p.cpf}', '${p.comp}', '${p.turno}')">
+              <span class="material-symbols-rounded align-middle fs-6 me-1">print</span> Imprimir
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    function filtrarDeclaracoes() {
+      let termo = document.getElementById('inputPesquisaDec').value.toLowerCase();
+      let filtrados = todosProfessoresCache.filter(p => p.nome.toLowerCase().includes(termo) || p.rg.toLowerCase().includes(termo));
+      exibirListaDeclaracoes(filtrados);
+    }
+
+    function imprimirDeclaracao(nome, rg, cpf, comp, turno) {
+      let local = document.getElementById('inputLocalDec').value.trim();
+      if(!local) {
+        alert("Por favor, preencha o campo 'Local da Formação' antes de gerar a declaração.");
+        document.getElementById('inputLocalDec').focus();
+        return;
+      }
+      
+      let dataInput = document.getElementById('inputDataDec').value;
+      let dataFormatada = dataInput.split('-').reverse().join('/');
+
+      document.getElementById('printNome').innerText = nome;
+      document.getElementById('printRg').innerText = rg;
+      document.getElementById('printCpf').innerText = cpf;
+      document.getElementById('printComp').innerText = comp;
+      document.getElementById('printTurno').innerText = turno;
+      document.getElementById('printLocal').innerText = local;
+      document.getElementById('printData').innerText = dataFormatada;
+
+      window.print();
+    }
+    // =================================================
+
+    function excluirIndicacao(linha, nomeProf) {
+      if(!confirm(`Atenção: Tem certeza que deseja EXCLUIR a indicação de ${nomeProf}?\nOs dados serão apagados e a escola precisará indicar novamente.`)) return;
+      fetch(API_URL, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'excluirIndicacao', linha: linha, nomeProf: nomeProf, pecLogado: nomeEspecialistaAtivo })
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res.sucesso) { alert('Indicação excluída com sucesso!'); fecharModal(); } 
+        else { alert('Erro ao tentar excluir: ' + res.mensagem); }
+      }).catch(() => alert('Erro de conexão ao tentar excluir.'));
     }
 
     function renderizarKanban(escolas) {
       let colNao = document.getElementById('kbColNao');
       let colParcial = document.getElementById('kbColParcial');
       let colConcluida = document.getElementById('kbColConcluida');
-      
       colNao.innerHTML = ''; colParcial.innerHTML = ''; colConcluida.innerHTML = '';
       let countNao = 0, countParcial = 0, countConcluida = 0;
 
@@ -444,12 +571,10 @@
             </div>
           </div>
         `;
-
         if(esc.status === 'Não Iniciado') { colNao.innerHTML += cardHtml; countNao++; } 
         else if(esc.status === 'Parcial') { colParcial.innerHTML += cardHtml; countParcial++; } 
         else if(esc.status === 'Concluído') { colConcluida.innerHTML += cardHtml; countConcluida++; }
       });
-
       document.getElementById('kbCountNao').innerText = countNao;
       document.getElementById('kbCountParcial').innerText = countParcial;
       document.getElementById('kbCountConcluida').innerText = countConcluida;
@@ -458,21 +583,14 @@
     function carregarLogs() {
       let tb = document.getElementById('tabelaLogs');
       tb.innerHTML = '<tr><td colspan="4" class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm"></div> Buscando histórico...</td></tr>';
-      
       fetch(`${API_URL}?action=getLogs`)
         .then(res => res.json())
         .then(logs => {
           tb.innerHTML = '';
           if(logs.length === 0) { tb.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Nenhum registro encontrado.</td></tr>'; return; }
-          
           logs.forEach(l => {
             let badgeColor = l.acao === "Chamada" ? "apple-badge-green" : (l.acao === "Login" ? "apple-badge-gray" : (l.acao === "Exclusão" ? "apple-badge-red" : "apple-badge-blue"));
-            tb.innerHTML += `<tr>
-              <td class="text-muted" style="white-space:nowrap;">${l.data}</td>
-              <td class="fw-bold">${l.usuario}</td>
-              <td><span class="apple-badge ${badgeColor}" style="font-size:0.75rem;">${l.acao}</span></td>
-              <td>${l.detalhes}</td>
-            </tr>`;
+            tb.innerHTML += `<tr><td class="text-muted" style="white-space:nowrap;">${l.data}</td><td class="fw-bold">${l.usuario}</td><td><span class="apple-badge ${badgeColor}" style="font-size:0.75rem;">${l.acao}</span></td><td>${l.detalhes}</td></tr>`;
           });
         });
     }
@@ -480,28 +598,15 @@
     function renderizarEscolas(escolas) {
       let div = document.getElementById('listaEscolas'); div.innerHTML = '';
       if(escolas.length === 0) { div.innerHTML = '<div class="alert alert-secondary rounded-4">Nenhum dado encontrado.</div>'; return; }
-      
       escolas.forEach((esc, idx) => {
         let corProgresso = esc.percentual === 100 ? '#10b981' : '#0071e3';
-        let statusBadge = esc.faltam > 0
-          ? `<span class="text-danger fw-bold" style="font-size:0.82rem">${esc.faltam} pendente(s)</span>`
-          : `<span class="apple-badge apple-badge-green"><span class="material-symbols-rounded align-middle fs-6 me-1">check</span> Concluído</span>`;
-
+        let statusBadge = esc.faltam > 0 ? `<span class="text-danger fw-bold" style="font-size:0.82rem">${esc.faltam} pendente(s)</span>` : `<span class="apple-badge apple-badge-green"><span class="material-symbols-rounded align-middle fs-6 me-1">check</span> Concluído</span>`;
         div.innerHTML += `
           <div class="glass-panel p-3 px-4 mb-3">
             <div class="row align-items-center">
-              <div class="col-md-5 mb-2 mb-md-0">
-                <h6 class="fw-bold mb-1">${esc.escola}</h6>
-                ${esc.afastados > 0 ? `<small class="text-muted"><span class="material-symbols-rounded align-middle fs-6">person_off</span> ${esc.afastados} afastado(s)</small>` : ''}
-              </div>
-              <div class="col-md-4 text-center">
-                <div class="d-flex justify-content-between text-muted" style="font-size: 0.78rem;"><span>${esc.indicados} indicados</span><span>${esc.total} ativos</span></div>
-                <div class="prog-bg"><div class="prog-fill" style="width: ${esc.percentual}%; background-color: ${corProgresso};"></div></div>
-              </div>
-              <div class="col-md-3 text-md-end d-flex flex-column align-items-md-end gap-1 mt-2 mt-md-0">
-                ${statusBadge}
-                <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold mt-1" onclick="abrirModalEscola(${idx})">Ver Detalhes</button>
-              </div>
+              <div class="col-md-5 mb-2 mb-md-0"><h6 class="fw-bold mb-1">${esc.escola}</h6>${esc.afastados > 0 ? `<small class="text-muted"><span class="material-symbols-rounded align-middle fs-6">person_off</span> ${esc.afastados} afastado(s)</small>` : ''}</div>
+              <div class="col-md-4 text-center"><div class="d-flex justify-content-between text-muted" style="font-size: 0.78rem;"><span>${esc.indicados} indicados</span><span>${esc.total} ativos</span></div><div class="prog-bg"><div class="prog-fill" style="width: ${esc.percentual}%; background-color: ${corProgresso};"></div></div></div>
+              <div class="col-md-3 text-md-end d-flex flex-column align-items-md-end gap-1 mt-2 mt-md-0">${statusBadge}<button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold mt-1" onclick="abrirModalEscola(${idx})">Ver Detalhes</button></div>
             </div>
           </div>`;
       });
@@ -515,26 +620,13 @@
     function renderizarTurnos(turnos) {
       let div = document.getElementById('listaTurnos'); div.innerHTML = '';
       if(turnos.length === 0) div.innerHTML = '<div class="alert alert-info rounded-4">Nenhum turno com inscrições nesta área.</div>';
-      
       turnos.forEach((t, idx) => {
         div.innerHTML += `
           <div class="glass-panel p-4 mb-3" style="border-left: 4px solid var(--apple-primary);">
             <div class="row align-items-center">
-              <div class="col-md-5 mb-2 mb-md-0">
-                <h5 class="fw-bold text-primary mb-1">${t.turno}</h5>
-                <small class="text-muted d-block"><span class="material-symbols-rounded align-middle fs-6">book</span> ${t.comp}</small>
-                <small class="text-muted d-block"><span class="material-symbols-rounded align-middle fs-6">groups</span> ${t.total} inscritos</small>
-              </div>
-              <div class="col-md-4 text-center mb-2 mb-md-0">
-                <div class="d-flex justify-content-center gap-2">
-                  <span class="apple-badge apple-badge-green">Presentes: ${t.presentes}</span>
-                  <span class="apple-badge apple-badge-red">Faltas: ${t.faltas}</span>
-                </div>
-              </div>
-              <div class="col-md-3 text-end d-flex flex-column gap-2 mt-3 mt-md-0">
-                <button class="btn btn-primary rounded-pill px-3 py-2 fw-bold" onclick="abrirModalTurno(${idx})">Fazer Chamada</button>
-                <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo do Turno</button>
-              </div>
+              <div class="col-md-5 mb-2 mb-md-0"><h5 class="fw-bold text-primary mb-1">${t.turno}</h5><small class="text-muted d-block"><span class="material-symbols-rounded align-middle fs-6">book</span> ${t.comp}</small><small class="text-muted d-block"><span class="material-symbols-rounded align-middle fs-6">groups</span> ${t.total} inscritos</small></div>
+              <div class="col-md-4 text-center mb-2 mb-md-0"><div class="d-flex justify-content-center gap-2"><span class="apple-badge apple-badge-green">Presentes: ${t.presentes}</span><span class="apple-badge apple-badge-red">Faltas: ${t.faltas}</span></div></div>
+              <div class="col-md-3 text-end d-flex flex-column gap-2 mt-3 mt-md-0"><button class="btn btn-primary rounded-pill px-3 py-2 fw-bold" onclick="abrirModalTurno(${idx})">Fazer Chamada</button><button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo do Turno</button></div>
             </div>
           </div>`;
       });
@@ -542,54 +634,18 @@
 
     function renderizarConsolidado(dados) {
       if(!dados) return;
-
-      let cardsPolos = document.getElementById('cardsPolosGrid');
-      let tbodyPolos = document.getElementById('tabelaConsolidadoPolos');
-      cardsPolos.innerHTML = '';
-      tbodyPolos.innerHTML = '';
-
+      let cardsPolos = document.getElementById('cardsPolosGrid'); let tbodyPolos = document.getElementById('tabelaConsolidadoPolos');
+      cardsPolos.innerHTML = ''; tbodyPolos.innerHTML = '';
       if (dados.consolidadoPolos && dados.consolidadoPolos.length > 0) {
         dados.consolidadoPolos.forEach(p => {
-          cardsPolos.innerHTML += `
-            <div class="col-md-4">
-              <div class="glass-panel p-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="apple-badge apple-badge-blue">${p.polo}</span>
-                  <span class="text-muted" style="font-size:0.8rem;"><b>${p.taxaPresenca}%</b> Presença</span>
-                </div>
-                <div class="d-flex justify-content-between text-muted" style="font-size:0.82rem;"><span>Ativos:</span><strong class="text-dark">${p.total}</strong></div>
-                <div class="d-flex justify-content-between text-muted" style="font-size:0.82rem;"><span>Presentes / Faltas:</span><strong class="text-success">${p.presentes} <span class="text-muted">/</span> <span class="text-danger">${p.faltas}</span></strong></div>
-                <div class="d-flex justify-content-between text-muted" style="font-size:0.82rem;"><span>Pendentes:</span><strong class="text-danger">${p.pendentes}</strong></div>
-              </div>
-            </div>`;
-
-          tbodyPolos.innerHTML += `
-            <tr>
-              <td class="fw-bold">${p.polo}</td>
-              <td class="text-center">${p.total}</td>
-              <td class="text-center text-primary fw-bold">${p.indicados}</td>
-              <td class="text-center text-danger fw-bold">${p.pendentes}</td>
-              <td class="text-center text-success fw-bold">${p.presentes}</td>
-              <td class="text-center text-danger fw-bold">${p.faltas}</td>
-              <td class="text-center fw-bold">${p.taxaPresenca}%</td>
-            </tr>`;
+          cardsPolos.innerHTML += `<div class="col-md-4"><div class="glass-panel p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="apple-badge apple-badge-blue">${p.polo}</span><span class="text-muted" style="font-size:0.8rem;"><b>${p.taxaPresenca}%</b> Presença</span></div><div class="d-flex justify-content-between text-muted" style="font-size:0.82rem;"><span>Ativos:</span><strong class="text-dark">${p.total}</strong></div><div class="d-flex justify-content-between text-muted" style="font-size:0.82rem;"><span>Presentes / Faltas:</span><strong class="text-success">${p.presentes} <span class="text-muted">/</span> <span class="text-danger">${p.faltas}</span></strong></div><div class="d-flex justify-content-between text-muted" style="font-size:0.82rem;"><span>Pendentes:</span><strong class="text-danger">${p.pendentes}</strong></div></div></div>`;
+          tbodyPolos.innerHTML += `<tr><td class="fw-bold">${p.polo}</td><td class="text-center">${p.total}</td><td class="text-center text-primary fw-bold">${p.indicados}</td><td class="text-center text-danger fw-bold">${p.pendentes}</td><td class="text-center text-success fw-bold">${p.presentes}</td><td class="text-center text-danger fw-bold">${p.faltas}</td><td class="text-center fw-bold">${p.taxaPresenca}%</td></tr>`;
         });
       }
-
-      let tbodyComp = document.getElementById('tabelaConsolidadoComponentes');
-      tbodyComp.innerHTML = '';
+      let tbodyComp = document.getElementById('tabelaConsolidadoComponentes'); tbodyComp.innerHTML = '';
       if (dados.consolidadoComponentes && dados.consolidadoComponentes.length > 0) {
         dados.consolidadoComponentes.forEach(c => {
-          tbodyComp.innerHTML += `
-            <tr>
-              <td class="fw-bold">${c.componente}</td>
-              <td class="text-center">${c.total}</td>
-              <td class="text-center text-primary fw-bold">${c.indicados}</td>
-              <td class="text-center text-danger fw-bold">${c.pendentes}</td>
-              <td class="text-center text-success fw-bold">${c.presentes}</td>
-              <td class="text-center text-danger fw-bold">${c.faltas}</td>
-              <td class="text-center fw-bold">${c.taxaPresenca}%</td>
-            </tr>`;
+          tbodyComp.innerHTML += `<tr><td class="fw-bold">${c.componente}</td><td class="text-center">${c.total}</td><td class="text-center text-primary fw-bold">${c.indicados}</td><td class="text-center text-danger fw-bold">${c.pendentes}</td><td class="text-center text-success fw-bold">${c.presentes}</td><td class="text-center text-danger fw-bold">${c.faltas}</td><td class="text-center fw-bold">${c.taxaPresenca}%</td></tr>`;
         });
       }
     }
@@ -598,29 +654,17 @@
       if (!dadosCache || !dadosCache.turnos) return;
       let t = dadosCache.turnos[idx];
       let csvContent = "\uFEFFEscola;Nome do Professor;RG;CPF;Agência;Conta Corrente;Componente;Turno;Presença\n";
-      t.professores.forEach(p => {
-        csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`;
-      });
+      t.professores.forEach(p => { csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`; });
       let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `Efetivo_Exercicio_${t.turno.replace(/[\/\\]/g, '-')}.csv`;
-      link.click();
+      let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Efetivo_Exercicio_${t.turno.replace(/[\/\\]/g, '-')}.csv`; link.click();
     }
 
     function exportarEfetivoGeral() {
       if (!dadosCache || !dadosCache.turnos) return;
       let csvContent = "\uFEFFEscola;Nome do Professor;RG;CPF;Agência;Conta Corrente;Componente;Turno;Presença\n";
-      dadosCache.turnos.forEach(t => {
-        t.professores.forEach(p => {
-          csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`;
-        });
-      });
+      dadosCache.turnos.forEach(t => { t.professores.forEach(p => { csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`; }); });
       let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `Efetivo_Exercicio_Completo_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`;
-      link.click();
+      let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Efetivo_Exercicio_Completo_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`; link.click();
     }
 
     function exportarRelatorioConsolidado() {
@@ -629,171 +673,77 @@
       dadosCache.consolidadoPolos.forEach(p => csvContent += `"${p.polo}";${p.total};${p.indicados};${p.pendentes};${p.presentes};${p.faltas};"${p.taxaPresenca}%"\n`);
       csvContent += "\n--- CONSOLIDADO POR COMPONENTE CURRICULAR ---\nComponente;Total Ativos;Indicados;Pendentes;Presentes;Faltas;Taxa Presenca (%)\n";
       dadosCache.consolidadoComponentes.forEach(c => csvContent += `"${c.componente}";${c.total};${c.indicados};${c.pendentes};${c.presentes};${c.faltas};"${c.taxaPresenca}%"\n`);
-
-      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `Relatorio_Consolidado_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`;
-      link.click();
+      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Relatorio_Consolidado_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`; link.click();
     }
 
     function abrirModalEscola(idx) {
       let escola = dadosCache.escolas[idx];
       document.getElementById('modalTituloEscolaDetalhe').innerText = escola.escola;
       let html = '';
-
-      if(escola.responsavel) {
-        html += `<div class="p-3 rounded-4 mb-3" style="background: rgba(0, 113, 227, 0.08);"><small class="text-muted d-block" style="font-size:0.75rem;">Responsável:</small><b>${escola.responsavel}</b></div>`;
-      }
-
+      if(escola.responsavel) { html += `<div class="p-3 rounded-4 mb-3" style="background: rgba(0, 113, 227, 0.08);"><small class="text-muted d-block" style="font-size:0.75rem;">Responsável:</small><b>${escola.responsavel}</b></div>`; }
       if(escola.listaIndicados.length > 0) {
         html += `<h6 class="fw-bold text-success mb-2">Professores Indicados (${escola.listaIndicados.length})</h6><div class="list-group list-group-flush mb-3">`;
         escola.listaIndicados.forEach(p => {
           let badgeTag = p.nome.includes("(Adicionado") ? `<span class="badge bg-warning text-dark ms-2" style="font-size:0.6rem;">Incluído Manualmente</span>` : "";
-          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center">
-                     <div><b>${p.nome}</b> ${badgeTag} <small class="text-muted d-block">${p.comp}</small></div>
-                     <div class="d-flex align-items-center gap-2">
-                       <span class="apple-badge apple-badge-blue">${p.turno}</span>
-                       <button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${p.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button>
-                     </div>
-                   </div>`;
+          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center"><div><b>${p.nome}</b> ${badgeTag} <small class="text-muted d-block">${p.comp}</small></div><div class="d-flex align-items-center gap-2"><span class="apple-badge apple-badge-blue">${p.turno}</span><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${p.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button></div></div>`;
         });
         html += '</div>';
       }
-
       if(escola.listaPendentes.length > 0) {
         html += `<h6 class="fw-bold text-danger mb-2">Pendentes (${escola.listaPendentes.length})</h6><div class="list-group list-group-flush mb-3">`;
-        escola.listaPendentes.forEach(p => {
-          html += `<div class="list-group-item bg-transparent px-0 py-2"><b>${p.nome}</b><small class="text-muted d-block">${p.comp}</small></div>`;
-        });
+        escola.listaPendentes.forEach(p => { html += `<div class="list-group-item bg-transparent px-0 py-2"><b>${p.nome}</b><small class="text-muted d-block">${p.comp}</small></div>`; });
         html += '</div>';
       }
-
       if(escola.listaAfastados && escola.listaAfastados.length > 0) {
         html += `<h6 class="fw-bold text-secondary mb-2">Afastados (${escola.listaAfastados.length})</h6><div class="list-group list-group-flush mb-3">`;
         escola.listaAfastados.forEach(p => {
-          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center">
-                     <div class="text-muted"><span>${p.nome}</span><small class="d-block">${p.comp}</small></div>
-                     <button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${p.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button>
-                   </div>`;
+          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center"><div class="text-muted"><span>${p.nome}</span><small class="d-block">${p.comp}</small></div><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${p.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button></div>`;
         });
         html += '</div>';
       }
-
-      document.getElementById('modalConteudoEscola').innerHTML = html;
-      document.getElementById('modalEscola').style.display = 'flex';
+      document.getElementById('modalConteudoEscola').innerHTML = html; document.getElementById('modalEscola').style.display = 'flex';
     }
 
     function abrirModalTurno(idx) {
       let turno = dadosCache.turnos[idx];
       document.getElementById('modalTituloTurno').innerText = turno.turno;
       let html = '';
-      
       turno.professores.forEach(prof => {
         let btnP = prof.presenca === 'Presente' ? 'btn-presente' : 'btn-neutro';
         let btnF = prof.presenca === 'Falta' ? 'btn-falta' : 'btn-neutro';
         let isManual = prof.nome.includes("(Adicionado");
-        
         html += `
           <div class="list-group-item bg-transparent px-0 py-3 d-flex justify-content-between align-items-center border-bottom">
-            <div>
-              <div class="fw-bold">${prof.nome} ${isManual ? '<span class="badge bg-warning text-dark ms-1" style="font-size:0.6rem;">Manual</span>' : ''}</div>
-              <small class="text-muted">${prof.escola}</small>
-              ${prof.rg ? `<div class="text-muted" style="font-size:0.75rem;">RG: ${prof.rg} | CPF: ${prof.cpf}</div>` : ''}
-            </div>
-            <div class="d-flex align-items-center gap-2">
-              <div class="btn-group">
-                <button class="btn-presenca ${btnP}" onclick="registrarFrequencia(${prof.linha}, 'Presente', '${prof.nome}', this)">Presente</button>
-                <button class="btn-presenca ${btnF}" onclick="registrarFrequencia(${prof.linha}, 'Falta', '${prof.nome}', this)">Faltou</button>
-              </div>
-              <button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${prof.linha}, '${prof.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.2rem;">delete</span></button>
-            </div>
+            <div><div class="fw-bold">${prof.nome} ${isManual ? '<span class="badge bg-warning text-dark ms-1" style="font-size:0.6rem;">Manual</span>' : ''}</div><small class="text-muted">${prof.escola}</small>${prof.rg ? `<div class="text-muted" style="font-size:0.75rem;">RG: ${prof.rg} | CPF: ${prof.cpf}</div>` : ''}</div>
+            <div class="d-flex align-items-center gap-2"><div class="btn-group"><button class="btn-presenca ${btnP}" onclick="registrarFrequencia(${prof.linha}, 'Presente', '${prof.nome}', this)">Presente</button><button class="btn-presenca ${btnF}" onclick="registrarFrequencia(${prof.linha}, 'Falta', '${prof.nome}', this)">Faltou</button></div><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${prof.linha}, '${prof.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.2rem;">delete</span></button></div>
           </div>`;
       });
-      
-      document.getElementById('modalListaPresenca').innerHTML = html;
-      document.getElementById('modalFreq').style.display = 'flex';
+      document.getElementById('modalListaPresenca').innerHTML = html; document.getElementById('modalFreq').style.display = 'flex';
     }
 
     function registrarFrequencia(linha, status, nomeProf, btnElement) {
       let parent = btnElement.parentElement;
       parent.querySelectorAll('.btn-presenca').forEach(b => b.className = 'btn-presenca btn-neutro');
       btnElement.className = `btn-presenca ${status === 'Presente' ? 'btn-presente' : 'btn-falta'}`;
-      
-      fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'salvarFrequencia', linha: linha, statusPresenca: status, nomeProf: nomeProf, pecLogado: nomeEspecialistaAtivo })
-      });
+      fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'salvarFrequencia', linha: linha, statusPresenca: status, nomeProf: nomeProf, pecLogado: nomeEspecialistaAtivo }) });
     }
 
-    function fecharModal() { 
-      document.getElementById('modalEscola').style.display = 'none'; 
-      document.getElementById('modalFreq').style.display = 'none'; 
-      carregarDados();
-    }
+    function fecharModal() { document.getElementById('modalEscola').style.display = 'none'; document.getElementById('modalFreq').style.display = 'none'; carregarDados(); }
 
     function renderizarAnalytics(dados) {
       if(!dados || !dados.kpis) return;
       let k = dados.kpis;
-      document.getElementById('anTaxaPresenca').innerText = `${k.percPresenca}%`;
-      document.getElementById('anTaxaFalta').innerText = `${k.taxaAbsenteismo}%`;
-      let totalEscolas = k.statusEscolas.totalEscolas;
-      let concluidas = k.statusEscolas.concluidas;
-      document.getElementById('anAdesaoEscolas').innerText = `${totalEscolas > 0 ? Math.round((concluidas/totalEscolas)*100) : 0}%`;
+      document.getElementById('anTaxaPresenca').innerText = `${k.percPresenca}%`; document.getElementById('anTaxaFalta').innerText = `${k.taxaAbsenteismo}%`;
+      document.getElementById('anAdesaoEscolas').innerText = `${k.statusEscolas.totalEscolas > 0 ? Math.round((k.statusEscolas.concluidas/k.statusEscolas.totalEscolas)*100) : 0}%`;
       document.getElementById('anAfastados').innerText = k.afastados;
 
-      if(chartFreqInstance) chartFreqInstance.destroy();
-      if(chartEscolasInstance) chartEscolasInstance.destroy();
-      if(chartTurnosInstance) chartTurnosInstance.destroy();
-
+      if(chartFreqInstance) chartFreqInstance.destroy(); if(chartEscolasInstance) chartEscolasInstance.destroy(); if(chartTurnosInstance) chartTurnosInstance.destroy();
       let ctxFreq = document.getElementById('chartFrequencia');
-      if(ctxFreq) {
-        chartFreqInstance = new Chart(ctxFreq, {
-          type: 'doughnut',
-          data: {
-            labels: ['Presentes', 'Faltas', 'Sem Registro'],
-            datasets: [{
-              data: [k.presentes, k.faltas, Math.max(0, k.indicados - (k.presentes + k.faltas))],
-              backgroundColor: ['#10b981', '#ef4444', '#e5e7eb'],
-              borderWidth: 0
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-        });
-      }
-
+      if(ctxFreq) { chartFreqInstance = new Chart(ctxFreq, { type: 'doughnut', data: { labels: ['Presentes', 'Faltas', 'Sem Registro'], datasets: [{ data: [k.presentes, k.faltas, Math.max(0, k.indicados - (k.presentes + k.faltas))], backgroundColor: ['#10b981', '#ef4444', '#e5e7eb'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } }); }
       let ctxEsc = document.getElementById('chartEscolasStatus');
-      if(ctxEsc) {
-        chartEscolasInstance = new Chart(ctxEsc, {
-          type: 'pie',
-          data: {
-            labels: ['Concluídas', 'Parciais', 'Não Iniciadas'],
-            datasets: [{
-              data: [k.statusEscolas.concluidas, k.statusEscolas.parciais, k.statusEscolas.naoIniciadas],
-              backgroundColor: ['#10b981', '#0071e3', '#ef4444'],
-              borderWidth: 0
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-        });
-      }
-
+      if(ctxEsc) { chartEscolasInstance = new Chart(ctxEsc, { type: 'pie', data: { labels: ['Concluídas', 'Parciais', 'Não Iniciadas'], datasets: [{ data: [k.statusEscolas.concluidas, k.statusEscolas.parciais, k.statusEscolas.naoIniciadas], backgroundColor: ['#10b981', '#0071e3', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } }); }
       let ctxTurnos = document.getElementById('chartTurnos');
-      if(ctxTurnos && dados.turnos.length > 0) {
-        chartTurnosInstance = new Chart(ctxTurnos, {
-          type: 'bar',
-          data: {
-            labels: dados.turnos.map(t => t.turno.length > 25 ? t.turno.substring(0,25) + '...' : t.turno),
-            datasets: [
-              { label: 'Inscritos', data: dados.turnos.map(t => t.total), backgroundColor: '#0071e3', borderRadius: 8 },
-              { label: 'Presentes', data: dados.turnos.map(t => t.presentes), backgroundColor: '#10b981', borderRadius: 8 },
-              { label: 'Faltas', data: dados.turnos.map(t => t.faltas), backgroundColor: '#ef4444', borderRadius: 8 }
-            ]
-          },
-          options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { position: 'bottom' } } }
-        });
-      }
+      if(ctxTurnos && dados.turnos.length > 0) { chartTurnosInstance = new Chart(ctxTurnos, { type: 'bar', data: { labels: dados.turnos.map(t => t.turno.length > 25 ? t.turno.substring(0,25) + '...' : t.turno), datasets: [ { label: 'Inscritos', data: dados.turnos.map(t => t.total), backgroundColor: '#0071e3', borderRadius: 8 }, { label: 'Presentes', data: dados.turnos.map(t => t.presentes), backgroundColor: '#10b981', borderRadius: 8 }, { label: 'Faltas', data: dados.turnos.map(t => t.faltas), backgroundColor: '#ef4444', borderRadius: 8 } ] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { position: 'bottom' } } } }); }
     }
   </script>
 </body>
