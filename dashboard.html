@@ -38,18 +38,18 @@
       padding-bottom: 60px;
     }
 
-    .glass-panel { background: var(--apple-card-bg); backdrop-filter: blur(30px) saturate(190%); -webkit-backdrop-filter: blur(30px) saturate(190%); border: 1px solid var(--apple-card-border); border-radius: 24px; box-shadow: var(--apple-shadow), var(--apple-glass-inset); }
-    .glass-appbar { background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 980px; padding: 12px 28px; margin: 24px auto 32px auto; max-width: 1020px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), var(--apple-glass-inset); }
+    .glass-panel { background: var(--apple-card-bg); backdrop-filter: blur(30px) saturate(190%); border: 1px solid var(--apple-card-border); border-radius: 24px; box-shadow: var(--apple-shadow), var(--apple-glass-inset); }
+    .glass-appbar { background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(25px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 980px; padding: 12px 28px; margin: 24px auto 32px auto; max-width: 1020px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), var(--apple-glass-inset); }
     .apple-badge-icon { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #0071e3, #60a5fa); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3); flex-shrink: 0; }
     .ure-logo { height: 38px; max-width: 130px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.04)); }
 
     /* SELETOR DE COMPONENTE ESTILO APPLE */
     .apple-select-pill {
-      appearance: none; -webkit-appearance: none; background-color: rgba(0, 113, 227, 0.08); color: var(--apple-primary);
+      appearance: none; background-color: rgba(0, 113, 227, 0.08); color: var(--apple-primary);
       font-weight: 600; font-size: 0.85rem; padding: 9px 36px 9px 16px; border-radius: 980px; border: 1px solid rgba(0, 113, 227, 0.2);
       cursor: pointer; transition: all 0.2s ease;
       background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%230071e3%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
-      background-repeat: no-repeat; background-position: right 14px center; outline: none; box-shadow: 0 2px 6px rgba(0, 113, 227, 0.05); max-width: 100%;
+      background-repeat: no-repeat; background-position: right 14px center; outline: none; max-width: 100%;
     }
     .apple-select-pill:hover { background-color: rgba(0, 113, 227, 0.14); border-color: var(--apple-primary); box-shadow: 0 4px 12px rgba(0, 113, 227, 0.12); }
     .apple-select-pill:focus { box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.25); }
@@ -70,7 +70,7 @@
     .apple-badge-red { background: rgba(239, 68, 68, 0.12) !important; color: #dc2626 !important; border-color: rgba(239, 68, 68, 0.25) !important; }
     .apple-badge-gray { background: rgba(120, 120, 128, 0.12) !important; color: #555558 !important; border-color: rgba(120, 120, 128, 0.2) !important; }
 
-    .liquid-segmented { background: rgba(118, 118, 128, 0.12); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 5px; border-radius: 980px; display: inline-flex; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04); flex-wrap: wrap; justify-content: center; }
+    .liquid-segmented { background: rgba(118, 118, 128, 0.12); backdrop-filter: blur(20px); padding: 5px; border-radius: 980px; display: inline-flex; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04); flex-wrap: wrap; justify-content: center; }
     .liquid-segmented button { border: none; background: transparent; color: var(--apple-text-secondary); padding: 8px 20px; border-radius: 980px; font-size: 0.88rem; font-weight: 500; transition: all 0.25s ease; display: flex; align-items: center; gap: 6px; }
     .liquid-segmented button.nav-active { background: rgba(255, 255, 255, 0.95); color: var(--apple-text); box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); font-weight: 600; }
 
@@ -97,11 +97,20 @@
     .kanban-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
     .kanban-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important; }
 
-    /* ESTILOS DE IMPRESSÃO */
+    /* ESTILOS DE IMPRESSÃO (CONTROLA AS DUAS VISÕES) */
     @media print {
       body * { visibility: hidden; }
-      #printArea, #printArea * { visibility: visible; }
-      #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; font-family: Arial, sans-serif; }
+
+      /* ATIVA A TELA DE DECLARAÇÃO (RETRATO) */
+      body.print-mode-dec #printArea, body.print-mode-dec #printArea * { visibility: visible; }
+      body.print-mode-dec #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; font-family: Arial, sans-serif; }
+      
+      /* ATIVA A TELA DA LISTA DE PRESENÇA (PAISAGEM) */
+      body.print-mode-lista @page { size: A4 landscape; margin: 8mm; }
+      body.print-mode-lista #printListaArea, body.print-mode-lista #printListaArea * { visibility: visible; }
+      body.print-mode-lista #printListaArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; font-family: Arial, sans-serif; }
+
+      /* ESTILOS DA DECLARAÇÃO */
       .print-border { border: 5px double #000; padding: 40px 50px; min-height: 95vh; box-sizing: border-box; }
       .print-header-table { width: 100%; margin-bottom: 50px; text-align: center; }
       .print-header-table td { vertical-align: middle; }
@@ -112,11 +121,24 @@
       .print-body { font-size: 1.15rem; line-height: 2; text-align: justify; margin-bottom: 60px; }
       .print-indent { text-indent: 80px; margin-bottom: 25px; }
       .print-footer { text-align: right; margin-top: 60px; font-size: 1.1rem; }
+
+      /* ESTILOS DA LISTA DE PRESENÇA KANBAN/TABELA */
+      .pl-header-table { width: 100%; margin-bottom: 10px; }
+      .pl-header-text { text-align: center; font-size: 11px; line-height: 1.3; }
+      .pl-title { font-size: 16px; font-weight: bold; text-align: center; margin: 15px 0; }
+      
+      .pl-info-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 11px; }
+      .pl-info-table td { border: 1px solid #000; padding: 6px; }
+      
+      .pl-main-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+      .pl-main-table th, .pl-main-table td { border: 1px solid #000; padding: 5px; text-align: center; vertical-align: middle; }
+      .pl-main-table th { font-weight: bold; background-color: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
     }
   </style>
 </head>
 <body>
 
+  <!-- TELA DE LOGIN DO ESPECIALISTA -->
   <div class="container" id="loginScreen" style="max-width: 500px; margin-top: 10vh;">
     <div class="glass-panel p-5 text-center">
       <div class="apple-badge-icon mx-auto mb-4" style="width: 60px; height: 60px;"><span class="material-symbols-rounded fs-2">monitoring</span></div>
@@ -129,6 +151,7 @@
     </div>
   </div>
 
+  <!-- APLICAÇÃO PRINCIPAL -->
   <div id="appScreen" style="display: none;">
     <div class="container px-3">
       <div class="glass-appbar d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -146,6 +169,7 @@
 
     <div class="container" style="max-width: 1020px;">
       
+      <!-- MENU DE ABAS -->
       <div class="text-center mb-4">
         <div class="liquid-segmented">
           <button id="btnAbaEscola" class="nav-active" onclick="mudarAba('escolas')"><span class="material-symbols-rounded fs-6">list</span> Lista</button>
@@ -161,6 +185,7 @@
       <div id="loadingScreen" class="text-center py-5" style="display:none;"><div class="spinner-border text-primary"></div><h6 class="mt-3 text-muted">Carregando métricas da rede...</h6></div>
 
       <div id="dashboardContent">
+        <!-- Top KPIs -->
         <div class="kpi-grid">
           <div class="kpi-card"><div class="kpi-title text-danger">Inscrições Pendentes</div><div class="kpi-value text-danger" id="kpiPendentes">0</div></div>
           <div class="kpi-card"><div class="kpi-title text-primary">Total Indicados</div><div class="kpi-value text-primary" id="kpiIndicados">0</div></div>
@@ -187,7 +212,9 @@
         </div>
 
         <div id="viewTurnos" style="display: none;">
-          <div class="d-flex justify-content-end mb-3"><button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 fw-bold" onclick="exportarEfetivoGeral()"><span class="material-symbols-rounded align-middle fs-6 me-1">badge</span> Baixar Lista Geral de Efetivo</button></div>
+          <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 fw-bold" onclick="exportarEfetivoGeral()"><span class="material-symbols-rounded align-middle fs-6 me-1">badge</span> Baixar Lista (CSV)</button>
+          </div>
           <div id="listaTurnos"></div>
         </div>
 
@@ -218,7 +245,7 @@
             <h5 class="fw-bold text-primary mb-1 d-flex align-items-center gap-2"><span class="material-symbols-rounded">description</span> Emissão de Declarações</h5>
             <p class="text-muted mb-4" style="font-size:0.85rem;">Gere automaticamente declarações em PDF no formato oficial da Diretoria de Ensino.</p>
             <div class="row g-3 mb-4">
-              <div class="col-md-8"><label class="liquid-label">Endereço Completo do Local da Formação</label><input type="text" id="inputLocalDec" class="liquid-input" placeholder="Ex: EE Prof. Leopoldo José de Sant'Anna, localizada na Rua José Gonçalves Paim, nº 60..."></div>
+              <div class="col-md-8"><label class="liquid-label">Endereço Completo do Local da Formação</label><input type="text" id="inputLocalDec" class="liquid-input" placeholder="Ex: EE Prof. Leopoldo José de Sant'Anna, localizada na Rua José..."></div>
               <div class="col-md-4"><label class="liquid-label">Data da Emissão</label><input type="date" id="inputDataDec" class="liquid-input"></div>
             </div>
             <input type="text" id="inputPesquisaDec" class="form-control rounded-pill px-4 py-2 mb-4 border-0" style="background: rgba(255,255,255,0.8); box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);" placeholder="Pesquisar professor pelo nome ou RG..." onkeyup="filtrarDeclaracoes()">
@@ -242,6 +269,7 @@
     </div>
   </div>
 
+  <!-- MODAL DE DETALHES DA ESCOLA -->
   <div class="modal-overlay" id="modalEscola">
     <div class="modal-content-apple">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3"><h5 class="fw-bold m-0 text-primary" id="modalTituloEscolaDetalhe">Escola</h5><button class="btn-close shadow-none" onclick="fecharModal()"></button></div>
@@ -250,6 +278,7 @@
     </div>
   </div>
 
+  <!-- MODAL DE CHAMADA -->
   <div class="modal-overlay" id="modalFreq">
     <div class="modal-content-apple">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3"><h5 class="fw-bold m-0 text-primary" id="modalTituloTurno">Turno</h5><button class="btn-close shadow-none" onclick="fecharModal()"></button></div>
@@ -258,6 +287,40 @@
     </div>
   </div>
 
+  <!-- MODAL CONFIGURAR LISTA DE PRESENÇA -->
+  <div class="modal-overlay" id="modalConfigLista">
+    <div class="modal-content-apple" style="max-width: 600px;">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
+        <h5 class="fw-bold m-0 text-primary">Imprimir Lista de Presença</h5>
+        <button class="btn-close shadow-none" onclick="fecharModalLista()"></button>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="liquid-label">Data</label>
+          <input type="date" id="listaData" class="liquid-input">
+        </div>
+        <div class="col-md-6">
+          <label class="liquid-label">Horário</label>
+          <input type="text" id="listaHorario" class="liquid-input" placeholder="Ex: das 8h às 14h">
+        </div>
+        <div class="col-12">
+          <label class="liquid-label">Local (Nome da Escola)</label>
+          <input type="text" id="listaLocal" class="liquid-input" placeholder="Ex: EE Profa. Silvia Jorge Pollastrini">
+        </div>
+        <div class="col-12">
+          <label class="liquid-label">Endereço do Local</label>
+          <input type="text" id="listaEndereco" class="liquid-input" placeholder="Ex: Rua Professora Alice T C Saraiva, 32...">
+        </div>
+      </div>
+      <div class="pt-3 border-top mt-4">
+        <button class="btn btn-primary w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center gap-2" onclick="imprimirListaDefinitiva()">
+          <span class="material-symbols-rounded">print</span> Gerar e Imprimir Lista
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÁREA DE IMPRESSÃO: DECLARAÇÃO (RETRATO) -->
   <div id="printArea" style="display: none;">
     <div class="print-border">
       <table class="print-header-table">
@@ -276,6 +339,58 @@
     </div>
   </div>
 
+  <!-- ÁREA DE IMPRESSÃO: LISTA DE PRESENÇA (PAISAGEM) -->
+  <div id="printListaArea" style="display: none;">
+    <table class="pl-header-table">
+      <tr>
+        <td style="width: 15%; text-align: left;"><img src="logo-sp.png" style="max-height: 70px;" alt="SP"></td>
+        <td style="width: 70%;" class="pl-header-text">
+          <strong>Unidade Regional de Ensino de São Vicente – URE SVI</strong><br>
+          SÃO VICENTE | PRAIA GRANDE | MONGAGUÁ | ITANHAÉM | PERUÍBE<br>
+          Coord. Geral – Dirigente Regional de Ensino Erica Alves da Rocha<br>
+          <span style="font-size: 9px;">Tel.: (13) 3569 – 1800 | Rua João Ramalho, 378, Centro – São Vicente/SP</span>
+        </td>
+        <td style="width: 15%; text-align: right;"><img src="logo-ure.png" style="max-height: 60px;" alt="URE"></td>
+      </tr>
+    </table>
+    
+    <div class="pl-title">LISTA DE PRESENÇA</div>
+    
+    <table class="pl-info-table">
+      <tr>
+        <td style="width: 50%;"><strong>Título:</strong> <span id="printListaTitulo"></span> – Planejamento Escolar 2026</td>
+        <td style="width: 25%;"><strong>Horário:</strong> <span id="printListaHorario"></span></td>
+        <td style="width: 25%;"><strong>Data:</strong> <span id="printListaData"></span></td>
+      </tr>
+      <tr>
+        <td><strong>Local:</strong> <span id="printListaLocal"></span></td>
+        <td colspan="2"><strong>Público-alvo:</strong> Todos os Professores atuantes no Projeto de Apoio ao Estudante do Ensino Técnico – PAEETs – das Escolas Estaduais.</td>
+      </tr>
+      <tr>
+        <td><strong>Endereço:</strong> <span id="printListaEndereco"></span></td>
+        <td colspan="2"><strong>Responsável:</strong> <span id="printListaResponsavel"></span></td>
+      </tr>
+    </table>
+    
+    <table class="pl-main-table">
+      <thead>
+        <tr>
+          <th style="width: 3%;"></th>
+          <th style="width: 10%;">CIDADE</th>
+          <th style="width: 17%;">UNIDADE ESCOLAR</th>
+          <th style="width: 20%;">NOME COMPLETO</th>
+          <th style="width: 9%;">RG</th>
+          <th style="width: 9%;">CPF</th>
+          <th style="width: 9%;">CONTA CORRENTE</th>
+          <th style="width: 6%;">AGÊNCIA</th>
+          <th style="width: 7%;">VALOR TRANSPORTE</th>
+          <th style="width: 10%;">ASSINATURA</th>
+        </tr>
+      </thead>
+      <tbody id="printListaTbody"></tbody>
+    </table>
+  </div>
+
   <script>
     // ⚠️ SUBSTITUA PELA SUA URL DO APPS SCRIPT
     const API_URL = "https://script.google.com/macros/s/AKfycbw6gY49y19b-L6-90Ad7-RpJVdF-mZEPilE49RdH8ufMq7kkKVIlUS3xSZ57_4d9HMQ/exec";
@@ -285,6 +400,7 @@
     let nomeEspecialistaAtivo = "";
     let usuarioAtivoLogin = "";
     let todosProfessoresCache = [];
+    let turnoSelecionadoParaLista = null; // Guarda o turno atual para a impressão
 
     function fazerLogin() {
       let u = document.getElementById('inputUser').value.trim();
@@ -307,7 +423,6 @@
           usuarioAtivoLogin = res.usuario;
           document.getElementById('nomePecLogado').innerText = nomeEspecialistaAtivo;
           
-          // Libera botão de lembretes se for perfil CEC ou Renan
           let isCec = usuarioAtivoLogin.toLowerCase() === 'cec' || nomeEspecialistaAtivo.toLowerCase().includes('cec') || nomeEspecialistaAtivo.toLowerCase().includes('renan');
           document.getElementById('btnLembretes').style.display = isCec ? 'inline-flex' : 'none';
 
@@ -468,7 +583,11 @@
       document.getElementById('printNome').innerText = nome; document.getElementById('printRg').innerText = rg;
       document.getElementById('printComp').innerText = comp; document.getElementById('printTurno').innerText = turnoTexto;
       document.getElementById('printLocal').innerText = local; document.getElementById('printData').innerText = dataExtenso;
+      
+      // Aplica classe para o modo retrato
+      document.body.classList.add('print-mode-dec');
       window.print();
+      document.body.classList.remove('print-mode-dec');
     }
 
     function excluirIndicacao(linha, nomeProf) {
@@ -522,6 +641,7 @@
 
     function filtrarEscolas() { let termo = document.getElementById('inputPesquisaEscola').value.toLowerCase(); renderizarEscolas(dadosCache.escolas.filter(e => e.escola.toLowerCase().includes(termo))); }
 
+    // RENDERIZAR TURNOS + BOTÃO LISTA
     function renderizarTurnos(turnos) {
       let div = document.getElementById('listaTurnos'); div.innerHTML = '';
       if(turnos.length === 0) div.innerHTML = '<div class="alert alert-info rounded-4">Nenhum turno com inscrições nesta área.</div>';
@@ -530,12 +650,77 @@
           <div class="glass-panel p-4 mb-3" style="border-left: 4px solid var(--apple-primary);">
             <div class="row align-items-center">
               <div class="col-md-5 mb-2 mb-md-0"><h5 class="fw-bold text-primary mb-1">${t.turno}</h5><small class="text-muted d-block"><span class="material-symbols-rounded align-middle fs-6">book</span> ${t.comp}</small><small class="text-muted d-block"><span class="material-symbols-rounded align-middle fs-6">groups</span> ${t.total} inscritos</small></div>
-              <div class="col-md-4 text-center mb-2 mb-md-0"><div class="d-flex justify-content-center gap-2"><span class="apple-badge apple-badge-green">Presentes: ${t.presentes}</span><span class="apple-badge apple-badge-red">Faltas: ${t.faltas}</span></div></div>
-              <div class="col-md-3 text-end d-flex flex-column gap-2 mt-3 mt-md-0"><button class="btn btn-primary rounded-pill px-3 py-2 fw-bold" onclick="abrirModalTurno(${idx})">Fazer Chamada</button><button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo do Turno</button></div>
+              <div class="col-md-3 text-center mb-2 mb-md-0"><div class="d-flex justify-content-center gap-2"><span class="apple-badge apple-badge-green">Presentes: ${t.presentes}</span><span class="apple-badge apple-badge-red">Faltas: ${t.faltas}</span></div></div>
+              <div class="col-md-4 text-end d-flex flex-column gap-2 mt-3 mt-md-0">
+                <button class="btn btn-primary rounded-pill px-3 py-2 fw-bold" onclick="abrirModalTurno(${idx})">Fazer Chamada</button>
+                <div class="d-flex gap-2 justify-content-end">
+                  <button class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold flex-grow-1" onclick="exportarEfetivoTurno(${idx})"><span class="material-symbols-rounded align-middle fs-6">badge</span> Efetivo</button>
+                  <button class="btn btn-sm btn-outline-dark rounded-pill px-3 py-1 fw-bold flex-grow-1" onclick="abrirModalLista(${idx})"><span class="material-symbols-rounded align-middle fs-6">print</span> Lista PDF</button>
+                </div>
+              </div>
             </div>
           </div>`;
       });
     }
+
+    // ========== FUNÇÕES DA LISTA DE PRESENÇA (KANBAN) ==========
+    function abrirModalLista(idx) {
+      turnoSelecionadoParaLista = dadosCache.turnos[idx];
+      document.getElementById('listaData').valueAsDate = new Date();
+      document.getElementById('modalConfigLista').style.display = 'flex';
+    }
+
+    function fecharModalLista() {
+      document.getElementById('modalConfigLista').style.display = 'none';
+    }
+
+    function imprimirListaDefinitiva() {
+      let t = turnoSelecionadoParaLista;
+      let dataRaw = document.getElementById('listaData').value;
+      let partesData = dataRaw.split('-');
+      let meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+      let dataExtenso = `${partesData[2]} de ${meses[parseInt(partesData[1]) - 1]} de ${partesData[0]}`;
+
+      let horario = document.getElementById('listaHorario').value || "das 8h às 14h";
+      let local = document.getElementById('listaLocal').value || "Local não informado";
+      let endereco = document.getElementById('listaEndereco').value || "Endereço não informado";
+      
+      // Extrai o polo/cidade do nome do turno (Ex: "CIÊNCIAS HUMANAS (MIP)")
+      let cidade = t.turno.includes('(') ? t.turno.split('(')[1].replace(')', '') : "SÃO VICENTE";
+
+      document.getElementById('printListaTitulo').innerText = t.comp;
+      document.getElementById('printListaHorario').innerText = horario;
+      document.getElementById('printListaData').innerText = dataExtenso;
+      document.getElementById('printListaLocal').innerText = local;
+      document.getElementById('printListaEndereco').innerText = endereco;
+      document.getElementById('printListaResponsavel').innerText = nomeEspecialistaAtivo;
+
+      let tbody = document.getElementById('printListaTbody');
+      tbody.innerHTML = '';
+
+      t.professores.forEach((p, index) => {
+          tbody.innerHTML += `
+              <tr>
+                  <td>${index + 1}</td>
+                  <td>${cidade}</td>
+                  <td>${p.escola}</td>
+                  <td style="text-align: left;">${p.nome.replace(" (Adicionado pela escola)", "")}</td>
+                  <td>${p.rg || ""}</td>
+                  <td>${p.cpf || ""}</td>
+                  <td>${p.conta || ""}</td>
+                  <td>${p.agencia || ""}</td>
+                  <td></td>
+                  <td></td>
+              </tr>
+          `;
+      });
+
+      document.body.classList.add('print-mode-lista');
+      window.print();
+      document.body.classList.remove('print-mode-lista');
+      fecharModalLista();
+    }
+    // =========================================================
 
     function renderizarConsolidado(dados) {
       if(!dados) return;
