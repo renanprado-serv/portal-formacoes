@@ -94,21 +94,63 @@
 
     .btn-outline-danger { transition: all 0.2s ease; }
     .btn-outline-danger:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; transform: scale(1.05); }
-
     .kanban-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
     .kanban-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important; }
 
-    /* ESTILOS DE IMPRESSÃO (NÃO AFETA A TELA NORMAL) */
+    /* ESTILOS DE IMPRESSÃO - DOCUMENTO OFICIAL TIMBRADO */
     @media print {
       body * { visibility: hidden; }
       #printArea, #printArea * { visibility: visible; }
-      #printArea { position: absolute; left: 0; top: 0; width: 100%; padding: 40px; display: block !important; }
-      .print-header { text-align: center; margin-bottom: 40px; }
-      .print-logo { max-height: 90px; margin-bottom: 20px; }
-      .print-title { font-size: 1.6rem; font-weight: bold; text-decoration: underline; margin-bottom: 50px; font-family: 'Times New Roman', serif; }
-      .print-body { font-size: 1.2rem; line-height: 2; text-align: justify; margin-bottom: 60px; font-family: 'Times New Roman', serif; }
-      .print-footer { text-align: center; margin-top: 100px; font-family: 'Times New Roman', serif; }
-      .print-signature { border-top: 1px solid #000; width: 60%; margin: 0 auto; padding-top: 10px; font-size: 1.1rem; }
+      #printArea { 
+        position: absolute; 
+        left: 0; 
+        top: 0; 
+        width: 100%; 
+        display: block !important; 
+        font-family: Arial, sans-serif;
+      }
+      .print-border {
+        border: 5px double #000;
+        padding: 40px 50px;
+        min-height: 95vh;
+        box-sizing: border-box;
+      }
+      .print-header-table {
+        width: 100%;
+        margin-bottom: 50px;
+        text-align: center;
+      }
+      .print-header-table td {
+        vertical-align: middle;
+      }
+      .print-logo-sp { max-height: 90px; }
+      .print-logo-ure { max-height: 80px; }
+      .print-header-text {
+        font-size: 1rem;
+        line-height: 1.3;
+      }
+      .print-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 60px;
+        letter-spacing: 1px;
+      }
+      .print-body {
+        font-size: 1.15rem;
+        line-height: 2;
+        text-align: justify;
+        margin-bottom: 60px;
+      }
+      .print-indent {
+        text-indent: 80px;
+        margin-bottom: 25px;
+      }
+      .print-footer {
+        text-align: right;
+        margin-top: 60px;
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
@@ -249,18 +291,18 @@
           </div>
         </div>
 
-        <!-- ABA 6: EMISSÃO DE DECLARAÇÕES (NOVIDADE) -->
+        <!-- ABA 6: EMISSÃO DE DECLARAÇÕES -->
         <div id="viewDeclaracoes" style="display: none;">
           <div class="glass-panel p-4 mb-4">
             <h5 class="fw-bold text-primary mb-1 d-flex align-items-center gap-2"><span class="material-symbols-rounded">description</span> Emissão de Declarações</h5>
-            <p class="text-muted mb-4" style="font-size:0.85rem;">Gere automaticamente declarações em PDF para os professores presentes.</p>
+            <p class="text-muted mb-4" style="font-size:0.85rem;">Gere automaticamente declarações em PDF no formato oficial da Diretoria de Ensino.</p>
             
             <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <label class="liquid-label">Local da Formação (Para o documento)</label>
-                <input type="text" id="inputLocalDec" class="liquid-input" placeholder="Ex: EE Abrahão Jacob Lafer">
+              <div class="col-md-8">
+                <label class="liquid-label">Endereço Completo do Local da Formação</label>
+                <input type="text" id="inputLocalDec" class="liquid-input" placeholder="Ex: EE Prof. Leopoldo José de Sant'Anna, localizada na Rua José Gonçalves Paim, nº 60...">
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label class="liquid-label">Data da Emissão</label>
                 <input type="date" id="inputDataDec" class="liquid-input">
               </div>
@@ -313,25 +355,40 @@
     </div>
   </div>
 
-  <!-- ÁREA DE IMPRESSÃO (ESCONDIDA NA NAVEGAÇÃO NORMAL) -->
+  <!-- ÁREA DE IMPRESSÃO (MODELO OFICIAL URE) -->
   <div id="printArea" style="display: none;">
-    <div class="print-header">
-      <img src="logo-ure.png" class="print-logo" alt="URE São Vicente">
-      <h2 class="print-title">DECLARAÇÃO DE COMPARECIMENTO</h2>
-    </div>
-    <div class="print-body">
-      Declaro, para os devidos fins, que o(a) professor(a) <strong id="printNome"></strong>,
-      portador(a) do RG <strong id="printRg"></strong> e do CPF <strong id="printCpf"></strong>,
-      compareceu à formação continuada de <strong id="printComp"></strong>,
-      realizada no local <strong id="printLocal"></strong>, no turno <strong id="printTurno"></strong>.
-    </div>
-    <div class="text-end mb-5" style="font-size: 1.1rem; font-family: 'Times New Roman', serif;">
-      São Vicente, <span id="printData"></span>.
-    </div>
-    <div class="print-footer">
-      <div class="print-signature">
-        Assinatura do(a) Especialista / Responsável<br>
-        <strong>URE São Vicente</strong>
+    <div class="print-border">
+      <table class="print-header-table">
+        <tr>
+          <td style="width: 20%; text-align: left;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Bras%C3%A3o_do_estado_de_S%C3%A3o_Paulo.svg" class="print-logo-sp" alt="Governo SP">
+          </td>
+          <td style="width: 60%; text-align: center;" class="print-header-text">
+            <strong>GOVERNO DO ESTADO DE SÃO PAULO</strong><br>
+            <strong>SECRETARIA DE ESTADO DA EDUCAÇÃO</strong><br>
+            UNIDADE REGIONAL DE ENSINO<br>
+            REGIÃO SÃO VICENTE<br><br>
+            <span style="font-size: 0.8rem;">Rua João Ramalho, 378 – Centro – São Vicente/SP – Tel.: (13) 3569-1800</span>
+          </td>
+          <td style="width: 20%; text-align: right;">
+            <img src="logo-ure.png" class="print-logo-ure" alt="URE São Vicente">
+          </td>
+        </tr>
+      </table>
+
+      <div class="print-title">DECLARAÇÃO</div>
+
+      <div class="print-body">
+        <p class="print-indent">
+          Declaramos, para os devidos fins, que o(a) Sr.(a) <span id="printNome" style="border-bottom: 1px solid #000; padding: 0 10px;"></span>, RG/CIN <span id="printRg" style="border-bottom: 1px solid #000; padding: 0 10px;"></span>, compareceu, na data de hoje, no período <span id="printTurno"></span>, à <span id="printLocal"></span> para participar da Formação de <span id="printComp"></span>.
+        </p>
+        <p class="print-indent">
+          Por ser expressão da verdade, firmamos a presente declaração para os fins que se fizerem necessários.
+        </p>
+      </div>
+
+      <div class="print-footer">
+        São Vicente, <span id="printData"></span>.
       </div>
     </div>
   </div>
@@ -464,15 +521,15 @@
       if (aba === 'declaracoes') renderizarDeclaracoes();
     }
 
-    // ========== NOVA SESSÃO DE DECLARAÇÕES ==========
+    // ========== LÓGICA DE DECLARAÇÕES ==========
     function renderizarDeclaracoes() {
       todosProfessoresCache = [];
       if(dadosCache && dadosCache.turnos) {
         dadosCache.turnos.forEach(t => {
           t.professores.forEach(p => {
             todosProfessoresCache.push({
-              nome: p.nome.replace(" (Adicionado pela escola)", ""), // Limpa tag visual
-              rg: p.rg || "Não informado",
+              nome: p.nome.replace(" (Adicionado pela escola)", ""),
+              rg: p.rg || "______________________",
               cpf: p.cpf || "Não informado",
               comp: t.comp,
               turno: t.turno
@@ -491,7 +548,7 @@
       let div = document.getElementById('listaDeclaracoes');
       div.innerHTML = '';
       if(lista.length === 0) {
-         div.innerHTML = '<div class="alert alert-secondary">Nenhum professor indicado encontrado.</div>';
+         div.innerHTML = '<div class="alert alert-secondary rounded-4">Nenhum professor indicado encontrado.</div>';
          return;
       }
       
@@ -500,9 +557,9 @@
           <div class="glass-panel p-3 d-flex justify-content-between align-items-center">
             <div>
               <div class="fw-bold" style="font-size:0.95rem;">${p.nome}</div>
-              <div class="text-muted mt-1" style="font-size:0.75rem;">RG: ${p.rg} | CPF: ${p.cpf} | ${p.turno}</div>
+              <div class="text-muted mt-1" style="font-size:0.75rem;">RG: ${p.rg.replace(/_/g, "Não inf.")} | CPF: ${p.cpf} | ${p.turno}</div>
             </div>
-            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" onclick="imprimirDeclaracao('${p.nome}', '${p.rg}', '${p.cpf}', '${p.comp}', '${p.turno}')">
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" onclick="imprimirDeclaracao('${p.nome}', '${p.rg}', '${p.comp}', '${p.turno}')">
               <span class="material-symbols-rounded align-middle fs-6 me-1">print</span> Imprimir
             </button>
           </div>
@@ -516,28 +573,37 @@
       exibirListaDeclaracoes(filtrados);
     }
 
-    function imprimirDeclaracao(nome, rg, cpf, comp, turno) {
+    function imprimirDeclaracao(nome, rg, comp, turno) {
       let local = document.getElementById('inputLocalDec').value.trim();
       if(!local) {
-        alert("Por favor, preencha o campo 'Local da Formação' antes de gerar a declaração.");
+        alert("Por favor, digite o 'Endereço Completo do Local da Formação' para gerar a declaração.");
         document.getElementById('inputLocalDec').focus();
         return;
       }
       
+      // Ajusta o turno textual (da manhã, da tarde, da noite)
+      let turnoMinusculo = turno.toLowerCase();
+      let turnoTexto = "integral";
+      if(turnoMinusculo.includes('manhã')) turnoTexto = "da manhã";
+      else if(turnoMinusculo.includes('tarde')) turnoTexto = "da tarde";
+      else if(turnoMinusculo.includes('noite')) turnoTexto = "da noite";
+
+      // Ajusta a data por extenso
       let dataInput = document.getElementById('inputDataDec').value;
-      let dataFormatada = dataInput.split('-').reverse().join('/');
+      let partesData = dataInput.split('-');
+      let meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+      let dataExtenso = `${partesData[2]} de ${meses[parseInt(partesData[1]) - 1]} de ${partesData[0]}`;
 
       document.getElementById('printNome').innerText = nome;
       document.getElementById('printRg').innerText = rg;
-      document.getElementById('printCpf').innerText = cpf;
       document.getElementById('printComp').innerText = comp;
-      document.getElementById('printTurno').innerText = turno;
+      document.getElementById('printTurno').innerText = turnoTexto;
       document.getElementById('printLocal').innerText = local;
-      document.getElementById('printData').innerText = dataFormatada;
+      document.getElementById('printData').innerText = dataExtenso;
 
       window.print();
     }
-    // =================================================
+    // ===========================================
 
     function excluirIndicacao(linha, nomeProf) {
       if(!confirm(`Atenção: Tem certeza que deseja EXCLUIR a indicação de ${nomeProf}?\nOs dados serão apagados e a escola precisará indicar novamente.`)) return;
@@ -578,21 +644,6 @@
       document.getElementById('kbCountNao').innerText = countNao;
       document.getElementById('kbCountParcial').innerText = countParcial;
       document.getElementById('kbCountConcluida').innerText = countConcluida;
-    }
-
-    function carregarLogs() {
-      let tb = document.getElementById('tabelaLogs');
-      tb.innerHTML = '<tr><td colspan="4" class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm"></div> Buscando histórico...</td></tr>';
-      fetch(`${API_URL}?action=getLogs`)
-        .then(res => res.json())
-        .then(logs => {
-          tb.innerHTML = '';
-          if(logs.length === 0) { tb.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Nenhum registro encontrado.</td></tr>'; return; }
-          logs.forEach(l => {
-            let badgeColor = l.acao === "Chamada" ? "apple-badge-green" : (l.acao === "Login" ? "apple-badge-gray" : (l.acao === "Exclusão" ? "apple-badge-red" : "apple-badge-blue"));
-            tb.innerHTML += `<tr><td class="text-muted" style="white-space:nowrap;">${l.data}</td><td class="fw-bold">${l.usuario}</td><td><span class="apple-badge ${badgeColor}" style="font-size:0.75rem;">${l.acao}</span></td><td>${l.detalhes}</td></tr>`;
-          });
-        });
     }
 
     function renderizarEscolas(escolas) {
