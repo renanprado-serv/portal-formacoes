@@ -97,20 +97,13 @@
     .kanban-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
     .kanban-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important; }
 
-    /* ESTILOS DE IMPRESSÃO */
+    /* ESTILOS DE IMPRESSÃO (RESOLUÇÃO DA QUEBRA DE PÁGINA) */
     @media print {
-      body * { visibility: hidden; }
+      /* Oculta tudo do app original para o Chrome não se confundir com os layouts */
+      body > * { display: none !important; }
 
-      body.print-mode-dec #printArea, body.print-mode-dec #printArea * { visibility: visible; }
-      body.print-mode-dec #printArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; font-family: Arial, sans-serif; }
-      
-      body.print-mode-lista @page { size: A4 landscape; margin: 8mm; }
-      body.print-mode-lista #printListaArea, body.print-mode-lista #printListaArea * { visibility: visible; }
-      body.print-mode-lista #printListaArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; font-family: Arial, sans-serif; }
-
-      .page-break { page-break-after: always; break-after: page; }
-      .print-page { width: 100%; box-sizing: border-box; }
-
+      /* TELA DE DECLARAÇÃO */
+      body.print-mode-dec #printArea { display: block !important; width: 100%; font-family: Arial, sans-serif; }
       .print-border { border: 5px double #000; padding: 40px 50px; min-height: 95vh; box-sizing: border-box; }
       .print-header-table { width: 100%; margin-bottom: 50px; text-align: center; }
       .print-header-table td { vertical-align: middle; }
@@ -122,6 +115,11 @@
       .print-indent { text-indent: 80px; margin-bottom: 25px; }
       .print-footer { text-align: right; margin-top: 60px; font-size: 1.1rem; }
 
+      /* TELA DA LISTA DE PRESENÇA */
+      body.print-mode-lista @page { size: A4 landscape; margin: 8mm; }
+      body.print-mode-lista #printListaArea { display: block !important; width: 100%; font-family: Arial, sans-serif; }
+      
+      .print-page { width: 100%; box-sizing: border-box; }
       .pl-header-table { width: 100%; margin-bottom: 10px; }
       .pl-header-text { text-align: center; font-size: 11px; line-height: 1.3; }
       .pl-title { font-size: 16px; font-weight: bold; text-align: center; margin: 15px 0; }
@@ -182,6 +180,7 @@
       <div id="loadingScreen" class="text-center py-5" style="display:none;"><div class="spinner-border text-primary"></div><h6 class="mt-3 text-muted">Carregando métricas da rede...</h6></div>
 
       <div id="dashboardContent">
+        <!-- Top KPIs -->
         <div class="kpi-grid">
           <div class="kpi-card"><div class="kpi-title text-danger">Inscrições Pendentes</div><div class="kpi-value text-danger" id="kpiPendentes">0</div></div>
           <div class="kpi-card"><div class="kpi-title text-primary">Total Indicados</div><div class="kpi-value text-primary" id="kpiIndicados">0</div></div>
@@ -265,6 +264,7 @@
     </div>
   </div>
 
+  <!-- MODAL DE DETALHES DA ESCOLA -->
   <div class="modal-overlay" id="modalEscola">
     <div class="modal-content-apple">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3"><h5 class="fw-bold m-0 text-primary" id="modalTituloEscolaDetalhe">Escola</h5><button class="btn-close shadow-none" onclick="fecharModal()"></button></div>
@@ -273,6 +273,7 @@
     </div>
   </div>
 
+  <!-- MODAL DE CHAMADA -->
   <div class="modal-overlay" id="modalFreq">
     <div class="modal-content-apple">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3"><h5 class="fw-bold m-0 text-primary" id="modalTituloTurno">Turno</h5><button class="btn-close shadow-none" onclick="fecharModal()"></button></div>
@@ -281,6 +282,7 @@
     </div>
   </div>
 
+  <!-- MODAL CONFIGURAR LISTA DE PRESENÇA -->
   <div class="modal-overlay" id="modalConfigLista">
     <div class="modal-content-apple" style="max-width: 650px;">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
@@ -296,13 +298,17 @@
           <label class="liquid-label">Público-alvo</label>
           <input type="text" id="listaPublicoInput" class="liquid-input" placeholder="Ex: Todos os Professores atuantes no Projeto...">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label class="liquid-label">Data</label>
           <input type="date" id="listaData" class="liquid-input">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label class="liquid-label">Horário</label>
           <input type="text" id="listaHorario" class="liquid-input" placeholder="Ex: das 8h às 14h">
+        </div>
+        <div class="col-md-4">
+          <label class="liquid-label">Cidade</label>
+          <input type="text" id="listaCidadeInput" class="liquid-input" placeholder="Ex: Praia Grande">
         </div>
         <div class="col-md-6">
           <label class="liquid-label">Local (Nome da Escola)</label>
@@ -321,6 +327,7 @@
     </div>
   </div>
 
+  <!-- ÁREAS DE IMPRESSÃO - INVISÍVEIS PARA O USUÁRIO -->
   <div id="printArea" style="display: none;">
     <div class="print-border">
       <table class="print-header-table">
@@ -610,6 +617,7 @@
       });
     }
 
+    // ========== LISTA DE PRESENÇA DINÂMICA (PAGINADA) ==========
     function abrirModalLista(idx) {
       turnoSelecionadoParaLista = dadosCache.turnos[idx];
       document.getElementById('listaTituloInput').value = turnoSelecionadoParaLista.comp; 
@@ -617,26 +625,33 @@
       document.getElementById('modalConfigLista').style.display = 'flex';
     }
 
-    function fecharModalLista() { document.getElementById('modalConfigLista').style.display = 'none'; }
+    function fecharModalLista() {
+      document.getElementById('modalConfigLista').style.display = 'none';
+    }
 
     function imprimirListaDefinitiva() {
       let t = turnoSelecionadoParaLista;
+      
       let titulo = document.getElementById('listaTituloInput').value.trim() || "Título não informado";
       let publico = document.getElementById('listaPublicoInput').value.trim() || "Público-alvo não informado";
       let horario = document.getElementById('listaHorario').value.trim() || "Horário não informado";
+      let cidade = document.getElementById('listaCidadeInput').value.trim() || "Não informada";
       let local = document.getElementById('listaLocal').value.trim() || "Local não informado";
       let endereco = document.getElementById('listaEndereco').value.trim() || "Endereço não informado";
 
-      let dataRaw = document.getElementById('listaData').value; let partesData = dataRaw.split('-');
-      let meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-      let dataExtenso = `${partesData[2]} de ${meses[parseInt(partesData[1]) - 1]} de ${partesData[0]}`;
+      let dataRaw = document.getElementById('listaData').value;
+      let dataExtenso = "Data não informada";
+      if(dataRaw) {
+        let partesData = dataRaw.split('-');
+        let meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+        dataExtenso = `${partesData[2]} de ${meses[parseInt(partesData[1]) - 1]} de ${partesData[0]}`;
+      }
 
-      let cidade = t.turno.includes('(') ? t.turno.split('(')[1].replace(')', '') : "SÃO VICENTE";
       let responsavel = nomeEspecialistaAtivo;
       let professores = t.professores;
       let chunks = [];
       
-      // AJUSTADO PARA 13 PROFESSORES POR PÁGINA
+      // DIVIDE EM BLOCOS DE 13
       for (let i = 0; i < professores.length; i += 13) {
         chunks.push(professores.slice(i, i + 13));
       }
@@ -646,9 +661,8 @@
       printContainer.innerHTML = '';
 
       chunks.forEach((chunk, pageIndex) => {
-        let isLastPage = pageIndex === chunks.length - 1;
         let pageHtml = `
-          <div class="print-page ${isLastPage ? '' : 'page-break'}">
+          <div class="print-page">
             <table class="pl-header-table">
               <tr>
                 <td style="width: 15%; text-align: left;"><img src="logo-sp.png" style="max-height: 70px;" alt="SP"></td>
@@ -661,7 +675,9 @@
                 <td style="width: 15%; text-align: right;"><img src="logo-ure.png" style="max-height: 60px;" alt="URE"></td>
               </tr>
             </table>
+            
             <div class="pl-title">LISTA DE PRESENÇA</div>
+            
             <table class="pl-info-table">
               <tr>
                 <td style="width: 50%;"><strong>Título:</strong> ${titulo}</td>
@@ -677,6 +693,7 @@
                 <td colspan="2"><strong>Responsável:</strong> ${responsavel}</td>
               </tr>
             </table>
+
             <table class="pl-main-table">
               <thead>
                 <tr>
@@ -695,7 +712,7 @@
               <tbody>
         `;
 
-        // AJUSTADO PARA 13 LINHAS PREENCHIDAS POR PÁGINA
+        // GERA SEMPRE 13 LINHAS
         for (let i = 0; i < 13; i++) {
           let globalIndex = (pageIndex * 13) + i + 1;
           if (i < chunk.length) {
@@ -707,6 +724,12 @@
         }
 
         pageHtml += `</tbody></table></div>`;
+        
+        // FORÇA A QUEBRA DE PÁGINA FÍSICA SE NÃO FOR A ÚLTIMA PÁGINA
+        if (pageIndex < chunks.length - 1) {
+          pageHtml += `<div style="page-break-after: always; clear: both;"></div>`;
+        }
+
         printContainer.innerHTML += pageHtml;
       });
 
@@ -715,6 +738,7 @@
       document.body.classList.remove('print-mode-lista');
       fecharModalLista();
     }
+    // =========================================================
 
     function renderizarConsolidado(dados) {
       if(!dados) return;
@@ -734,23 +758,6 @@
       }
     }
 
-    function exportarEfetivoTurno(idx) {
-      if (!dadosCache || !dadosCache.turnos) return;
-      let t = dadosCache.turnos[idx];
-      let csvContent = "\uFEFFEscola;Nome do Professor;RG;CPF;Agência;Conta Corrente;Componente;Turno;Presença\n";
-      t.professores.forEach(p => { csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`; });
-      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Efetivo_Exercicio_${t.turno.replace(/[\/\\]/g, '-')}.csv`; link.click();
-    }
-
-    function exportarEfetivoGeral() {
-      if (!dadosCache || !dadosCache.turnos) return;
-      let csvContent = "\uFEFFEscola;Nome do Professor;RG;CPF;Agência;Conta Corrente;Componente;Turno;Presença\n";
-      dadosCache.turnos.forEach(t => { t.professores.forEach(p => { csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`; }); });
-      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Efetivo_Exercicio_Completo_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`; link.click();
-    }
-
     function exportarRelatorioConsolidado() {
       if (!dadosCache) return;
       let csvContent = "\uFEFF--- CONSOLIDADO POR POLO REGIONAL ---\nPolo;Total Ativos;Indicados;Pendentes;Presentes;Faltas;Taxa Presenca (%)\n";
@@ -759,60 +766,6 @@
       dadosCache.consolidadoComponentes.forEach(c => csvContent += `"${c.componente}";${c.total};${c.indicados};${c.pendentes};${c.presentes};${c.faltas};"${c.taxaPresenca}%"\n`);
       let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Relatorio_Consolidado_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`; link.click();
     }
-
-    function abrirModalEscola(idx) {
-      let escola = dadosCache.escolas[idx];
-      document.getElementById('modalTituloEscolaDetalhe').innerText = escola.escola;
-      let html = '';
-      if(escola.responsavel) { html += `<div class="p-3 rounded-4 mb-3" style="background: rgba(0, 113, 227, 0.08);"><small class="text-muted d-block" style="font-size:0.75rem;">Responsável:</small><b>${escola.responsavel}</b></div>`; }
-      if(escola.listaIndicados.length > 0) {
-        html += `<h6 class="fw-bold text-success mb-2">Professores Indicados (${escola.listaIndicados.length})</h6><div class="list-group list-group-flush mb-3">`;
-        escola.listaIndicados.forEach(p => {
-          let badgeTag = p.nome.includes("(Adicionado") ? `<span class="badge bg-warning text-dark ms-2" style="font-size:0.6rem;">Incluído Manualmente</span>` : "";
-          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center"><div><b>${p.nome}</b> ${badgeTag} <small class="text-muted d-block">${p.comp}</small></div><div class="d-flex align-items-center gap-2"><span class="apple-badge apple-badge-blue">${p.turno}</span><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${p.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button></div></div>`;
-        });
-        html += '</div>';
-      }
-      if(escola.listaPendentes.length > 0) {
-        html += `<h6 class="fw-bold text-danger mb-2">Pendentes (${escola.listaPendentes.length})</h6><div class="list-group list-group-flush mb-3">`;
-        escola.listaPendentes.forEach(p => { html += `<div class="list-group-item bg-transparent px-0 py-2"><b>${p.nome}</b><small class="text-muted d-block">${p.comp}</small></div>`; });
-        html += '</div>';
-      }
-      if(escola.listaAfastados && escola.listaAfastados.length > 0) {
-        html += `<h6 class="fw-bold text-secondary mb-2">Afastados (${escola.listaAfastados.length})</h6><div class="list-group list-group-flush mb-3">`;
-        escola.listaAfastados.forEach(p => {
-          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center"><div class="text-muted"><span>${p.nome}</span><small class="d-block">${p.comp}</small></div><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${p.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button></div>`;
-        });
-        html += '</div>';
-      }
-      document.getElementById('modalConteudoEscola').innerHTML = html; document.getElementById('modalEscola').style.display = 'flex';
-    }
-
-    function abrirModalTurno(idx) {
-      let turno = dadosCache.turnos[idx];
-      document.getElementById('modalTituloTurno').innerText = turno.turno;
-      let html = '';
-      turno.professores.forEach(prof => {
-        let btnP = prof.presenca === 'Presente' ? 'btn-presente' : 'btn-neutro';
-        let btnF = prof.presenca === 'Falta' ? 'btn-falta' : 'btn-neutro';
-        let isManual = prof.nome.includes("(Adicionado");
-        html += `
-          <div class="list-group-item bg-transparent px-0 py-3 d-flex justify-content-between align-items-center border-bottom">
-            <div><div class="fw-bold">${prof.nome} ${isManual ? '<span class="badge bg-warning text-dark ms-1" style="font-size:0.6rem;">Manual</span>' : ''}</div><small class="text-muted">${prof.escola}</small>${prof.rg ? `<div class="text-muted" style="font-size:0.75rem;">RG: ${prof.rg} | CPF: ${prof.cpf}</div>` : ''}</div>
-            <div class="d-flex align-items-center gap-2"><div class="btn-group"><button class="btn-presenca ${btnP}" onclick="registrarFrequencia(${prof.linha}, 'Presente', '${prof.nome}', this)">Presente</button><button class="btn-presenca ${btnF}" onclick="registrarFrequencia(${prof.linha}, 'Falta', '${prof.nome}', this)">Faltou</button></div><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${prof.linha}, '${prof.nome}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.2rem;">delete</span></button></div>
-          </div>`;
-      });
-      document.getElementById('modalListaPresenca').innerHTML = html; document.getElementById('modalFreq').style.display = 'flex';
-    }
-
-    function registrarFrequencia(linha, status, nomeProf, btnElement) {
-      let parent = btnElement.parentElement;
-      parent.querySelectorAll('.btn-presenca').forEach(b => b.className = 'btn-presenca btn-neutro');
-      btnElement.className = `btn-presenca ${status === 'Presente' ? 'btn-presente' : 'btn-falta'}`;
-      fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'salvarFrequencia', linha: linha, statusPresenca: status, nomeProf: nomeProf, pecLogado: nomeEspecialistaAtivo }) });
-    }
-
-    function fecharModal() { document.getElementById('modalEscola').style.display = 'none'; document.getElementById('modalFreq').style.display = 'none'; carregarDados(); }
 
     function renderizarAnalytics(dados) {
       if(!dados || !dados.kpis) return;
