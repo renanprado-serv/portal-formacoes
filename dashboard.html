@@ -110,6 +110,10 @@
       body.print-mode-lista #printListaArea, body.print-mode-lista #printListaArea * { visibility: visible; }
       body.print-mode-lista #printListaArea { position: absolute; left: 0; top: 0; width: 100%; display: block !important; font-family: Arial, sans-serif; }
 
+      /* QUEBRA DE PÁGINA OBRIGATÓRIA PARA A LISTA */
+      .page-break { page-break-after: always; break-after: page; }
+      .print-page { width: 100%; box-sizing: border-box; }
+
       /* ESTILOS DA DECLARAÇÃO */
       .print-border { border: 5px double #000; padding: 40px 50px; min-height: 95vh; box-sizing: border-box; }
       .print-header-table { width: 100%; margin-bottom: 50px; text-align: center; }
@@ -131,7 +135,7 @@
       .pl-info-table td { border: 1px solid #000; padding: 6px; }
       
       .pl-main-table { width: 100%; border-collapse: collapse; font-size: 10px; }
-      .pl-main-table th, .pl-main-table td { border: 1px solid #000; padding: 5px; text-align: center; vertical-align: middle; }
+      .pl-main-table th, .pl-main-table td { border: 1px solid #000; padding: 4px; text-align: center; vertical-align: middle; height: 30px; }
       .pl-main-table th { font-weight: bold; background-color: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
     }
   </style>
@@ -185,7 +189,6 @@
       <div id="loadingScreen" class="text-center py-5" style="display:none;"><div class="spinner-border text-primary"></div><h6 class="mt-3 text-muted">Carregando métricas da rede...</h6></div>
 
       <div id="dashboardContent">
-        <!-- Top KPIs -->
         <div class="kpi-grid">
           <div class="kpi-card"><div class="kpi-title text-danger">Inscrições Pendentes</div><div class="kpi-value text-danger" id="kpiPendentes">0</div></div>
           <div class="kpi-card"><div class="kpi-title text-primary">Total Indicados</div><div class="kpi-value text-primary" id="kpiIndicados">0</div></div>
@@ -289,12 +292,20 @@
 
   <!-- MODAL CONFIGURAR LISTA DE PRESENÇA -->
   <div class="modal-overlay" id="modalConfigLista">
-    <div class="modal-content-apple" style="max-width: 600px;">
+    <div class="modal-content-apple" style="max-width: 650px;">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
         <h5 class="fw-bold m-0 text-primary">Imprimir Lista de Presença</h5>
         <button class="btn-close shadow-none" onclick="fecharModalLista()"></button>
       </div>
       <div class="row g-3">
+        <div class="col-md-12">
+          <label class="liquid-label">Título da Formação</label>
+          <input type="text" id="listaTituloInput" class="liquid-input" placeholder="Ex: 1ª Orientação Técnica Projeto...">
+        </div>
+        <div class="col-md-12">
+          <label class="liquid-label">Público-alvo</label>
+          <input type="text" id="listaPublicoInput" class="liquid-input" placeholder="Ex: Todos os Professores atuantes no Projeto...">
+        </div>
         <div class="col-md-6">
           <label class="liquid-label">Data</label>
           <input type="date" id="listaData" class="liquid-input">
@@ -303,11 +314,11 @@
           <label class="liquid-label">Horário</label>
           <input type="text" id="listaHorario" class="liquid-input" placeholder="Ex: das 8h às 14h">
         </div>
-        <div class="col-12">
+        <div class="col-md-6">
           <label class="liquid-label">Local (Nome da Escola)</label>
           <input type="text" id="listaLocal" class="liquid-input" placeholder="Ex: EE Profa. Silvia Jorge Pollastrini">
         </div>
-        <div class="col-12">
+        <div class="col-md-6">
           <label class="liquid-label">Endereço do Local</label>
           <input type="text" id="listaEndereco" class="liquid-input" placeholder="Ex: Rua Professora Alice T C Saraiva, 32...">
         </div>
@@ -341,54 +352,7 @@
 
   <!-- ÁREA DE IMPRESSÃO: LISTA DE PRESENÇA (PAISAGEM) -->
   <div id="printListaArea" style="display: none;">
-    <table class="pl-header-table">
-      <tr>
-        <td style="width: 15%; text-align: left;"><img src="logo-sp.png" style="max-height: 70px;" alt="SP"></td>
-        <td style="width: 70%;" class="pl-header-text">
-          <strong>Unidade Regional de Ensino de São Vicente – URE SVI</strong><br>
-          SÃO VICENTE | PRAIA GRANDE | MONGAGUÁ | ITANHAÉM | PERUÍBE<br>
-          Coord. Geral – Dirigente Regional de Ensino Erica Alves da Rocha<br>
-          <span style="font-size: 9px;">Tel.: (13) 3569 – 1800 | Rua João Ramalho, 378, Centro – São Vicente/SP</span>
-        </td>
-        <td style="width: 15%; text-align: right;"><img src="logo-ure.png" style="max-height: 60px;" alt="URE"></td>
-      </tr>
-    </table>
-    
-    <div class="pl-title">LISTA DE PRESENÇA</div>
-    
-    <table class="pl-info-table">
-      <tr>
-        <td style="width: 50%;"><strong>Título:</strong> <span id="printListaTitulo"></span> – Planejamento Escolar 2026</td>
-        <td style="width: 25%;"><strong>Horário:</strong> <span id="printListaHorario"></span></td>
-        <td style="width: 25%;"><strong>Data:</strong> <span id="printListaData"></span></td>
-      </tr>
-      <tr>
-        <td><strong>Local:</strong> <span id="printListaLocal"></span></td>
-        <td colspan="2"><strong>Público-alvo:</strong> Todos os Professores atuantes no Projeto de Apoio ao Estudante do Ensino Técnico – PAEETs – das Escolas Estaduais.</td>
-      </tr>
-      <tr>
-        <td><strong>Endereço:</strong> <span id="printListaEndereco"></span></td>
-        <td colspan="2"><strong>Responsável:</strong> <span id="printListaResponsavel"></span></td>
-      </tr>
-    </table>
-    
-    <table class="pl-main-table">
-      <thead>
-        <tr>
-          <th style="width: 3%;"></th>
-          <th style="width: 10%;">CIDADE</th>
-          <th style="width: 17%;">UNIDADE ESCOLAR</th>
-          <th style="width: 20%;">NOME COMPLETO</th>
-          <th style="width: 9%;">RG</th>
-          <th style="width: 9%;">CPF</th>
-          <th style="width: 9%;">CONTA CORRENTE</th>
-          <th style="width: 6%;">AGÊNCIA</th>
-          <th style="width: 7%;">VALOR TRANSPORTE</th>
-          <th style="width: 10%;">ASSINATURA</th>
-        </tr>
-      </thead>
-      <tbody id="printListaTbody"></tbody>
-    </table>
+      <!-- O conteúdo será injetado dinamicamente via JS -->
   </div>
 
   <script>
@@ -400,7 +364,7 @@
     let nomeEspecialistaAtivo = "";
     let usuarioAtivoLogin = "";
     let todosProfessoresCache = [];
-    let turnoSelecionadoParaLista = null; // Guarda o turno atual para a impressão
+    let turnoSelecionadoParaLista = null; 
 
     function fazerLogin() {
       let u = document.getElementById('inputUser').value.trim();
@@ -584,7 +548,6 @@
       document.getElementById('printComp').innerText = comp; document.getElementById('printTurno').innerText = turnoTexto;
       document.getElementById('printLocal').innerText = local; document.getElementById('printData').innerText = dataExtenso;
       
-      // Aplica classe para o modo retrato
       document.body.classList.add('print-mode-dec');
       window.print();
       document.body.classList.remove('print-mode-dec');
@@ -641,7 +604,6 @@
 
     function filtrarEscolas() { let termo = document.getElementById('inputPesquisaEscola').value.toLowerCase(); renderizarEscolas(dadosCache.escolas.filter(e => e.escola.toLowerCase().includes(termo))); }
 
-    // RENDERIZAR TURNOS + BOTÃO LISTA
     function renderizarTurnos(turnos) {
       let div = document.getElementById('listaTurnos'); div.innerHTML = '';
       if(turnos.length === 0) div.innerHTML = '<div class="alert alert-info rounded-4">Nenhum turno com inscrições nesta área.</div>';
@@ -663,9 +625,10 @@
       });
     }
 
-    // ========== FUNÇÕES DA LISTA DE PRESENÇA (KANBAN) ==========
+    // ========== LISTA DE PRESENÇA DINÂMICA (PAGINADA) ==========
     function abrirModalLista(idx) {
       turnoSelecionadoParaLista = dadosCache.turnos[idx];
+      document.getElementById('listaTituloInput').value = turnoSelecionadoParaLista.comp; // Preenche título automaticamente
       document.getElementById('listaData').valueAsDate = new Date();
       document.getElementById('modalConfigLista').style.display = 'flex';
     }
@@ -676,32 +639,97 @@
 
     function imprimirListaDefinitiva() {
       let t = turnoSelecionadoParaLista;
+      
+      let titulo = document.getElementById('listaTituloInput').value.trim() || "Título não informado";
+      let publico = document.getElementById('listaPublicoInput').value.trim() || "Público-alvo não informado";
+      let horario = document.getElementById('listaHorario').value.trim() || "Horário não informado";
+      let local = document.getElementById('listaLocal').value.trim() || "Local não informado";
+      let endereco = document.getElementById('listaEndereco').value.trim() || "Endereço não informado";
+
       let dataRaw = document.getElementById('listaData').value;
       let partesData = dataRaw.split('-');
       let meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
       let dataExtenso = `${partesData[2]} de ${meses[parseInt(partesData[1]) - 1]} de ${partesData[0]}`;
 
-      let horario = document.getElementById('listaHorario').value || "das 8h às 14h";
-      let local = document.getElementById('listaLocal').value || "Local não informado";
-      let endereco = document.getElementById('listaEndereco').value || "Endereço não informado";
-      
-      // Extrai o polo/cidade do nome do turno (Ex: "CIÊNCIAS HUMANAS (MIP)")
       let cidade = t.turno.includes('(') ? t.turno.split('(')[1].replace(')', '') : "SÃO VICENTE";
+      let responsavel = nomeEspecialistaAtivo;
 
-      document.getElementById('printListaTitulo').innerText = t.comp;
-      document.getElementById('printListaHorario').innerText = horario;
-      document.getElementById('printListaData').innerText = dataExtenso;
-      document.getElementById('printListaLocal').innerText = local;
-      document.getElementById('printListaEndereco').innerText = endereco;
-      document.getElementById('printListaResponsavel').innerText = nomeEspecialistaAtivo;
+      let professores = t.professores;
+      let chunks = [];
+      
+      // Divide os professores em blocos de 15
+      for (let i = 0; i < professores.length; i += 15) {
+        chunks.push(professores.slice(i, i + 15));
+      }
 
-      let tbody = document.getElementById('printListaTbody');
-      tbody.innerHTML = '';
+      if (chunks.length === 0) chunks.push([]); // Garante pelo menos uma folha vazia
 
-      t.professores.forEach((p, index) => {
-          tbody.innerHTML += `
+      let printContainer = document.getElementById('printListaArea');
+      printContainer.innerHTML = '';
+
+      chunks.forEach((chunk, pageIndex) => {
+        let isLastPage = pageIndex === chunks.length - 1;
+        
+        // Monta o Cabeçalho que vai se repetir a cada página
+        let pageHtml = `
+          <div class="print-page ${isLastPage ? '' : 'page-break'}">
+            <table class="pl-header-table">
               <tr>
-                  <td>${index + 1}</td>
+                <td style="width: 15%; text-align: left;"><img src="logo-sp.png" style="max-height: 70px;" alt="SP"></td>
+                <td style="width: 70%;" class="pl-header-text">
+                  <strong>Unidade Regional de Ensino de São Vicente – URE SVI</strong><br>
+                  SÃO VICENTE | PRAIA GRANDE | MONGAGUÁ | ITANHAÉM | PERUÍBE<br>
+                  Coord. Geral – Dirigente Regional de Ensino Erica Alves da Rocha<br>
+                  <span style="font-size: 9px;">Tel.: (13) 3569 – 1800 | Rua João Ramalho, 378, Centro – São Vicente/SP</span>
+                </td>
+                <td style="width: 15%; text-align: right;"><img src="logo-ure.png" style="max-height: 60px;" alt="URE"></td>
+              </tr>
+            </table>
+            
+            <div class="pl-title">LISTA DE PRESENÇA</div>
+            
+            <table class="pl-info-table">
+              <tr>
+                <td style="width: 50%;"><strong>Título:</strong> ${titulo}</td>
+                <td style="width: 25%;"><strong>Horário:</strong> ${horario}</td>
+                <td style="width: 25%;"><strong>Data:</strong> ${dataExtenso}</td>
+              </tr>
+              <tr>
+                <td><strong>Local:</strong> ${local}</td>
+                <td colspan="2"><strong>Público-alvo:</strong> ${publico}</td>
+              </tr>
+              <tr>
+                <td><strong>Endereço:</strong> ${endereco}</td>
+                <td colspan="2"><strong>Responsável:</strong> ${responsavel}</td>
+              </tr>
+            </table>
+
+            <table class="pl-main-table">
+              <thead>
+                <tr>
+                  <th style="width: 3%;"></th>
+                  <th style="width: 10%;">CIDADE</th>
+                  <th style="width: 17%;">UNIDADE ESCOLAR</th>
+                  <th style="width: 20%;">NOME COMPLETO</th>
+                  <th style="width: 9%;">RG</th>
+                  <th style="width: 9%;">CPF</th>
+                  <th style="width: 9%;">CONTA CORRENTE</th>
+                  <th style="width: 6%;">AGÊNCIA</th>
+                  <th style="width: 7%;">VALOR TRANSPORTE</th>
+                  <th style="width: 10%;">ASSINATURA</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        // Preenche sempre 15 linhas para manter o layout idêntico
+        for (let i = 0; i < 15; i++) {
+          let globalIndex = (pageIndex * 15) + i + 1;
+          if (i < chunk.length) {
+            let p = chunk[i];
+            pageHtml += `
+                <tr>
+                  <td>${globalIndex}</td>
                   <td>${cidade}</td>
                   <td>${p.escola}</td>
                   <td style="text-align: left;">${p.nome.replace(" (Adicionado pela escola)", "")}</td>
@@ -711,8 +739,16 @@
                   <td>${p.agencia || ""}</td>
                   <td></td>
                   <td></td>
-              </tr>
-          `;
+                </tr>
+            `;
+          } else {
+             // Linha em branco
+             pageHtml += `<tr><td>${globalIndex}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+          }
+        }
+
+        pageHtml += `</tbody></table></div>`;
+        printContainer.innerHTML += pageHtml;
       });
 
       document.body.classList.add('print-mode-lista');
@@ -738,23 +774,6 @@
           tbodyComp.innerHTML += `<tr><td class="fw-bold">${c.componente}</td><td class="text-center">${c.total}</td><td class="text-center text-primary fw-bold">${c.indicados}</td><td class="text-center text-danger fw-bold">${c.pendentes}</td><td class="text-center text-success fw-bold">${c.presentes}</td><td class="text-center text-danger fw-bold">${c.faltas}</td><td class="text-center fw-bold">${c.taxaPresenca}%</td></tr>`;
         });
       }
-    }
-
-    function exportarEfetivoTurno(idx) {
-      if (!dadosCache || !dadosCache.turnos) return;
-      let t = dadosCache.turnos[idx];
-      let csvContent = "\uFEFFEscola;Nome do Professor;RG;CPF;Agência;Conta Corrente;Componente;Turno;Presença\n";
-      t.professores.forEach(p => { csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`; });
-      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Efetivo_Exercicio_${t.turno.replace(/[\/\\]/g, '-')}.csv`; link.click();
-    }
-
-    function exportarEfetivoGeral() {
-      if (!dadosCache || !dadosCache.turnos) return;
-      let csvContent = "\uFEFFEscola;Nome do Professor;RG;CPF;Agência;Conta Corrente;Componente;Turno;Presença\n";
-      dadosCache.turnos.forEach(t => { t.professores.forEach(p => { csvContent += `"${p.escola}";"${p.nome}";"${p.rg}";"${p.cpf}";"${p.agencia}";"${p.conta}";"${t.comp}";"${t.turno}";"${p.presenca || 'Pendente'}"\n`; }); });
-      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Efetivo_Exercicio_Completo_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`; link.click();
     }
 
     function exportarRelatorioConsolidado() {
