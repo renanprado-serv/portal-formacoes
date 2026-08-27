@@ -80,7 +80,8 @@
     .kpi-value { font-size: 2.2rem; font-weight: 700; color: var(--apple-text); line-height: 1.2; margin-top: 4px; }
 
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(12px); padding: 20px; }
-    .modal-content-apple { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(35px) saturate(190%); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 28px; width: 100%; max-width: 700px; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); max-height: 90vh; overflow-y: hidden; display: flex; flex-direction: column; }
+    .modal-content-apple { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(35px) saturate(190%); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 28px; width: 100%; max-width: 700px; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); max-height: 90vh; display: flex; flex-direction: column; }
+    #modalListaPresenca { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
 
     .btn-presenca { border-radius: 980px; font-weight: 600; padding: 6px 16px; font-size: 0.82rem; transition: 0.2s; border: 1px solid transparent; }
     .btn-presente { background: rgba(16, 185, 129, 0.15); color: #059669; border-color: rgba(16, 185, 129, 0.3); }
@@ -97,12 +98,10 @@
     .kanban-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
     .kanban-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important; }
 
-    /* ESTILOS DE IMPRESSÃO (RESOLUÇÃO DA QUEBRA DE PÁGINA) */
+    /* ESTILOS DE IMPRESSÃO */
     @media print {
-      /* Oculta tudo do app original para o Chrome não se confundir com os layouts */
       body > * { display: none !important; }
 
-      /* TELA DE DECLARAÇÃO */
       body.print-mode-dec #printArea { display: block !important; width: 100%; font-family: Arial, sans-serif; }
       .print-border { border: 5px double #000; padding: 40px 50px; min-height: 95vh; box-sizing: border-box; }
       .print-header-table { width: 100%; margin-bottom: 50px; text-align: center; }
@@ -115,11 +114,12 @@
       .print-indent { text-indent: 80px; margin-bottom: 25px; }
       .print-footer { text-align: right; margin-top: 60px; font-size: 1.1rem; }
 
-      /* TELA DA LISTA DE PRESENÇA */
       body.print-mode-lista @page { size: A4 landscape; margin: 8mm; }
       body.print-mode-lista #printListaArea { display: block !important; width: 100%; font-family: Arial, sans-serif; }
       
       .print-page { width: 100%; box-sizing: border-box; }
+      .page-break { page-break-after: always; break-after: page; }
+      
       .pl-header-table { width: 100%; margin-bottom: 10px; }
       .pl-header-text { text-align: center; font-size: 11px; line-height: 1.3; }
       .pl-title { font-size: 16px; font-weight: bold; text-align: center; margin: 15px 0; }
@@ -277,7 +277,7 @@
   <div class="modal-overlay" id="modalFreq">
     <div class="modal-content-apple">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3"><h5 class="fw-bold m-0 text-primary" id="modalTituloTurno">Turno</h5><button class="btn-close shadow-none" onclick="fecharModal()"></button></div>
-      <div class="list-group list-group-flush" id="modalListaPresenca" style="overflow-y: auto; flex-grow: 1; padding-right: 5px;"></div>
+      <div class="list-group list-group-flush" id="modalListaPresenca"></div>
       <div class="pt-3 border-top mt-2"><button class="btn btn-primary w-100 rounded-pill py-2 fw-bold" onclick="fecharModal()">Salvar e Voltar</button></div>
     </div>
   </div>
@@ -327,8 +327,8 @@
     </div>
   </div>
 
-  <!-- ÁREAS DE IMPRESSÃO - INVISÍVEIS PARA O USUÁRIO -->
-  <div id="printArea" style="display: none;">
+  <!-- ÁREA DE IMPRESSÃO: DECLARAÇÃO (RETRATO) -->
+  <div id="printArea">
     <div class="print-border">
       <table class="print-header-table">
         <tr>
@@ -346,7 +346,8 @@
     </div>
   </div>
 
-  <div id="printListaArea" style="display: none;"></div>
+  <!-- ÁREA DE IMPRESSÃO: LISTA DE PRESENÇA (PAISAGEM) -->
+  <div id="printListaArea"></div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbw6gY49y19b-L6-90Ad7-RpJVdF-mZEPilE49RdH8ufMq7kkKVIlUS3xSZ57_4d9HMQ/exec";
@@ -365,7 +366,6 @@
       let msg = document.getElementById('mensagemLogin');
       
       if(!u || !p) { msg.innerHTML = 'Preencha usuário e senha.'; msg.style.display = 'flex'; return; }
-      
       btn.innerText = "Autenticando..."; btn.disabled = true; msg.style.display = 'none';
 
       fetch(API_URL, {
@@ -396,13 +396,9 @@
     }
 
     function dispararLembretes() {
-      if(!confirm("Deseja disparar um e-mail de cobrança automatizado para TODAS as escolas que estão com status 'Não Iniciado' ou 'Parcial'?\n\nEssa ação enviará o e-mail para o institucional e o pedagógico de cada unidade.")) return;
-      
-      let btn = document.getElementById('btnLembretes');
-      let textoOriginal = btn.innerHTML;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
-      btn.disabled = true;
-
+      if(!confirm("Deseja disparar um e-mail de cobrança automatizado para TODAS as escolas que estão com status 'Não Iniciado' ou 'Parcial'?")) return;
+      let btn = document.getElementById('btnLembretes'); let textoOriginal = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...'; btn.disabled = true;
       let filtroAtual = document.getElementById('selectComponenteDash').value;
 
       fetch(API_URL, {
@@ -412,12 +408,9 @@
       .then(res => res.json())
       .then(res => {
         btn.innerHTML = textoOriginal; btn.disabled = false;
-        if(res.sucesso) { alert(`Sucesso! E-mails de lembrete enviados para ${res.enviadas} escola(s).`); carregarLogs(); } 
+        if(res.sucesso) { alert(`Sucesso! E-mails enviados para ${res.enviadas} escola(s).`); carregarLogs(); } 
         else { alert('Aviso: ' + res.mensagem); }
-      }).catch(() => {
-        alert('Erro de conexão ao tentar enviar lembretes.');
-        btn.innerHTML = textoOriginal; btn.disabled = false;
-      });
+      }).catch(() => { alert('Erro de conexão ao tentar enviar lembretes.'); btn.innerHTML = textoOriginal; btn.disabled = false; });
     }
 
     function iniciarPainel() { 
@@ -428,20 +421,18 @@
           sel.innerHTML = '<option value="Todos">Visão Geral (Todos os Componentes)</option>';
           c.forEach(comp => sel.innerHTML += `<option value="${comp.nome}">${comp.nome}</option>`);
           carregarDados(); 
-        })
-        .catch(() => alert("Falha ao carregar as opções de formações no painel."));
+        }).catch(() => alert("Falha ao carregar as opções de formações no painel."));
     }
 
     function carregarDados() {
       document.getElementById('dashboardContent').style.display = 'none'; document.getElementById('loadingScreen').style.display = 'block';
       let filtroAtual = document.getElementById('selectComponenteDash').value;
       fetch(`${API_URL}?action=getDashboard&componente=${encodeURIComponent(filtroAtual)}`)
-        .then(res => { if (!res.ok) throw new Error("Erro de resposta do servidor: " + res.status); return res.json(); })
+        .then(res => res.json())
         .then(dados => { 
           if(dados.erro) { alert("Erro reportado pelo sistema: " + dados.mensagem); document.getElementById('loadingScreen').style.display = 'none'; return; }
-          try { renderizarPainel(dados); } catch(e) { alert("Erro interno ao processar os dados recebidos."); }
-        })
-        .catch((e) => { alert("Falha de conexão com o banco de dados. Atualize a página."); document.getElementById('loadingScreen').style.display = 'none'; });
+          renderizarPainel(dados); 
+        }).catch(() => { alert("Falha de conexão com o banco de dados. Atualize a página."); document.getElementById('loadingScreen').style.display = 'none'; });
     }
 
     function renderizarPainel(dados) {
@@ -509,10 +500,11 @@
       let div = document.getElementById('listaDeclaracoes'); div.innerHTML = '';
       if(lista.length === 0) { div.innerHTML = '<div class="alert alert-secondary rounded-4">Nenhum professor indicado encontrado.</div>'; return; }
       lista.forEach(p => {
+        let nomeSafe = p.nome.replace(/'/g, "\\'").replace(/"/g, "&quot;");
         div.innerHTML += `
           <div class="glass-panel p-3 d-flex justify-content-between align-items-center">
             <div><div class="fw-bold" style="font-size:0.95rem;">${p.nome}</div><div class="text-muted mt-1" style="font-size:0.75rem;">RG: ${p.rg.replace(/_/g, "Não inf.")} | CPF: ${p.cpf} | ${p.turno}</div></div>
-            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" onclick="imprimirDeclaracao('${p.nome}', '${p.rg}', '${p.comp}', '${p.turno}')"><span class="material-symbols-rounded align-middle fs-6 me-1">print</span> Imprimir</button>
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" onclick="imprimirDeclaracao('${nomeSafe}', '${p.rg}', '${p.comp}', '${p.turno}')"><span class="material-symbols-rounded align-middle fs-6 me-1">print</span> Imprimir</button>
           </div>`;
       });
     }
@@ -617,7 +609,6 @@
       });
     }
 
-    // ========== LISTA DE PRESENÇA DINÂMICA (PAGINADA) ==========
     function abrirModalLista(idx) {
       turnoSelecionadoParaLista = dadosCache.turnos[idx];
       document.getElementById('listaTituloInput').value = turnoSelecionadoParaLista.comp; 
@@ -625,13 +616,10 @@
       document.getElementById('modalConfigLista').style.display = 'flex';
     }
 
-    function fecharModalLista() {
-      document.getElementById('modalConfigLista').style.display = 'none';
-    }
+    function fecharModalLista() { document.getElementById('modalConfigLista').style.display = 'none'; }
 
     function imprimirListaDefinitiva() {
       let t = turnoSelecionadoParaLista;
-      
       let titulo = document.getElementById('listaTituloInput').value.trim() || "Título não informado";
       let publico = document.getElementById('listaPublicoInput').value.trim() || "Público-alvo não informado";
       let horario = document.getElementById('listaHorario').value.trim() || "Horário não informado";
@@ -651,10 +639,7 @@
       let professores = t.professores;
       let chunks = [];
       
-      // DIVIDE EM BLOCOS DE 13
-      for (let i = 0; i < professores.length; i += 13) {
-        chunks.push(professores.slice(i, i + 13));
-      }
+      for (let i = 0; i < professores.length; i += 13) { chunks.push(professores.slice(i, i + 13)); }
       if (chunks.length === 0) chunks.push([]); 
 
       let printContainer = document.getElementById('printListaArea');
@@ -712,7 +697,6 @@
               <tbody>
         `;
 
-        // GERA SEMPRE 13 LINHAS
         for (let i = 0; i < 13; i++) {
           let globalIndex = (pageIndex * 13) + i + 1;
           if (i < chunk.length) {
@@ -724,12 +708,7 @@
         }
 
         pageHtml += `</tbody></table></div>`;
-        
-        // FORÇA A QUEBRA DE PÁGINA FÍSICA SE NÃO FOR A ÚLTIMA PÁGINA
-        if (pageIndex < chunks.length - 1) {
-          pageHtml += `<div style="page-break-after: always; clear: both;"></div>`;
-        }
-
+        if (pageIndex < chunks.length - 1) { pageHtml += `<div style="page-break-after: always; clear: both;"></div>`; }
         printContainer.innerHTML += pageHtml;
       });
 
@@ -738,7 +717,6 @@
       document.body.classList.remove('print-mode-lista');
       fecharModalLista();
     }
-    // =========================================================
 
     function renderizarConsolidado(dados) {
       if(!dados) return;
@@ -766,6 +744,63 @@
       dadosCache.consolidadoComponentes.forEach(c => csvContent += `"${c.componente}";${c.total};${c.indicados};${c.pendentes};${c.presentes};${c.faltas};"${c.taxaPresenca}%"\n`);
       let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Relatorio_Consolidado_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`; link.click();
     }
+
+    function abrirModalEscola(idx) {
+      let escola = dadosCache.escolas[idx];
+      document.getElementById('modalTituloEscolaDetalhe').innerText = escola.escola;
+      let html = '';
+      if(escola.responsavel) { html += `<div class="p-3 rounded-4 mb-3" style="background: rgba(0, 113, 227, 0.08);"><small class="text-muted d-block" style="font-size:0.75rem;">Responsável:</small><b>${escola.responsavel}</b></div>`; }
+      if(escola.listaIndicados.length > 0) {
+        html += `<h6 class="fw-bold text-success mb-2">Professores Indicados (${escola.listaIndicados.length})</h6><div class="list-group list-group-flush mb-3">`;
+        escola.listaIndicados.forEach(p => {
+          let badgeTag = p.nome.includes("(Adicionado") ? `<span class="badge bg-warning text-dark ms-2" style="font-size:0.6rem;">Incluído Manualmente</span>` : "";
+          let nomeSafe = p.nome.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center"><div><b>${p.nome}</b> ${badgeTag} <small class="text-muted d-block">${p.comp}</small></div><div class="d-flex align-items-center gap-2"><span class="apple-badge apple-badge-blue">${p.turno}</span><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${nomeSafe}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button></div></div>`;
+        });
+        html += '</div>';
+      }
+      if(escola.listaPendentes.length > 0) {
+        html += `<h6 class="fw-bold text-danger mb-2">Pendentes (${escola.listaPendentes.length})</h6><div class="list-group list-group-flush mb-3">`;
+        escola.listaPendentes.forEach(p => { html += `<div class="list-group-item bg-transparent px-0 py-2"><b>${p.nome}</b><small class="text-muted d-block">${p.comp}</small></div>`; });
+        html += '</div>';
+      }
+      if(escola.listaAfastados && escola.listaAfastados.length > 0) {
+        html += `<h6 class="fw-bold text-secondary mb-2">Afastados (${escola.listaAfastados.length})</h6><div class="list-group list-group-flush mb-3">`;
+        escola.listaAfastados.forEach(p => {
+          let nomeSafe = p.nome.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+          html += `<div class="list-group-item bg-transparent px-0 py-2 d-flex justify-content-between align-items-center"><div class="text-muted"><span>${p.nome}</span><small class="d-block">${p.comp}</small></div><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${p.linha}, '${nomeSafe}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.1rem;">delete</span></button></div>`;
+        });
+        html += '</div>';
+      }
+      document.getElementById('modalConteudoEscola').innerHTML = html; document.getElementById('modalEscola').style.display = 'flex';
+    }
+
+    function abrirModalTurno(idx) {
+      let turno = dadosCache.turnos[idx];
+      document.getElementById('modalTituloTurno').innerText = turno.turno;
+      let html = '';
+      turno.professores.forEach(prof => {
+        let btnP = prof.presenca === 'Presente' ? 'btn-presente' : 'btn-neutro';
+        let btnF = prof.presenca === 'Falta' ? 'btn-falta' : 'btn-neutro';
+        let isManual = prof.nome.includes("(Adicionado");
+        let nomeSafe = prof.nome.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        html += `
+          <div class="list-group-item bg-transparent px-0 py-3 d-flex justify-content-between align-items-center border-bottom">
+            <div><div class="fw-bold">${prof.nome} ${isManual ? '<span class="badge bg-warning text-dark ms-1" style="font-size:0.6rem;">Manual</span>' : ''}</div><small class="text-muted">${prof.escola}</small>${prof.rg ? `<div class="text-muted" style="font-size:0.75rem;">RG: ${prof.rg} | CPF: ${prof.cpf}</div>` : ''}</div>
+            <div class="d-flex align-items-center gap-2"><div class="btn-group"><button class="btn-presenca ${btnP}" onclick="registrarFrequencia(${prof.linha}, 'Presente', '${nomeSafe}', this)">Presente</button><button class="btn-presenca ${btnF}" onclick="registrarFrequencia(${prof.linha}, 'Falta', '${nomeSafe}', this)">Faltou</button></div><button class="btn btn-sm btn-outline-danger rounded-circle p-1 d-flex align-items-center justify-content-center" onclick="excluirIndicacao(${prof.linha}, '${nomeSafe}')" title="Excluir Indicação" style="border:none;"><span class="material-symbols-rounded" style="font-size: 1.2rem;">delete</span></button></div>
+          </div>`;
+      });
+      document.getElementById('modalListaPresenca').innerHTML = html; document.getElementById('modalFreq').style.display = 'flex';
+    }
+
+    function registrarFrequencia(linha, status, nomeProf, btnElement) {
+      let parent = btnElement.parentElement;
+      parent.querySelectorAll('.btn-presenca').forEach(b => b.className = 'btn-presenca btn-neutro');
+      btnElement.className = `btn-presenca ${status === 'Presente' ? 'btn-presente' : 'btn-falta'}`;
+      fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'salvarFrequencia', linha: linha, statusPresenca: status, nomeProf: nomeProf, pecLogado: nomeEspecialistaAtivo }) });
+    }
+
+    function fecharModal() { document.getElementById('modalEscola').style.display = 'none'; document.getElementById('modalFreq').style.display = 'none'; carregarDados(); }
 
     function renderizarAnalytics(dados) {
       if(!dados || !dados.kpis) return;
