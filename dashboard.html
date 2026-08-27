@@ -98,6 +98,9 @@
     .kanban-card { transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
     .kanban-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important; }
 
+    /* ESSENCIAL: Garante que os templates de impressão fiquem rigorosamente invisíveis na tela normal */
+    #printArea, #printListaArea { display: none !important; }
+
     /* ESTILOS DE IMPRESSÃO */
     @media print {
       body > * { display: none !important; }
@@ -327,7 +330,7 @@
     </div>
   </div>
 
-  <!-- ÁREA DE IMPRESSÃO: DECLARAÇÃO (RETRATO) -->
+  <!-- ÁREAS DE IMPRESSÃO - FORA DO FLUXO VISUAL -->
   <div id="printArea">
     <div class="print-border">
       <table class="print-header-table">
@@ -346,7 +349,6 @@
     </div>
   </div>
 
-  <!-- ÁREA DE IMPRESSÃO: LISTA DE PRESENÇA (PAISAGEM) -->
   <div id="printListaArea"></div>
 
   <script>
