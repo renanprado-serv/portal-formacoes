@@ -312,7 +312,7 @@
   </div>
 
   <script>
-    // ⚠️ SUBSTITUA PELA SUA URL DO APPS SCRIPT
+    // ⚠️ SUBSTITUA PELA SUA URL DO APPS SCRIPT SE NECESSÁRIO
     const API_URL = "https://script.google.com/macros/s/AKfycbw6gY49y19b-L6-90Ad7-RpJVdF-mZEPilE49RdH8ufMq7kkKVIlUS3xSZ57_4d9HMQ/exec";
 
     let estruturaCompleta = null, dadosAtuais = null, poloSelecionado = null;
@@ -459,7 +459,7 @@
       document.getElementById('cardPrazo').style.display = 'none';
       document.getElementById('selectComponente').value = '';
       
-      document.getElementById('corpoTabelaNovos').innerHTML = ''; // Limpa professores adicionados
+      document.getElementById('corpoTabelaNovos').innerHTML = '';
 
       dadosAtuais = null; nomeGestorAtual = ""; cargoGestorAtual = ""; componenteGlobal = "";
       window.scrollTo(0,0);
@@ -505,9 +505,9 @@
 
     function exibirProfessores(dados) {
       dadosAtuais = dados;
-      turnosGlobais = dados.turnos; // Salva para uso nos cards manuais
+      turnosGlobais = dados.turnos;
       let tbody = document.getElementById('corpoTabela'); tbody.innerHTML = '';
-      document.getElementById('corpoTabelaNovos').innerHTML = ''; // Limpa adições da sessão anterior
+      document.getElementById('corpoTabelaNovos').innerHTML = ''; 
       let todosJaIndicados = true;
 
       if (!dados.professores || dados.professores.length === 0) {
@@ -702,18 +702,26 @@
       })
       .then(res => res.json())
       .then(res => {
-        document.getElementById('btnSalvar').innerHTML = 'Salvar Indicações'; document.getElementById('btnSalvar').disabled = false;
+        document.getElementById('btnSalvar').innerHTML = 'Salvar Indicações'; 
+        document.getElementById('btnSalvar').disabled = false;
+        
         if(res.sucesso) {
+          // CORREÇÃO AQUI: O ID correto agora é ocultado sem causar erros
           document.getElementById('areaProfessores').style.display = 'none';
-          document.getElementById('areaCalendario').style.display = 'none';
+          document.getElementById('cardCalendario').style.display = 'none'; 
+          
           document.getElementById('textoConfirmacaoEmail').innerText = `Uma cópia foi encaminhada para ${email}.`;
           document.getElementById('tabelaResumo').innerHTML = res.resumo.map(r => `<tr><td class="fw-bold">${r.nome}</td><td><span class="apple-badge apple-badge-blue">${r.status}</span></td><td class="text-muted"><span class="material-symbols-rounded align-middle fs-6 text-primary">location_on</span> ${r.local}</td></tr>`).join('');
           document.getElementById('areaSucesso').style.display = 'block'; 
           window.scrollTo(0,0);
-        } else { exibirMensagem('error', res.mensagem); }
+        } else { 
+          exibirMensagem('error', res.mensagem); 
+        }
       })
-      .catch(() => {
-        document.getElementById('btnSalvar').innerHTML = 'Salvar Indicações'; document.getElementById('btnSalvar').disabled = false;
+      .catch((e) => {
+        console.error("Erro capturado:", e);
+        document.getElementById('btnSalvar').innerHTML = 'Salvar Indicações'; 
+        document.getElementById('btnSalvar').disabled = false;
         exibirMensagem('error', 'Erro ao salvar. Verifique sua conexão.');
       });
     }
@@ -725,7 +733,6 @@
       div.style.display = 'flex'; window.scrollTo(0,0);
     }
 
-    // Prevenção de perda de dados ao fechar a aba
     window.addEventListener('beforeunload', function (e) {
       if (document.getElementById('areaProfessores').style.display === 'block') {
         e.preventDefault();
